@@ -31,10 +31,12 @@ The MCP server is a separate repo:
 [`techandsociety-ai/mcp-server`](https://github.com/techandsociety-ai/mcp-server).
 This site only documents it.
 
-- **Live URL**: `https://chip50-mcp-zbqg33tava-uc.a.run.app/mcp` — this is the
-  production `chip50-mcp` Cloud Run service. (Cloud Run also serves the same
-  service at a deterministic alias, `chip50-mcp-563455814008.us-central1.run.app`;
-  both hostnames are one service, not two deployments.)
+- **Live URL**: `https://mcp.techandsociety.ai/mcp` — the full-panel server
+  (Cloud Run service `chip50-mcp-vanity`). Sibling servers at
+  `https://ai.techandsociety.ai/mcp` (the Northeastern 2026 AI survey) and
+  `https://sentinel.techandsociety.ai/mcp` (election monitoring). The older
+  `*.run.app` addresses still answer but are being retired (2026-09-22); do
+  not publish them.
 - **Transport**: remote MCP over HTTPS (not stdio)
 - **Auth**: Google OAuth; access is managed — unauthorized users request access
   at the auth screen. Users connect via Settings → Connectors → Add custom
