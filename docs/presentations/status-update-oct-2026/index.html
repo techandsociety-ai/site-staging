@@ -160,12 +160,16 @@ a { color: var(--teal-ink); text-decoration-thickness: 2px; text-underline-offse
          background: var(--cream); color: var(--navy); }
 .slide.on { visibility: visible; }
 .slide.dark { background: var(--navy); color: var(--cream); }
+.slide.timeline { padding-top: 80px; padding-bottom: 80px; }
 
 h1 { font: 500 128px/1.05 var(--serif); }
 h2 { font: 500 80px/1.1 var(--serif); }
 .lede { font-size: 40px; line-height: 1.4; color: var(--mist); }
 .lede.small { font-size: 28px; line-height: 1.45; }
 .body { font-size: 36px; line-height: 1.45; color: var(--ink); }
+.before { font-size: 30px; line-height: 1.45; color: var(--muted); padding-top: 32px;
+          border-top: 2px solid rgba(10, 23, 41, 0.12); }
+.before b { color: var(--navy); font-weight: 600; }
 .refs { font-size: 26px; color: var(--muted); }
 .refs a { color: inherit; }
 
@@ -189,6 +193,8 @@ h2 { font: 500 80px/1.1 var(--serif); }
           padding: 28px 32px; display: flex; flex-direction: column; gap: 8px; }
 .server h3 { font: 600 44px/1.2 var(--sans); color: var(--cream); }
 .server p { font-size: 26px; color: var(--mist); }
+.server.future { background: none; border: 3px dashed var(--accent); border-left-width: 8px; }
+.server.future h3 { color: var(--mist); }
 
 .docs { display: flex; flex-direction: column; gap: 48px; }
 .docs .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
@@ -202,10 +208,12 @@ h2 { font: 500 80px/1.1 var(--serif); }
 .title-row .refs { text-align: right; line-height: 1.4; }
 .months { display: flex; flex-direction: column; gap: 12px; }
 .month { display: grid; grid-template-columns: 420px 1fr; gap: 48px; background: var(--paper);
-         border-left: 10px solid var(--accent); border-radius: 12px; padding: 20px 40px; }
+         border-left: 10px solid var(--accent); border-radius: 12px; padding: 18px 40px; }
 .month .when { font: 600 24px/1.3 var(--sans); color: var(--muted); margin-bottom: 4px; }
 .month h3 { font: 500 38px/1.15 var(--serif); }
-.month > p { font-size: 25px; line-height: 1.45; color: var(--ink); }
+.month .what { display: flex; flex-direction: column; gap: 10px; }
+.month .what p { font-size: 24px; line-height: 1.45; color: var(--ink); }
+.month .what .why { color: var(--navy); font-weight: 500; }
 .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
 .card { border-top: 10px solid var(--accent); border-radius: 16px; padding: 36px 40px;
         display: flex; flex-direction: column; gap: 16px; background: var(--navy-2); }
@@ -283,19 +291,31 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
   <div class="months">
     <div class="month jul">
       <div><p class="when">Late July</p><h3>Tests and CI</h3></div>
-      <p>CI runs the full test suite before every deploy, with a failing test for each known bug and checks against published CHIP50 reports. Every run generates a report, published at <a href="../../test-status/">techandsociety.ai/test-status</a>.</p>
+      <div class="what">
+        <p>CI runs the full test suite before every deploy, including checks against published CHIP50 reports, and publishes a report of every run at <a href="../../test-status/">techandsociety.ai/test-status</a>.</p>
+        <p class="why">We can change the code with confidence, and anyone can see what’s known to be broken.</p>
+      </div>
     </div>
     <div class="month aug">
       <div><p class="when">August</p><h3>Data cleanup</h3></div>
-      <p>All 47 raw wave files went into one bucket, answers got their labels from the survey codebook, and a new loader rebuilt every wave in a sandbox. With Hong and Katya, we planned a sturdier data architecture to replace the old pipeline.</p>
+      <div class="what">
+        <p>All 47 raw wave files went into one bucket, answers got their labels from the survey codebook, and a new loader rebuilt every wave in a sandbox. With Hong and Katya, we planned a sturdier data architecture to replace the old pipeline.</p>
+        <p class="why">So every number can eventually trace back to the raw survey files.</p>
+      </div>
     </div>
     <div class="month sep">
       <div><p class="when">September</p><h3>The AI profile and production polish</h3></div>
-      <p>One codebase now runs three servers, including one for the Wave 38.6 AI survey, and chat.techandsociety.ai puts it in a browser. We tightened sign-in and access, logged every tool call and fixed a long list of bugs. Most important, we started building survey expertise into the MCP: it tells the model how to read each scale, says what every answer leaves out, and traces a report’s numbers back to the calls that made them.</p>
+      <div class="what">
+        <p>One codebase now runs several servers, including the Wave 38.6 AI survey, and chat.techandsociety.ai puts it in a browser. We tightened access, logged every tool call and fixed a long list of bugs. Most important, we started building survey expertise into the MCP: how to read each scale, what each answer leaves out, and where a report’s numbers came from.</p>
+        <p class="why">That expertise is what lets people outside the team use the MCP without one of us in the room.</p>
+      </div>
     </div>
     <div class="month oct">
       <div><p class="when">Early October</p><h3>Ready for early access</h3></div>
-      <p>Wave 38 is complete, sentinel data refreshes itself, ChatGPT can connect, and a maintenance guide and alerts mean someone new can keep it running.</p>
+      <div class="what">
+        <p>Wave 38 is complete, sentinel data refreshes itself, ChatGPT can connect, and a maintenance guide and alerts mean someone new can keep it running.</p>
+        <p class="why">It’s stable and documented enough for early-access users, and for a change of hands.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -304,23 +324,26 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
   <div class="text">
     <h2>Every deploy is tested first</h2>
     <p class="body">CI runs the suite before anything deploys, including checks against published CHIP50 reports, and generates a report of each run on the <a href="../../test-status/">test-status page</a>.</p>
+    <p class="before"><b>Before:</b> The test suite didn’t run, and deploys went out unchecked.</p>
   </div>
 </section>
-<section class="slide split aug" id="aug-data" aria-label="Every wave, from the raw files">
+<section class="slide split aug" id="aug-data" aria-label="Every wave now loads from the raw files">
   <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" /><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" /><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" /></svg></div>
   <div class="text">
-    <h2>Every wave, from the raw files</h2>
+    <h2>Every wave now loads from the raw files</h2>
     <p class="body">All 47 raw wave files sit in one bucket, answers are labeled from the survey’s own codebook, and a new loader rebuilt all 722.7 million rows in a sandbox.</p>
+    <p class="before"><b>Before:</b> Import depended on a manual CSV export from someone on the team.</p>
   </div>
 </section>
 <section class="slide split aug" id="aug-plan" aria-label="A sturdier data architecture">
-  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12.99 6.74 1.93 3.44" /><path d="M19.136 12a10 10 0 0 1-14.271 0" /><path d="m21 21-2.16-3.84" /><path d="m3 21 8.02-14.26" /><circle cx="12" cy="5" r="2" /></svg></div>
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z" /><path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19" /></svg></div>
   <div class="text">
     <h2>A sturdier data architecture</h2>
-    <p class="body">With Hong and Katya, we planned the pipeline that replaces the old one, built on Katya’s cleaned data and codebook. The new loader is its first piece.</p>
+    <p class="body">With Hong and Katya, we planned the pipeline that replaces the old one, built on Katya’s cleaned data and codebook. The new loader and the Wave 38 work are the first big steps.</p>
+    <p class="before"><b>Before:</b> Labels and question wording were typed into the code by hand, one variable at a time.</p>
   </div>
 </section>
-<section class="slide split sep" id="sep-servers" aria-label="One codebase, three servers">
+<section class="slide split sep" id="sep-servers" aria-label="One codebase, as many servers as we need">
   <div class="panel">
   <div class="servers">
     <div class="server">
@@ -335,11 +358,16 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
       <h3>sentinel</h3>
       <p>sentinel.techandsociety.ai</p>
     </div>
+    <div class="server future">
+      <h3>next</h3>
+      <p>specialized servers, a paid tier</p>
+    </div>
   </div>
   </div>
   <div class="text">
-    <h2>One codebase, three servers</h2>
-    <p class="body">The same code runs the full panel, the Wave 38.6 AI survey and the sentinel data, each at its own address. CI checks the AI survey against 200 tables from Lazer’s own tabulation.</p>
+    <h2>One codebase, as many servers as we need</h2>
+    <p class="body">Each server is a profile with its own data, roster and address: today the full panel, the Wave 38.6 AI survey and sentinel. A new server is a profile, not a fork, which opens the door to specialized servers, a paid tier and more.</p>
+    <p class="before"><b>Before:</b> The AI survey ran on a separate fork of the code.</p>
   </div>
 </section>
 <section class="slide split sep" id="sep-chat" aria-label="Ask from a browser">
@@ -347,6 +375,7 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
   <div class="text">
     <h2>Ask from a browser</h2>
     <p class="body"><a href="https://chat.techandsociety.ai/">chat.techandsociety.ai</a>, rebuilt on the project’s own cloud account, lets people on the roster ask the AI survey questions without setting up Claude.</p>
+    <p class="before"><b>Before:</b> The old chat ran in a cloud project we couldn’t administer, and its users couldn’t run the survey tools.</p>
   </div>
 </section>
 <section class="slide split sep" id="sep-polish" aria-label="Production polish">
@@ -354,6 +383,7 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
   <div class="text">
     <h2>Production polish</h2>
     <p class="body">Each server has its own roster that admins edit without a redeploy, every tool call is logged with who made it, and a long list of bugs from Lazer and others is fixed.</p>
+    <p class="before"><b>Before:</b> Any Google account could get in, and nothing recorded who ran what.</p>
   </div>
 </section>
 <section class="slide split sep" id="sep-expertise" aria-label="Survey expertise, built in">
@@ -361,13 +391,7 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
   <div class="text">
     <h2>Survey expertise, built in</h2>
     <p class="body">The server tells the model how to read the data: which codes aren’t points on a scale, which wave asked a question, which cells are suppressed. Every answer names its source, and a QA tool traces a report’s numbers back to the calls that made them.</p>
-  </div>
-</section>
-<section class="slide split oct" id="oct-data" aria-label="More data, more ways in">
-  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg></div>
-  <div class="text">
-    <h2>More data, more ways in</h2>
-    <p class="body">151 Wave 38 questions that were loaded but never served are now available, sentinel data refreshes itself every eight hours, and ChatGPT can connect as well as Claude.</p>
+    <p class="before"><b>Before:</b> The tools returned bare numbers, and the model had to guess what they meant.</p>
   </div>
 </section>
 <section class="slide split oct" id="oct-ready" aria-label="Built to keep running">
@@ -375,6 +399,7 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
   <div class="text">
     <h2>Built to keep running</h2>
     <p class="body">A <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md">maintenance guide</a> with runbooks lets someone new run it, alerts email when a scheduled job fails, and retiring the old addresses cut Cloud Run costs.</p>
+    <p class="before"><b>Before:</b> How it all ran lived in two people’s heads, and nobody heard when a scheduled job failed.</p>
   </div>
 </section>
 <section class="slide dark next" id="next" aria-label="Next phase">
