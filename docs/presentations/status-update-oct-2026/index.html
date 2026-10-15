@@ -170,6 +170,7 @@ h2 { font: 500 80px/1.1 var(--serif); }
 .before { font-size: 30px; line-height: 1.45; color: var(--muted); padding-top: 32px;
           border-top: 2px solid rgba(10, 23, 41, 0.12); }
 .before b { color: var(--navy); font-weight: 600; }
+.pull { font: 500 40px/1.35 var(--serif); color: var(--navy); }
 .refs { font-size: 26px; color: var(--muted); }
 .refs a { color: inherit; }
 
@@ -307,7 +308,7 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
     <div class="month sep">
       <div><p class="when">September</p><h3>The AI profile and production polish</h3></div>
       <div class="what">
-        <p>One codebase now runs several servers, including the Wave 38.6 AI survey, and chat.techandsociety.ai puts it in a browser. We tightened access, logged every tool call and fixed a long list of bugs. Most important, we started building survey expertise into the MCP: how to read each scale, what each answer leaves out, and where a report’s numbers came from.</p>
+        <p>One codebase now runs several servers, including the Wave 38.6 AI survey, and chat.techandsociety.ai puts it in a browser. We tightened access and logged every tool call. Most important, we started building survey expertise into the MCP: how to read each scale, what each answer leaves out, and where a report’s numbers came from.</p>
         <p class="why">That expertise is what lets people outside the team use the MCP without one of us in the room.</p>
       </div>
     </div>
@@ -340,7 +341,7 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
   <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z" /><path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19" /></svg></div>
   <div class="text">
     <h2>A sturdier data architecture</h2>
-    <p class="body">With Hong and Katya, we planned the pipeline that replaces the old one, built on Katya’s cleaned data and codebook. The new loader and the Wave 38 work are the first big steps.</p>
+    <p class="body">With Hong and Katya, we planned the pipeline that replaces the old one, built on Katya’s cleaned data and codebook. The new loader and the Wave 38 work are the first big steps. Along the way we fixed data bugs Lazer and others found: wrong labels and wording, 151 Wave 38 questions never served, and the wrong weight on political and state questions.</p>
     <p class="before"><b>Before:</b> Labels and question wording were typed into the code by hand, one variable at a time.</p>
   </div>
 </section>
@@ -379,28 +380,21 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
     <p class="before"><b>Before:</b> The old chat ran in a cloud project we couldn’t administer, and everyone ran the survey tools under one shared Google account.</p>
   </div>
 </section>
-<section class="slide split sep" id="sep-polish" aria-label="Production polish">
-  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg></div>
-  <div class="text">
-    <h2>Production polish</h2>
-    <p class="body">Each server has its own roster that admins edit without a redeploy, every tool call is logged with who made it, and a long list of bugs from Lazer and others is fixed.</p>
-    <p class="before"><b>Before:</b> Any Google account could get in, and nothing recorded who ran what.</p>
-  </div>
-</section>
-<section class="slide split sep" id="sep-expertise" aria-label="Survey expertise, built in">
+<section class="slide split sep" id="sep-expertise" aria-label="Survey expertise">
   <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" /><path d="M22 10v6" /><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" /></svg></div>
   <div class="text">
-    <h2>Survey expertise, built in</h2>
-    <p class="body">The server tells the model how to read the data: which codes aren’t points on a scale, which wave asked a question, which cells are suppressed. Every answer names its source, and a QA tool traces a report’s numbers back to the calls that made them.</p>
+    <h2>Survey expertise</h2>
+    <p class="body">The server now tells the model how to read the data, which heads off mistakes we saw models make: averaging “Not sure” into a scale, borrowing a same-named question from another wave, reading a suppressed cell as zero.</p>
+    <p class="pull">There’s a lot more to do, and it’s what could make the MCP great: a tool that teaches people how to read a survey, not one that just hands them numbers.</p>
     <p class="before"><b>Before:</b> The tools returned bare numbers, and the model had to guess what they meant.</p>
   </div>
 </section>
-<section class="slide split oct" id="oct-ready" aria-label="Built to keep running">
-  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m4.93 4.93 4.24 4.24" /><path d="m14.83 9.17 4.24-4.24" /><path d="m14.83 14.83 4.24 4.24" /><path d="m9.17 14.83-4.24 4.24" /><circle cx="12" cy="12" r="4" /></svg></div>
+<section class="slide split oct" id="oct-ready" aria-label="Ready for early access">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg></div>
   <div class="text">
-    <h2>Built to keep running</h2>
-    <p class="body">A <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md">maintenance guide</a> with runbooks lets someone new run it, alerts email when a scheduled job fails, and retiring the old addresses cut Cloud Run costs.</p>
-    <p class="before"><b>Before:</b> How it all ran lived in two people’s heads, and nobody heard when a scheduled job failed.</p>
+    <h2>Ready for early access</h2>
+    <p class="body">Each server has its own roster that admins edit without a redeploy, and every tool call is logged with who made it. A <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md">maintenance guide</a> with runbooks lets someone new run it, alerts email when a scheduled job fails, and retiring the old addresses cut Cloud Run costs.</p>
+    <p class="before"><b>Before:</b> Any Google account could get in, nothing recorded who ran what, and how it all ran lived in two people’s heads.</p>
   </div>
 </section>
 <section class="slide dark next" id="next" aria-label="Next phase">
