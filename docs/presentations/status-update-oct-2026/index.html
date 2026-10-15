@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<!--
+  CHIP50 MCP status update, October 2026: a slide deck in one file.
+
+  Each <section class="slide"> is one slide on a 1920x1080 canvas that the
+  script at the bottom scales to the window. Arrow keys, space or a swipe
+  move between slides; #N in the URL opens slide N; printing to PDF gives one
+  page per slide. Images are in img/. Icons are inline SVG from Lucide
+  (lucide.dev, ISC license). The password gate is copied from ../../index.html,
+  so the same password works on both.
+-->
+<script>
+(function(){
+  const HASH='808488bd49a9971556eefb6aeafde6f5b3f5434205fa3670b72362dafc6aee43';
+  if(sessionStorage.getItem('ts_auth')===HASH)return;
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.style.overflow='hidden';
+    var g=document.createElement('div');
+    g.id='ts-gate';
+    g.innerHTML=`
+<div id="ts-gate-box">
+  <div id="ts-gate-brand">
+    <svg width="28" height="28" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="5" cy="5" r="2.2" fill="#2DC4B6"/>
+      <circle cx="25" cy="8" r="1.6" fill="#EDAA1B"/>
+      <circle cx="15" cy="25" r="2" fill="#2DC4B6"/>
+      <circle cx="23" cy="21" r="1.3" fill="#BF4E2C"/>
+      <line x1="5" y1="5" x2="25" y2="8" stroke="#2DC4B6" stroke-width="0.7" stroke-opacity="0.5"/>
+      <line x1="25" y1="8" x2="23" y2="21" stroke="#192E4A" stroke-width="0.7"/>
+      <line x1="23" y1="21" x2="15" y2="25" stroke="#2DC4B6" stroke-width="0.7" stroke-opacity="0.5"/>
+      <line x1="5" y1="5" x2="15" y2="25" stroke="#192E4A" stroke-width="0.5" stroke-dasharray="2,2"/>
+    </svg>
+    <div>
+      <div id="ts-gate-l1">Tech &amp;</div>
+      <div id="ts-gate-l2">Society</div>
+    </div>
+  </div>
+  <p id="ts-gate-sub">Enter password to continue</p>
+  <input id="ts-gate-input" type="password" placeholder="Password" autocomplete="current-password">
+  <button id="ts-gate-btn">Continue</button>
+  <div id="ts-gate-err"></div>
+</div>`;
+    document.body.prepend(g);
+    function attempt(){
+      var val=document.getElementById('ts-gate-input').value;
+      crypto.subtle.digest('SHA-256',new TextEncoder().encode(val)).then(function(buf){
+        var hex=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+        if(hex===HASH){
+          sessionStorage.setItem('ts_auth',HASH);
+          document.getElementById('ts-gate').remove();
+          document.body.style.overflow='';
+        }else{
+          var e=document.getElementById('ts-gate-err');
+          e.textContent='Incorrect password.';
+          document.getElementById('ts-gate-input').value='';
+          document.getElementById('ts-gate-input').focus();
+        }
+      });
+    }
+    document.getElementById('ts-gate-btn').addEventListener('click',attempt);
+    document.getElementById('ts-gate-input').addEventListener('keydown',function(e){if(e.key==='Enter')attempt();});
+    setTimeout(function(){document.getElementById('ts-gate-input').focus();},60);
+  });
+})();
+</script>
+<style>
+#ts-gate{
+  position:fixed;inset:0;z-index:9999;
+  background:#091525;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Inter',system-ui,sans-serif;
+}
+#ts-gate-box{
+  width:100%;max-width:340px;
+  padding:44px 44px 40px;
+  background:#0C1D35;
+  border:1px solid #192E4A;
+  border-top:2px solid #2DC4B6;
+  text-align:center;
+}
+#ts-gate-brand{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  margin-bottom:28px;
+}
+#ts-gate-l1{
+  font-family:'Inter Tight',system-ui,sans-serif;
+  font-size:13px;font-weight:500;
+  letter-spacing:0.24em;text-transform:uppercase;
+  color:#8CA0B8;text-align:left;
+}
+#ts-gate-l2{
+  font-family:'Inter Tight',system-ui,sans-serif;
+  font-size:14px;font-weight:700;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:#2DC4B6;text-align:left;
+}
+#ts-gate-sub{
+  font-size:14.5px;color:#8CA0B8;
+  margin-bottom:22px;letter-spacing:0.01em;
+}
+#ts-gate-input{
+  width:100%;padding:10px 14px;
+  background:#091525;
+  border:1px solid #192E4A;
+  color:#EDE8D9;
+  font-family:inherit;font-size:16px;
+  outline:none;
+  margin-bottom:10px;
+  transition:border-color 0.15s;
+}
+#ts-gate-input:focus{border-color:#2DC4B6;}
+#ts-gate-input::placeholder{color:#4A607A;}
+#ts-gate-btn{
+  width:100%;padding:10px;
+  background:transparent;
+  border:1px solid #1A7A73;
+  color:#2DC4B6;
+  font-family:'Inter Tight',system-ui,sans-serif;
+  font-size:13.5px;font-weight:600;
+  letter-spacing:0.12em;text-transform:uppercase;
+  cursor:pointer;
+  transition:all 0.18s;
+}
+#ts-gate-btn:hover{background:rgba(45,196,182,0.1);border-color:#2DC4B6;}
+#ts-gate-err{
+  margin-top:10px;font-size:13.5px;
+  color:#BF4E2C;min-height:18px;
+  letter-spacing:0.02em;
+}
+</style>
+<title>CHIP50 MCP status update, October 2026</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=Lora:wght@500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0A1729; --navy-2: #13233D; --cream: #F0E9D8; --paper: #FBF7EE;
+  --teal: #2BBCC4; --teal-ink: #13666C; --amber: #FFB84D; --coral: #E07856; --blue: #85B7EB;
+  --ink: #33415A; --muted: #5A6678; --mist: #BFD0DC;
+  --serif: 'Lora', Georgia, serif;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #050C17; font-family: var(--sans); }
+h1, h2, h3, p, ul { margin: 0; }
+a { color: var(--teal-ink); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.dark a { color: var(--teal); }
+
+/* A fixed 1920x1080 canvas, scaled to fit the window by the script below. */
+.deck { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px;
+        transform: translate(-50%, -50%) scale(var(--scale, 0.5)); }
+.slide { position: absolute; inset: 0; padding: 128px; overflow: hidden; visibility: hidden;
+         background: var(--cream); color: var(--navy); }
+.slide.on { visibility: visible; }
+.slide.dark { background: var(--navy); color: var(--cream); }
+
+.eyebrow { font: 600 28px/1.2 var(--sans); letter-spacing: 2px; text-transform: uppercase; color: var(--teal-ink); }
+.dark .eyebrow { color: var(--teal); letter-spacing: 3px; }
+h1 { font: 500 140px/1.05 var(--serif); }
+h2 { font: 500 80px/1.1 var(--serif); }
+.lede { font-size: 40px; line-height: 1.4; color: var(--mist); }
+.lede.small { font-size: 28px; line-height: 1.45; }
+.body { font-size: 36px; line-height: 1.45; color: var(--ink); }
+.refs { font-size: 26px; color: var(--muted); }
+.refs a { color: inherit; }
+
+.jul { --accent: var(--teal); } .aug { --accent: var(--amber); }
+.sep { --accent: var(--coral); } .oct { --accent: var(--blue); }
+
+.cover { display: flex; flex-direction: column; justify-content: flex-end; }
+.cover .constellation { position: absolute; left: 1072px; top: 128px; width: 720px; height: 720px; }
+.cover-text { width: 900px; display: flex; flex-direction: column; gap: 32px; }
+
+.split { display: grid; grid-template-columns: 640px 1fr; gap: 96px; align-items: center; }
+.panel { height: 824px; border-radius: 24px; background: var(--navy); overflow: hidden;
+         display: flex; align-items: center; justify-content: center; color: var(--accent); }
+.panel > svg { width: 320px; height: 320px; }
+.panel > img { width: 100%; height: 100%; object-fit: cover; object-position: left top; }
+.text { display: flex; flex-direction: column; gap: 36px; }
+
+.servers { width: 100%; padding: 56px; display: flex; flex-direction: column; gap: 32px; }
+.server { background: var(--navy-2); border-left: 8px solid var(--accent); border-radius: 12px;
+          padding: 28px 32px; display: flex; flex-direction: column; gap: 8px; }
+.server h3 { font: 600 44px/1.2 var(--sans); color: var(--cream); }
+.server p { font-size: 26px; color: var(--mist); }
+
+.docs { display: flex; flex-direction: column; gap: 48px; }
+.docs .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+.docs .cols > div { display: flex; flex-direction: column; gap: 20px; }
+.docs ul { padding-left: 1.1em; font-size: 28px; line-height: 1.55; color: var(--ink); }
+
+.timeline, .next { display: flex; flex-direction: column; gap: 64px; }
+.timeline { justify-content: space-between; }
+.cards { display: grid; grid-template-columns: repeat(var(--n, 4), 1fr); gap: 32px; }
+.next .cards { --n: 3; }
+.card { background: var(--paper); border-top: 10px solid var(--accent); border-radius: 16px; padding: 40px;
+        display: flex; flex-direction: column; gap: 20px; }
+.card h3 { font: 500 44px/1.15 var(--serif); }
+.card p:not(.eyebrow) { font-size: 28px; line-height: 1.45; color: var(--ink); }
+.dark .card { background: var(--navy-2); }
+.dark .card p:not(.eyebrow) { color: var(--mist); }
+.next h2 { font-size: 96px; }
+.spacer { flex: 1; }
+
+nav { position: fixed; right: 16px; bottom: 12px; display: flex; gap: 8px; align-items: center;
+      font: 500 14px var(--sans); color: #8CA0B8; }
+nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
+             border: 1px solid #192E4A; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+
+@page { size: 1920px 1080px; margin: 0; }
+@media print {
+  html, body { height: auto; overflow: visible; background: none; }
+  .deck { position: static; transform: none; height: auto; }
+  .slide { position: relative; visibility: visible; width: 1920px; height: 1080px; break-after: page; }
+  nav { display: none; }
+}
+</style>
+</head>
+<body>
+<main class="deck">
+
+<section class="slide dark cover" id="cover" aria-label="Cover">
+  <svg class="constellation" viewBox="0 0 720 720" aria-hidden="true"><g stroke="#2E4466" stroke-width="3"><line x1="360" y1="360" x2="170" y2="190"/><line x1="360" y1="360" x2="560" y2="150"/><line x1="360" y1="360" x2="610" y2="420"/><line x1="360" y1="360" x2="420" y2="610"/><line x1="360" y1="360" x2="130" y2="500"/><line x1="170" y1="190" x2="560" y2="150"/><line x1="610" y1="420" x2="420" y2="610"/><line x1="130" y1="500" x2="420" y2="610"/></g><circle cx="360" cy="360" r="30" fill="#FFB84D"/><circle cx="170" cy="190" r="16" fill="#3DD5CB"/><circle cx="560" cy="150" r="16" fill="#F0997B"/><circle cx="610" cy="420" r="16" fill="#85B7EB"/><circle cx="420" cy="610" r="16" fill="#97C459"/><circle cx="130" cy="500" r="16" fill="#AFA9EC"/></svg>
+  <div class="cover-text">
+    <p class="eyebrow">CHIP50 MCP · Status update, October 2026</p>
+    <h1>July to October</h1>
+    <p class="lede">What we built, cleaned up and wrote down</p>
+  </div>
+</section>
+<section class="slide docs" id="docs" aria-label="Docs and runbooks">
+  <h2>Docs and runbooks</h2>
+  <div class="cols">
+    <div>
+      <h3 class="eyebrow">Guides</h3>
+      <ul>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md"><b>MAINTENANCE</b></a>: start here; how everything runs</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/CONNECTING.md">CONNECTING</a>: add a server to Claude or ChatGPT</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/USER_MANAGEMENT.md">USER_MANAGEMENT</a>: who gets access</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/PROFILES.md">PROFILES</a>: one image, three servers</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/NEW_DATA_PLAYBOOK.md">NEW_DATA_PLAYBOOK</a>: loading a wave</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/SENTINEL_USER_GUIDE.md">SENTINEL_USER_GUIDE</a>: the sentinel server</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/SETUP.md">SETUP</a>: running the code locally</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/AGENTS.md">AGENTS</a>: rules for coding agents</li>
+        <li><a href="https://github.com/techandsociety-ai/chat#readme">chat README</a>: chat.techandsociety.ai</li>
+        <li><a href="../../test-status/">test-status</a>: live test results</li>
+      </ul>
+    </div>
+    <div>
+      <h3 class="eyebrow">Runbooks, in MAINTENANCE</h3>
+      <ul>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#1-the-map">The map</a>: what runs where</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#4-deploys">Deploys</a> and checking what’s live</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#add-a-user">Add a user</a> · <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#remove-a-user">Remove a user</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#someone-says-they-cant-get-in">Someone says they can’t get in</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#roll-back-a-deploy">Roll back a deploy</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#alerts">Alerts</a>: who gets the emails</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#add-a-wave">Add a wave</a> · <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#add-a-profile--deployment">Add a server</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#6-chattechandsocietyai-librechat">The hosted chat</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#11-backups-and-restore">Backups and restore</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#12-credentials-inventory">Credentials</a> · <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#13-loose-ends">Loose ends</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="refs">GitHub links need access to the techandsociety-ai organization.</p>
+</section>
+<section class="slide timeline" id="timeline" aria-label="Four months, four milestones">
+  <h2>Four months, four milestones</h2>
+  <div class="cards">
+    <div class="card jul">
+      <p class="eyebrow">July</p>
+      <h3>Tests and CI</h3>
+      <p>Failing tests for known bugs, CI before every deploy, checks against published reports.</p>
+    </div>
+    <div class="card aug">
+      <p class="eyebrow">August</p>
+      <h3>Data cleanup</h3>
+      <p>Raw files in one bucket, codebook labels, a clean loader, access by allowlist.</p>
+    </div>
+    <div class="card sep">
+      <p class="eyebrow">September</p>
+      <h3>The AI profile</h3>
+      <p>Three servers from one codebase, the AI survey server and a hosted chat.</p>
+    </div>
+    <div class="card oct">
+      <p class="eyebrow">October</p>
+      <h3>Ready to hand off</h3>
+      <p>Wave 38 complete, sentinel on a schedule, ChatGPT, a maintenance guide and alerts.</p>
+    </div>
+  </div>
+  <p class="refs">As of Oct. 15: 126 pull requests merged on mcp-server since July 17, and 73 issues closed.</p>
+</section>
+<section class="slide split jul" id="jul-tests" aria-label="Tests run before every deploy">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">July · Tests and CI</p>
+    <h2>Tests run before every deploy</h2>
+    <p class="body">We made the test harness runnable, wrote a failing test for each known bug, and made CI run the suite before anything deploys.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/issues/25">#25</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/35">#35</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/75">#75</a></p>
+  </div>
+</section>
+<section class="slide split jul" id="jul-gold" aria-label="Checked against published reports">
+  <div class="panel"><img src="img/test-status.jpg" alt="The test-status page on Oct. 13: 2,382 checks passing, 13 expected failures, none failing"></div>
+  <div class="text">
+    <p class="eyebrow">July · Tests and CI</p>
+    <h2>Checked against published reports</h2>
+    <p class="body">A gold-standard job replays figures from published CHIP50 reports through the server and compares the numbers. Results post to the <a href="../../test-status/">test-status page</a>.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/71">#71</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/78">#78</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/94">#94</a></p>
+  </div>
+</section>
+<section class="slide split jul" id="jul-registry" aria-label="One registry for every variable">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5V19A9 3 0 0 0 21 19V5" /><path d="M3 12A9 3 0 0 0 21 12" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">July · Tests and CI</p>
+    <h2>One registry for every variable</h2>
+    <p class="body">Each column’s label, type and waves moved out of scattered dictionaries into one variable registry that the tools read.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/65">#65</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/90">#90</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/101">#101</a></p>
+  </div>
+</section>
+<section class="slide split aug" id="aug-raw" aria-label="Every raw wave file in one place">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">August · Data cleanup</p>
+    <h2>Every raw wave file in one place</h2>
+    <p class="body">All 47 raw SPSS wave files sync to a Cloud Storage bucket: the ground truth upstream of BigQuery.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/114">#114</a></p>
+  </div>
+</section>
+<section class="slide split aug" id="aug-labels" aria-label="Answer labels from the codebook">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14" /><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">August · Data cleanup</p>
+    <h2>Answer labels from the codebook</h2>
+    <p class="body">Every query path now labels answers from the survey’s own codebook, and fixes landed for the label problems David Lazer reported.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/104">#104</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/128">#128</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/134">#134</a></p>
+  </div>
+</section>
+<section class="slide split aug" id="aug-loader" aria-label="A clean loader, proven in a sandbox">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" /><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" /><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">August · Data cleanup</p>
+    <h2>A clean loader, proven in a sandbox</h2>
+    <p class="body">A new BigQuery loader took all 47 waves, 722.7 million rows, into a sandbox and checked the result against production. It hasn’t replaced production yet.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/119">#119</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/129">#129</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/131">#131</a></p>
+  </div>
+</section>
+<section class="slide split aug" id="aug-access" aria-label="Only people on the list get data">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">August · Data cleanup</p>
+    <h2>Only people on the list get data</h2>
+    <p class="body">Every tool checks the caller’s email. In September the list moved to Firestore, one per server, so admins add people without a redeploy.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/136">#136</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/160">#160</a></p>
+  </div>
+</section>
+<section class="slide split aug" id="aug-site" aria-label="A rebuilt techandsociety.ai">
+  <div class="panel"><img src="img/report.jpg" alt="The America Meets AI report on techandsociety.ai"></div>
+  <div class="text">
+    <p class="eyebrow">August · Data cleanup</p>
+    <h2>A rebuilt techandsociety.ai</h2>
+    <p class="body">The website moved to one report design system, with a section on connecting to the MCP servers.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/techandsociety-ai.github.io/pull/24">site #24</a> · <a href="https://github.com/techandsociety-ai/techandsociety-ai.github.io/pull/34">#34</a> · <a href="https://github.com/techandsociety-ai/techandsociety-ai.github.io/pull/35">#35</a></p>
+  </div>
+</section>
+<section class="slide split sep" id="sep-profiles" aria-label="One codebase, three servers">
+  <div class="panel">
+  <div class="servers">
+    <div class="server">
+      <h3>full</h3>
+      <p>mcp.techandsociety.ai</p>
+    </div>
+    <div class="server">
+      <h3>ai</h3>
+      <p>ai.techandsociety.ai</p>
+    </div>
+    <div class="server">
+      <h3>sentinel</h3>
+      <p>sentinel.techandsociety.ai</p>
+    </div>
+  </div>
+  </div>
+  <div class="text">
+    <p class="eyebrow">September · The AI profile</p>
+    <h2>One codebase, three servers</h2>
+    <p class="body">Profiles let one container image run as three servers: the full panel, the Wave 38.6 AI survey and the sentinel data, each at its own address.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/138">#138</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/157">#157</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/213">#213</a></p>
+  </div>
+</section>
+<section class="slide split sep" id="sep-ai" aria-label="The AI survey server">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">September · The AI profile</p>
+    <h2>The AI survey server</h2>
+    <p class="body">ai.techandsociety.ai serves the Wave 38.6 AI survey alone, every question registered with codebook wording. CI checks it against 200 tables from Lazer’s own tabulation.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/148">#148</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/204">#204</a>–<a href="https://github.com/techandsociety-ai/mcp-server/pull/212">#212</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/206">#206</a></p>
+  </div>
+</section>
+<section class="slide split sep" id="sep-chat" aria-label="Ask the AI survey from a browser">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">September · The AI profile</p>
+    <h2>Ask the AI survey from a browser</h2>
+    <p class="body"><a href="https://chat.techandsociety.ai/">chat.techandsociety.ai</a>, rebuilt on the project’s own cloud account, lets people on the AI survey roster ask questions without setting up Claude.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/chat/pull/5">chat #5</a></p>
+  </div>
+</section>
+<section class="slide split sep" id="sep-guardrails" aria-label="Answers say what they left out">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">September · The AI profile</p>
+    <h2>Answers say what they left out</h2>
+    <p class="body">Every result names its data source and flags suppressed cells and excluded codes. A report-QA tool traces a report’s numbers back to the calls that made them.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/150">#150</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/155">#155</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/158">#158</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/176">#176</a></p>
+  </div>
+</section>
+<section class="slide split oct" id="oct-cost" aria-label="The old addresses are retired">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18.84 12.25 1.72-1.71h-.02a5.004 5.004 0 0 0-.12-7.07 5.006 5.006 0 0 0-6.95 0l-1.72 1.71" /><path d="m5.17 11.75-1.71 1.71a5.004 5.004 0 0 0 .12 7.07 5.006 5.006 0 0 0 6.95 0l1.71-1.71" /><line x1="8" x2="8" y1="2" y2="5" /><line x1="2" x2="5" y1="8" y2="8" /><line x1="16" x2="16" y1="19" y2="22" /><line x1="19" x2="22" y1="16" y2="16" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">October · Ready to hand off</p>
+    <h2>The old addresses are retired</h2>
+    <p class="body">The run.app services shut down on Sept. 30, and the rest were right-sized and made stateless to cut Cloud Run costs.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/222">#222</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/223">#223</a></p>
+  </div>
+</section>
+<section class="slide split oct" id="oct-w38" aria-label="Wave 38, complete">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">October · Ready to hand off</p>
+    <h2>Wave 38, complete</h2>
+    <p class="body">151 Wave 38 questions that were loaded but never served are now registered, with wave-correct labels and the right weight for each question.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/228">#228</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/229">#229</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/232">#232</a></p>
+  </div>
+</section>
+<section class="slide split oct" id="oct-sentinel" aria-label="Sentinel data refreshes itself">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">October · Ready to hand off</p>
+    <h2>Sentinel data refreshes itself</h2>
+    <p class="body">A job loads kateto/SENTINEL into BigQuery every eight hours, and the sentinel server gained county and ZIP breakdowns.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/234">#234</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/256">#256</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/258">#258</a></p>
+  </div>
+</section>
+<section class="slide split oct" id="oct-chatgpt" aria-label="ChatGPT can sign in">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">October · Ready to hand off</p>
+    <h2>ChatGPT can sign in</h2>
+    <p class="body">The servers accept ChatGPT’s sign-in, and a patch to FastMCP fixes the token step that blocked it.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/251">#251</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/255">#255</a></p>
+  </div>
+</section>
+<section class="slide split oct" id="oct-handoff" aria-label="Written down for whoever’s next">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m4.93 4.93 4.24 4.24" /><path d="m14.83 9.17 4.24-4.24" /><path d="m14.83 14.83 4.24 4.24" /><path d="m9.17 14.83-4.24 4.24" /><circle cx="12" cy="12" r="4" /></svg></div>
+  <div class="text">
+    <p class="eyebrow">October · Ready to hand off</p>
+    <h2>Written down for whoever’s next</h2>
+    <p class="body">A <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md">maintenance guide</a> with runbooks, CI pinned ahead of GitHub’s runner change, and email alerts when a scheduled job fails.</p>
+    <p class="refs"><a href="https://github.com/techandsociety-ai/mcp-server/pull/218">#218</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/259">#259</a> · <a href="https://github.com/techandsociety-ai/mcp-server/pull/262">#262</a></p>
+  </div>
+</section>
+<section class="slide dark next" id="next" aria-label="Next phase">
+  <p class="eyebrow">Next phase</p>
+  <h2>Untangle server.py</h2>
+  <div class="cards">
+    <div class="card jul">
+      <h3>1 · Reorganize</h3>
+      <p><a href="https://github.com/techandsociety-ai/mcp-server/issues/52">#52</a>: split the 4,978-line server.py into modules. No behavior changes.</p>
+    </div>
+    <div class="card aug">
+      <h3>2 · Simplify</h3>
+      <p>A very careful pass to simplify and clean up what’s there.</p>
+    </div>
+    <div class="card sep">
+      <h3>3 · One pipeline</h3>
+      <p><a href="https://github.com/techandsociety-ai/mcp-server/issues/51">#51</a>: the crosstab tools share one query, suppress and label path.</p>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <p class="lede small">Also open: move chat to a project-owned Anthropic key, and the <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#13-loose-ends">loose ends in MAINTENANCE §13</a>.</p>
+</section>
+</main>
+<nav aria-label="Slides">
+  <button id="prev" aria-label="Previous slide">‹</button>
+  <span id="count"></span>
+  <button id="next-btn" aria-label="Next slide">›</button>
+</nav>
+<script>
+(function () {
+  var deck = document.querySelector('.deck');
+  var slides = Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+  var count = document.getElementById('count');
+  var i = 0;
+  function fit() {
+    deck.style.setProperty('--scale', Math.min(innerWidth / 1920, innerHeight / 1080));
+  }
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, k) { s.classList.toggle('on', k === i); });
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    history.replaceState(null, '', '#' + (i + 1));
+  }
+  function fromHash() { go((parseInt(location.hash.slice(1), 10) || 1) - 1); }
+  addEventListener('resize', fit);
+  addEventListener('hashchange', fromHash);
+  addEventListener('keydown', function (e) {
+    if (document.getElementById('ts-gate') || e.target.closest('input, button')) return;
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].indexOf(e.key) >= 0) go(i + 1);
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].indexOf(e.key) >= 0) go(i - 1);
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(slides.length - 1);
+    else return;
+    e.preventDefault();
+  });
+  document.getElementById('prev').onclick = function () { go(i - 1); };
+  document.getElementById('next-btn').onclick = function () { go(i + 1); };
+  var x0 = null;
+  addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) go(i + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+  fit();
+  fromHash();
+})();
+</script>
+</body>
+</html>
