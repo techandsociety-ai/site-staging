@@ -167,10 +167,14 @@ h2 { font: 500 80px/1.1 var(--serif); }
 .lede { font-size: 40px; line-height: 1.4; color: var(--mist); }
 .lede.small { font-size: 28px; line-height: 1.45; }
 .body { font-size: 36px; line-height: 1.45; color: var(--ink); }
-.before { font-size: 30px; line-height: 1.45; color: var(--muted); padding-top: 32px;
-          border-top: 2px solid rgba(10, 23, 41, 0.12); }
-.before b { color: var(--navy); font-weight: 600; }
-.pull { font: 500 40px/1.35 var(--serif); color: var(--navy); }
+/* July, now and next on each unit slide: a solid rule for what's done, dashed for what's ahead. */
+.stage { font-size: 29px; line-height: 1.45; color: var(--muted); padding-left: 28px;
+         border-left: 6px solid rgba(10, 23, 41, 0.14); }
+.stage b { color: var(--navy); font-weight: 600; }
+.stage.now { color: var(--ink); border-left-color: var(--accent); }
+.stage.ahead { color: var(--ink); border-left-style: dashed; border-left-color: var(--accent); }
+.stage.pull { font: 500 34px/1.35 var(--serif); color: var(--navy); }
+.stage.pull b { font-family: var(--sans); font-size: 29px; }
 .refs { font-size: 26px; color: var(--muted); }
 .refs a { color: inherit; }
 
@@ -186,9 +190,9 @@ h2 { font: 500 80px/1.1 var(--serif); }
 .panel { height: 824px; border-radius: 24px; background: var(--navy); overflow: hidden;
          display: flex; align-items: center; justify-content: center; color: var(--accent); }
 .panel > svg { width: 320px; height: 320px; }
-.split.wide { grid-template-columns: 890px 1fr; }
+.split.wide { grid-template-columns: 890px 1fr; gap: 72px; }
 .panel > img { width: 100%; height: 100%; object-fit: cover; object-position: left top; }
-.text { display: flex; flex-direction: column; gap: 36px; }
+.text { display: flex; flex-direction: column; gap: 32px; }
 
 .servers { width: 100%; padding: 56px; display: flex; flex-direction: column; gap: 32px; }
 .server { background: var(--navy-2); border-left: 8px solid var(--accent); border-radius: 12px;
@@ -212,15 +216,19 @@ h2 { font: 500 80px/1.1 var(--serif); }
 .month { display: grid; grid-template-columns: 420px 1fr; gap: 48px; background: var(--paper);
          border-left: 10px solid var(--accent); border-radius: 12px; padding: 18px 40px; }
 .month .when { font: 600 24px/1.3 var(--sans); color: var(--muted); margin-bottom: 4px; }
-.month h3 { font: 500 38px/1.15 var(--serif); }
-.month .what { display: flex; flex-direction: column; gap: 10px; }
-.month .what p { font-size: 24px; line-height: 1.45; color: var(--ink); }
-.month .what .why { color: var(--navy); font-weight: 500; }
+.month h3 { font: 500 40px/1.15 var(--serif); }
+.month > p { font-size: 28px; line-height: 1.45; color: var(--ink); align-self: center; }
 .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
 .card { border-top: 10px solid var(--accent); border-radius: 16px; padding: 36px 40px;
         display: flex; flex-direction: column; gap: 16px; background: var(--navy-2); }
 .card h3 { font: 500 48px/1.15 var(--serif); }
 .card p { font-size: 30px; line-height: 1.45; color: var(--mist); }
+.cards.three { grid-template-columns: repeat(3, 1fr); }
+.work { display: flex; flex-direction: column; gap: 64px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.stat { background: var(--paper); border-top: 10px solid var(--accent); border-radius: 16px; padding: 32px 40px 40px; }
+.stat .n { font: 500 96px/1.1 var(--serif); color: var(--navy); }
+.stat p:not(.n) { font-size: 30px; line-height: 1.35; color: var(--ink); margin-top: 12px; }
 .next h2 { font-size: 96px; }
 .spacer { flex: 1; }
 
@@ -248,6 +256,122 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
     <p class="lede">What we built, fixed, and documented during Q3 2026</p>
     <p class="byline">October 2026, prepared by David Eads</p>
   </div>
+</section>
+<section class="slide timeline" id="story" aria-label="From prototype to early access">
+  <div class="title-row">
+    <h2>From prototype to early access</h2>
+    <p class="refs">Each step set up the next.</p>
+  </div>
+  <div class="months">
+    <div class="month jul">
+      <div><p class="when">Late July</p><h3>Know when it’s wrong</h3></div>
+      <p>Tests now run before every deploy, including checks against published CHIP50 reports. Those checks turned up problems in the data itself.</p>
+    </div>
+    <div class="month aug">
+      <div><p class="when">August</p><h3>Fix the data underneath</h3></div>
+      <p>So we went back to the raw survey files and, with Hong and Katya, planned a sturdier pipeline. With numbers we could check, we could open the MCP to more people.</p>
+    </div>
+    <div class="month sep">
+      <div><p class="when">September</p><h3>Open more doors</h3></div>
+      <p>One codebase now runs a server for each audience, plus a chat in the browser. Wider use showed how easily a model misreads a survey.</p>
+    </div>
+    <div class="month sep">
+      <div><p class="when">September</p><h3>Teach it to read a survey</h3></div>
+      <p>So the server now tells the model how to read the data. It’s a start on what could make the MCP great.</p>
+    </div>
+    <div class="month oct">
+      <div><p class="when">Early October</p><h3>Keep it running</h3></div>
+      <p>Rosters, logging, alerts and a maintenance guide make it ready for early-access users, and for someone new to run.</p>
+    </div>
+  </div>
+</section>
+<section class="slide split jul" id="tests" aria-label="Every deploy is tested first">
+  <div class="panel"><img src="img/test-status.jpg" alt="The test-status page on Oct. 13: 2,382 checks passing, 13 expected failures, none failing"></div>
+  <div class="text">
+    <h2>Every deploy is tested first</h2>
+    <p class="stage was"><b>In July:</b> The test suite didn’t run, and deploys went out unchecked.</p>
+    <p class="stage now"><b>Now:</b> CI runs 2,382 checks before anything deploys, including checks against published CHIP50 reports, and posts the results of every run on the <a href="../../test-status/">test-status page</a>.</p>
+    <p class="stage ahead"><b>Next:</b> Fix the 13 known problems the tests still flag, and check the live servers after each deploy, not just the code before it.</p>
+  </div>
+</section>
+<section class="slide split aug" id="data" aria-label="Rebuilding the data">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z" /><path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19" /></svg></div>
+  <div class="text">
+    <h2>Rebuilding the data</h2>
+    <p class="stage was"><b>In July:</b> Import depended on a manual CSV export from someone on the team, labels and wording were typed into the code by hand, and 11 of the 47 waves weren’t in the database at all.</p>
+    <p class="stage now"><b>Now:</b> All 47 raw wave files sit in one bucket, and a new loader rebuilt every wave in a sandbox, labeled from the survey’s own codebook. We planned the replacement pipeline with Hong and Katya, and fixed the data bugs Lazer and others found, from wrong labels and wording to the wrong weight on political and state questions.</p>
+    <p class="stage ahead"><b>Next:</b> Load Katya’s next cleaned release, with its new weights, through the new pipeline, and move production onto it.</p>
+  </div>
+</section>
+<section class="slide split sep" id="servers" aria-label="One codebase, as many servers as we need">
+  <div class="panel">
+  <div class="servers">
+    <div class="server">
+      <h3>full</h3>
+      <p>mcp.techandsociety.ai</p>
+    </div>
+    <div class="server">
+      <h3>ai</h3>
+      <p>ai.techandsociety.ai</p>
+    </div>
+    <div class="server">
+      <h3>sentinel</h3>
+      <p>sentinel.techandsociety.ai</p>
+    </div>
+    <div class="server future">
+      <h3>next</h3>
+      <p>specialized servers, a paid tier</p>
+    </div>
+  </div>
+  </div>
+  <div class="text">
+    <h2>One codebase, as many servers as we need</h2>
+    <p class="stage was"><b>In July:</b> The AI survey ran on a separate fork of the code.</p>
+    <p class="stage now"><b>Now:</b> Each server is a profile with its own data, roster and address: today the full panel, the Wave 38.6 AI survey and sentinel. A new server is a profile, not a fork.</p>
+    <p class="stage ahead"><b>Next:</b> Specialized servers for particular topics or partners, a paid tier, and more, each one a new profile.</p>
+  </div>
+</section>
+<section class="slide split wide sep" id="chat" aria-label="Ask from a browser">
+  <div class="panel"><img src="img/chat.jpg" alt="A chat.techandsociety.ai conversation comparing AI use by managers and other workers in the Wave 38.6 survey"></div>
+  <div class="text">
+    <h2>Ask from a browser</h2>
+    <p class="stage was"><b>In July:</b> The old chat ran in a cloud project we couldn’t administer, and everyone used one shared Google account.</p>
+    <p class="stage now"><b>Now:</b> <a href="https://chat.techandsociety.ai/">chat.techandsociety.ai</a> runs on the project’s own cloud account, and people on the roster sign in as themselves to ask the AI survey questions, no Claude setup needed.</p>
+    <p class="stage ahead"><b>Next:</b> Add the full panel alongside the AI survey, and give each person a spending allowance that fits real use.</p>
+  </div>
+</section>
+<section class="slide split sep" id="expertise" aria-label="Survey expertise">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" /><path d="M22 10v6" /><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" /></svg></div>
+  <div class="text">
+    <h2>Survey expertise</h2>
+    <p class="stage was"><b>In July:</b> The tools returned bare numbers, and the model had to guess what they meant.</p>
+    <p class="stage now"><b>Now:</b> The server tells the model how to read the data, which heads off mistakes we saw models make: averaging “Not sure” into a scale, borrowing a same-named question from another wave, reading a suppressed cell as zero.</p>
+    <p class="stage ahead pull"><b>Next:</b> There’s a lot more to do, and it’s what could make the MCP great: a tool that teaches people how to read a survey, not one that just hands them numbers.</p>
+  </div>
+</section>
+<section class="slide split oct" id="ops" aria-label="Ready for early access">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg></div>
+  <div class="text">
+    <h2>Ready for early access</h2>
+    <p class="stage was"><b>In July:</b> Any Google account could get in, nothing recorded who ran what, and how it all ran lived in two people’s heads.</p>
+    <p class="stage now"><b>Now:</b> Each server has its own roster that admins edit without a redeploy, and every tool call is logged with who made it. A <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md">maintenance guide</a> with runbooks lets someone new run it, alerts email when a scheduled job fails, and retiring the old addresses cut Cloud Run costs.</p>
+    <p class="stage ahead"><b>Next:</b> A staging server, so changes are tried before users see them, and a usage history that outlasts the 30 days the logs keep now.</p>
+  </div>
+</section>
+<section class="slide work" id="work" aria-label="The work behind it">
+  <h2>The work behind it</h2>
+  <div class="stats">
+    <div class="stat jul"><p class="n">126</p><p>pull requests merged</p></div>
+    <div class="stat aug"><p class="n">73</p><p>issues closed</p></div>
+    <div class="stat sep"><p class="n">31</p><p>bugs fixed</p></div>
+    <div class="stat oct"><p class="n">2,382</p><p>checks before every deploy</p></div>
+    <div class="stat aug"><p class="n">47</p><p>waves rebuilt from the raw files, in a sandbox</p></div>
+    <div class="stat sep"><p class="n">3</p><p>servers from one codebase, plus a chat</p></div>
+    <div class="stat aug"><p class="n">151</p><p>Wave 38 questions now served</p></div>
+    <div class="stat oct"><p class="n">8</p><p>runbooks in the maintenance guide</p></div>
+  </div>
+  <div class="spacer"></div>
+  <p class="refs">On mcp-server, July 17 to Oct. 15. Bugs fixed counts the closed issues that reported a bug.</p>
 </section>
 <section class="slide docs" id="docs" aria-label="Docs and runbooks">
   <h2>Docs and runbooks</h2>
@@ -285,136 +409,42 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
   </div>
   <p class="refs">GitHub links need access to the private mcp-server and chat repos.</p>
 </section>
-<section class="slide timeline" id="timeline" aria-label="Monthly milestones">
-  <div class="title-row">
-    <h2>Monthly milestones</h2>
-    <p class="refs">126 pull requests merged and 73 issues closed<br>on mcp-server, July 17 to Oct. 15</p>
-  </div>
+<section class="slide timeline roadmap" id="roadmap" aria-label="The roadmap I’d recommend">
+  <h2>The roadmap I’d recommend</h2>
   <div class="months">
     <div class="month jul">
-      <div><p class="when">Late July</p><h3>Tests and CI</h3></div>
-      <div class="what">
-        <p>CI runs the full test suite before every deploy, including checks against published CHIP50 reports, and publishes a report of every run at <a href="../../test-status/">techandsociety.ai/test-status</a>.</p>
-        <p class="why">We can change the code with confidence, and anyone can see what’s known to be broken.</p>
-      </div>
+      <div><p class="when">First, starting now</p><h3>Split server.py</h3></div>
+      <p>Break the 10,200-line file into modules, about 20 hours with careful review. Nothing waits on it, and it’s the biggest obstacle to anyone else working on the code.</p>
     </div>
     <div class="month aug">
-      <div><p class="when">August</p><h3>Data cleanup</h3></div>
-      <div class="what">
-        <p>All 47 raw wave files went into one bucket, answers got their labels from the survey codebook, and a new loader rebuilt every wave in a sandbox. With Hong and Katya, we planned a sturdier data architecture to replace the old pipeline.</p>
-        <p class="why">So every number can eventually trace back to the raw survey files.</p>
-      </div>
+      <div><p class="when">Right after</p><h3>One query path</h3></div>
+      <p>Send every table tool through one path for queries, suppression and labels, so a fix lands everywhere at once instead of tool by tool.</p>
     </div>
     <div class="month sep">
-      <div><p class="when">September</p><h3>The AI profile and production polish</h3></div>
-      <div class="what">
-        <p>One codebase now runs several servers, including the Wave 38.6 AI survey, and chat.techandsociety.ai puts it in a browser. We tightened access and logged every tool call. Most important, we started building survey expertise into the MCP: how to read each scale, what each answer leaves out, and where a report’s numbers came from.</p>
-        <p class="why">That expertise is what lets people outside the team use the MCP without one of us in the room.</p>
-      </div>
+      <div><p class="when">When Katya’s next release lands</p><h3>Move production to the new pipeline</h3></div>
+      <p>Load her re-cleaned data and new weights once, so every number traces back to the raw survey files.</p>
     </div>
     <div class="month oct">
-      <div><p class="when">Early October</p><h3>Ready for early access</h3></div>
-      <div class="what">
-        <p>Wave 38 is complete, sentinel data refreshes itself, ChatGPT can connect, and a maintenance guide and alerts mean someone new can keep it running.</p>
-        <p class="why">It’s stable and documented enough for early-access users, and for a change of hands.</p>
-      </div>
+      <div><p class="when">Throughout</p><h3>More survey expertise</h3></div>
+      <p>Build in what users and reports get wrong. It takes the least engineering and could matter most.</p>
     </div>
   </div>
 </section>
-<section class="slide split jul" id="jul-tests" aria-label="Every deploy is tested first">
-  <div class="panel"><img src="img/test-status.jpg" alt="The test-status page on Oct. 13: 2,382 checks passing, 13 expected failures, none failing"></div>
-  <div class="text">
-    <h2>Every deploy is tested first</h2>
-    <p class="body">CI runs the suite before anything deploys, including checks against published CHIP50 reports, and generates a report of each run on the <a href="../../test-status/">test-status page</a>.</p>
-    <p class="before"><b>Before:</b> The test suite didn’t run, and deploys went out unchecked.</p>
-  </div>
-</section>
-<section class="slide split aug" id="aug-data" aria-label="Every wave now loads from the raw files">
-  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z" /><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" /><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" /></svg></div>
-  <div class="text">
-    <h2>Every wave now loads from the raw files</h2>
-    <p class="body">All 47 raw wave files sit in one bucket, answers are labeled from the survey’s own codebook, and a new loader rebuilt all 722.7 million rows in a sandbox.</p>
-    <p class="before"><b>Before:</b> Import depended on a manual CSV export from someone on the team.</p>
-  </div>
-</section>
-<section class="slide split aug" id="aug-plan" aria-label="A sturdier data architecture">
-  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z" /><path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19" /></svg></div>
-  <div class="text">
-    <h2>A sturdier data architecture</h2>
-    <p class="body">With Hong and Katya, we planned the pipeline that replaces the old one, built on Katya’s cleaned data and codebook. The new loader and the Wave 38 work are the first big steps. Along the way we fixed data bugs Lazer and others found: wrong labels and wording, 151 Wave 38 questions never served, and the wrong weight on political and state questions.</p>
-    <p class="before"><b>Before:</b> Labels and question wording were typed into the code by hand, one variable at a time.</p>
-  </div>
-</section>
-<section class="slide split sep" id="sep-servers" aria-label="One codebase, as many servers as we need">
-  <div class="panel">
-  <div class="servers">
-    <div class="server">
-      <h3>full</h3>
-      <p>mcp.techandsociety.ai</p>
-    </div>
-    <div class="server">
-      <h3>ai</h3>
-      <p>ai.techandsociety.ai</p>
-    </div>
-    <div class="server">
-      <h3>sentinel</h3>
-      <p>sentinel.techandsociety.ai</p>
-    </div>
-    <div class="server future">
-      <h3>next</h3>
-      <p>specialized servers, a paid tier</p>
-    </div>
-  </div>
-  </div>
-  <div class="text">
-    <h2>One codebase, as many servers as we need</h2>
-    <p class="body">Each server is a profile with its own data, roster and address: today the full panel, the Wave 38.6 AI survey and sentinel. A new server is a profile, not a fork, which opens the door to specialized servers, a paid tier and more.</p>
-    <p class="before"><b>Before:</b> The AI survey ran on a separate fork of the code.</p>
-  </div>
-</section>
-<section class="slide split wide sep" id="sep-chat" aria-label="Ask from a browser">
-  <div class="panel"><img src="img/chat.jpg" alt="A chat.techandsociety.ai conversation comparing AI use by managers and other workers in the Wave 38.6 survey"></div>
-  <div class="text">
-    <h2>Ask from a browser</h2>
-    <p class="body"><a href="https://chat.techandsociety.ai/">chat.techandsociety.ai</a>, rebuilt on the project’s own cloud account, lets people on the roster, each signed in as themselves, ask the AI survey questions without setting up Claude.</p>
-    <p class="before"><b>Before:</b> The old chat ran in a cloud project we couldn’t administer, and everyone ran the survey tools under one shared Google account.</p>
-  </div>
-</section>
-<section class="slide split sep" id="sep-expertise" aria-label="Survey expertise">
-  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" /><path d="M22 10v6" /><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" /></svg></div>
-  <div class="text">
-    <h2>Survey expertise</h2>
-    <p class="body">The server now tells the model how to read the data, which heads off mistakes we saw models make: averaging “Not sure” into a scale, borrowing a same-named question from another wave, reading a suppressed cell as zero.</p>
-    <p class="pull">There’s a lot more to do, and it’s what could make the MCP great: a tool that teaches people how to read a survey, not one that just hands them numbers.</p>
-    <p class="before"><b>Before:</b> The tools returned bare numbers, and the model had to guess what they meant.</p>
-  </div>
-</section>
-<section class="slide split oct" id="oct-ready" aria-label="Ready for early access">
-  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg></div>
-  <div class="text">
-    <h2>Ready for early access</h2>
-    <p class="body">Each server has its own roster that admins edit without a redeploy, and every tool call is logged with who made it. A <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md">maintenance guide</a> with runbooks lets someone new run it, alerts email when a scheduled job fails, and retiring the old addresses cut Cloud Run costs.</p>
-    <p class="before"><b>Before:</b> Any Google account could get in, nothing recorded who ran what, and how it all ran lived in two people’s heads.</p>
-  </div>
-</section>
-<section class="slide dark next" id="next" aria-label="Next phase">
-  <h2>Next phase</h2>
-  <div class="cards">
+<section class="slide dark next" id="fit" aria-label="How does this fit?">
+  <h2>How does this fit?</h2>
+  <p class="lede">You’re also planning a road show, outside users and AI reports. How does this plan fit with those?</p>
+  <div class="cards three">
     <div class="card jul">
-      <h3>Untangle the code and the data</h3>
-      <p>Split the 4,978-line server.py into modules with one shared query path, and finish replacing the old data pipeline with one that uses Katya’s ground-truth data consistently.</p>
-    </div>
-    <div class="card sep">
-      <h3>Build in more expertise</h3>
-      <p>Put more survey know-how into the MCP, so it explains how to read the numbers, not just what they are.</p>
+      <h3>Road show and outside users</h3>
+      <p>The servers and chat are ready for early access now. More users will turn up more ways to misread the data, and they’ll need someone to answer questions.</p>
     </div>
     <div class="card aug">
-      <h3>Real-world users</h3>
-      <p>Get the servers and the chat in front of potential real-world users.</p>
+      <h3>AI reports</h3>
+      <p>Published numbers lean hardest on the data: they should trace back to the raw files and use the new weights.</p>
     </div>
-    <div class="card oct">
-      <h3>Compelling content</h3>
-      <p>Use the system to produce news stories, videos and more. A stretch goal, a little further out.</p>
+    <div class="card sep">
+      <h3>Bandwidth</h3>
+      <p>With one engineer, these go one at a time, and we’d pick the order. With more hands, the code and data work could run alongside the work with users.</p>
     </div>
   </div>
 </section>
