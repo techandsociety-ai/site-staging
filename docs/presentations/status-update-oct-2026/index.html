@@ -358,6 +358,45 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
     <p class="stage ahead"><b>Next:</b> A staging server, so changes are tried before users see them, and a usage history that outlasts the 30 days the logs keep now.</p>
   </div>
 </section>
+<section class="slide timeline roadmap" id="roadmap" aria-label="The roadmap I’d recommend">
+  <h2>The roadmap I’d recommend</h2>
+  <div class="months">
+    <div class="month jul">
+      <div><p class="when">First, starting now</p><h3>Split server.py</h3></div>
+      <p>Break the 10,200-line file into modules, about 20 hours with careful review. Nothing waits on it, and it’s the biggest obstacle to anyone else working on the code.</p>
+    </div>
+    <div class="month aug">
+      <div><p class="when">Right after</p><h3>One query path</h3></div>
+      <p>Send every table tool through one path for queries, suppression and labels, so a fix lands everywhere at once instead of tool by tool.</p>
+    </div>
+    <div class="month sep">
+      <div><p class="when">Now through year’s end</p><h3>Move production to the new pipeline</h3></div>
+      <p>Katya’s cleaned data is rolling in now and should be complete by the end of the year. We can load it through the new pipeline as it arrives, then move production onto it, so every number traces back to the raw survey files.</p>
+    </div>
+    <div class="month oct">
+      <div><p class="when">Throughout</p><h3>More survey expertise</h3></div>
+      <p>Build in what users and reports get wrong. It takes the least engineering and could matter most.</p>
+    </div>
+  </div>
+</section>
+<section class="slide dark next" id="fit" aria-label="How does this fit?">
+  <h2>How does this fit?</h2>
+  <p class="lede">You’re also planning a road show, outside users and AI reports. How does this plan fit with those?</p>
+  <div class="cards three">
+    <div class="card jul">
+      <h3>Road show and outside users</h3>
+      <p>The servers and chat are ready for early access now. More users will turn up more ways to misread the data, and they’ll need someone to answer questions.</p>
+    </div>
+    <div class="card aug">
+      <h3>AI reports</h3>
+      <p>Published numbers lean hardest on the data: they should trace back to the raw files and use the new weights.</p>
+    </div>
+    <div class="card sep">
+      <h3>Bandwidth</h3>
+      <p>With one engineer, these go one at a time, and we’d pick the order. With more hands, the code and data work could run alongside the work with users.</p>
+    </div>
+  </div>
+</section>
 <section class="slide work" id="work" aria-label="The work behind it">
   <h2>The work behind it</h2>
   <div class="stats">
@@ -408,45 +447,6 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
     </div>
   </div>
   <p class="refs">GitHub links need access to the private mcp-server and chat repos.</p>
-</section>
-<section class="slide timeline roadmap" id="roadmap" aria-label="The roadmap I’d recommend">
-  <h2>The roadmap I’d recommend</h2>
-  <div class="months">
-    <div class="month jul">
-      <div><p class="when">First, starting now</p><h3>Split server.py</h3></div>
-      <p>Break the 10,200-line file into modules, about 20 hours with careful review. Nothing waits on it, and it’s the biggest obstacle to anyone else working on the code.</p>
-    </div>
-    <div class="month aug">
-      <div><p class="when">Right after</p><h3>One query path</h3></div>
-      <p>Send every table tool through one path for queries, suppression and labels, so a fix lands everywhere at once instead of tool by tool.</p>
-    </div>
-    <div class="month sep">
-      <div><p class="when">Now through year’s end</p><h3>Move production to the new pipeline</h3></div>
-      <p>Katya’s cleaned data is rolling in now and should be complete by the end of the year. We can load it through the new pipeline as it arrives, then move production onto it, so every number traces back to the raw survey files.</p>
-    </div>
-    <div class="month oct">
-      <div><p class="when">Throughout</p><h3>More survey expertise</h3></div>
-      <p>Build in what users and reports get wrong. It takes the least engineering and could matter most.</p>
-    </div>
-  </div>
-</section>
-<section class="slide dark next" id="fit" aria-label="How does this fit?">
-  <h2>How does this fit?</h2>
-  <p class="lede">You’re also planning a road show, outside users and AI reports. How does this plan fit with those?</p>
-  <div class="cards three">
-    <div class="card jul">
-      <h3>Road show and outside users</h3>
-      <p>The servers and chat are ready for early access now. More users will turn up more ways to misread the data, and they’ll need someone to answer questions.</p>
-    </div>
-    <div class="card aug">
-      <h3>AI reports</h3>
-      <p>Published numbers lean hardest on the data: they should trace back to the raw files and use the new weights.</p>
-    </div>
-    <div class="card sep">
-      <h3>Bandwidth</h3>
-      <p>With one engineer, these go one at a time, and we’d pick the order. With more hands, the code and data work could run alongside the work with users.</p>
-    </div>
-  </div>
 </section>
 </main>
 <nav aria-label="Slides">
