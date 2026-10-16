@@ -300,7 +300,7 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
     <h2>Rebuilding the data</h2>
     <p class="stage was"><b>In July:</b> Import depended on a manual CSV export from someone on the team, labels and wording were typed into the code by hand, and 11 of the 47 waves weren’t in the database at all.</p>
     <p class="stage now"><b>Now:</b> All 47 raw wave files sit in one bucket, and a new loader rebuilt every wave in a sandbox, labeled from the survey’s own codebook. We planned the replacement pipeline with Hong and Katya, and fixed the data bugs Lazer and others found, from wrong labels and wording to the wrong weight on political and state questions.</p>
-    <p class="stage ahead"><b>Next:</b> Load Katya’s next cleaned release, with its new weights, through the new pipeline, and move production onto it.</p>
+    <p class="stage ahead"><b>Next:</b> Load Katya’s cleaned data through the new pipeline as it rolls in, through the end of the year, and move production onto it.</p>
   </div>
 </section>
 <section class="slide split sep" id="servers" aria-label="One codebase, as many servers as we need">
@@ -421,8 +421,8 @@ nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
       <p>Send every table tool through one path for queries, suppression and labels, so a fix lands everywhere at once instead of tool by tool.</p>
     </div>
     <div class="month sep">
-      <div><p class="when">When Katya’s next release lands</p><h3>Move production to the new pipeline</h3></div>
-      <p>Load her re-cleaned data and new weights once, so every number traces back to the raw survey files.</p>
+      <div><p class="when">Now through year’s end</p><h3>Move production to the new pipeline</h3></div>
+      <p>Katya’s cleaned data is rolling in now and should be complete by the end of the year. We can load it through the new pipeline as it arrives, then move production onto it, so every number traces back to the raw survey files.</p>
     </div>
     <div class="month oct">
       <div><p class="when">Throughout</p><h3>More survey expertise</h3></div>
