@@ -2,7 +2,16 @@
   "set": "platforms-w38",
   "site": "techandsociety.ai",
   "state_n": "raw/tiktok-w38/states.json",
-  "by": {"column": "age_cat_4", "name": "age", "order": ["18 to 24", "25 to 44", "45 to 64", "65 and over"]},
+  "by": {
+    "column": "age_cat_4",
+    "name": "age",
+    "order": [
+      "18 to 24",
+      "25 to 44",
+      "45 to 64",
+      "65 and over"
+    ]
+  },
   "wave": "Wave 38",
   "fielded": "May 14 to July 5, 2026",
   "weight": {
@@ -10,7 +19,7 @@
     "state": "weight_state: demographics, calibrated within each state"
   },
   "suppression": "Groups under 10 respondents are withheld; none were",
-  "moe": "Not yet served by the MCP (#273). State figures rest on 26 to 1,879 respondents each, so gaps of a few points may be noise.",
+  "moe": "Not yet served by the MCP (#273). States rest on 390 to 1,879 respondents each, and an age group within a state on as few as 26, so gaps of a few points may be noise.",
   "pulled": "Oct 25, 2026",
   "template": {
     "topic": "Social media",
@@ -31,11 +40,11 @@
         "state": {
           "title": "{value} of {state} adults use {label}",
           "subtitle": "Share who say they ever use {label}, by age, spring 2026. Ticks mark the U.S.",
-          "source": "CHIP50 survey, {wave}, {fielded}. {n} adults in {state}, weighted within the state; U.S. ticks from all {usN}."
+          "source": "CHIP50 survey, {wave}, {fielded}. {n} adults in {state}, weighted within the state; U.S. ticks from all {usN}. No margins of error yet."
         }
       },
       "states": {
-        "title": "{label} use runs from {lo} in {loState} to {hi} in {hiState}",
+        "title": "{label} use ranges from {lo} to {hi} across states",
         "subtitle": "Share of adults who say they ever use {label}, by state, spring 2026. U.S.: {us}",
         "source": "CHIP50 survey, {wave}, {fielded}. {usN} adults, 390 to 1,879 per state, weighted within each state."
       },
@@ -46,20 +55,81 @@
     }
   },
   "questions": [
-    {"id": "facebook-w38", "column": "use_facebook", "label": "Facebook"},
-    {"id": "youtube-w38", "column": "use_youtube", "label": "YouTube"},
-    {"id": "messenger-w38", "column": "use_messenger", "label": "Facebook Messenger"},
-    {"id": "instagram-w38", "column": "use_instagram", "label": "Instagram"},
-    {"id": "tiktok-w38", "column": "use_tiktok", "label": "TikTok", "config": "tiktok-w38.json"},
-    {"id": "pinterest-w38", "column": "use_pinterest", "label": "Pinterest"},
-    {"id": "snapchat-w38", "column": "use_snapchat", "label": "Snapchat"},
-    {"id": "twitter-w38", "column": "use_twitter", "label": "X (Twitter)"},
-    {"id": "reddit-w38", "column": "use_reddit", "label": "Reddit"},
-    {"id": "linkedin-w38", "column": "use_linkedin", "label": "LinkedIn"},
-    {"id": "whatsapp-w38", "column": "use_whatsapp", "label": "WhatsApp"},
-    {"id": "threads-w38", "column": "use_threads", "label": "Threads"},
-    {"id": "tumblr-w38", "column": "use_tumblr", "label": "Tumblr"},
-    {"id": "bluesky-w38", "column": "use_bluesky", "label": "Bluesky"},
-    {"id": "truth-w38", "column": "use_truth", "label": "Truth Social"}
+    {
+      "id": "facebook-w38",
+      "column": "use_facebook",
+      "label": "Facebook"
+    },
+    {
+      "id": "youtube-w38",
+      "column": "use_youtube",
+      "label": "YouTube"
+    },
+    {
+      "id": "messenger-w38",
+      "column": "use_messenger",
+      "label": "Facebook Messenger"
+    },
+    {
+      "id": "instagram-w38",
+      "column": "use_instagram",
+      "label": "Instagram"
+    },
+    {
+      "id": "tiktok-w38",
+      "column": "use_tiktok",
+      "label": "TikTok",
+      "config": "tiktok-w38.json"
+    },
+    {
+      "id": "pinterest-w38",
+      "column": "use_pinterest",
+      "label": "Pinterest"
+    },
+    {
+      "id": "snapchat-w38",
+      "column": "use_snapchat",
+      "label": "Snapchat"
+    },
+    {
+      "id": "twitter-w38",
+      "column": "use_twitter",
+      "label": "X (Twitter)"
+    },
+    {
+      "id": "reddit-w38",
+      "column": "use_reddit",
+      "label": "Reddit"
+    },
+    {
+      "id": "linkedin-w38",
+      "column": "use_linkedin",
+      "label": "LinkedIn"
+    },
+    {
+      "id": "whatsapp-w38",
+      "column": "use_whatsapp",
+      "label": "WhatsApp"
+    },
+    {
+      "id": "threads-w38",
+      "column": "use_threads",
+      "label": "Threads"
+    },
+    {
+      "id": "tumblr-w38",
+      "column": "use_tumblr",
+      "label": "Tumblr"
+    },
+    {
+      "id": "bluesky-w38",
+      "column": "use_bluesky",
+      "label": "Bluesky"
+    },
+    {
+      "id": "truth-w38",
+      "column": "use_truth",
+      "label": "Truth Social"
+    }
   ]
 }

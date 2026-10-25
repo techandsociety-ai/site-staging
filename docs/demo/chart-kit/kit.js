@@ -33,8 +33,10 @@
   }
   function ease(t) { t = Math.max(0, Math.min(1, t)); return 1 - Math.pow(1 - t, 3); }
   /* shares under 10% keep a decimal, so small platforms still read */
-  function pct(v) { return v == null ? '—' : (v < 9.95 ? (Math.round(v * 10) / 10) : Math.round(v)) + '%'; }
+  function pct(v) { return v == null ? '—' : (v < 9.95 ? v.toFixed(1) : Math.round(v)) + '%'; }
   function num(n) { return n.toLocaleString('en-US'); }
+  /* for radio copy: the same precision as pct, spelled for the ear */
+  function words(v) { return pct(v).replace('%', ' percent'); }
   function fill(t, o) { return t.replace(/\{(\w+)\}/g, function (m, k) { return o[k] != null ? o[k] : m; }); }
 
   /* view(q, 'by' | 'states', slug) → a chart spec. 'by' is the U.S. by group,
@@ -42,9 +44,9 @@
      chosen one highlighted. */
   function view(q, v, slug) {
     var st = slug ? q.states.filter(function (s) { return s.slug === slug; })[0] : null;
-    var T = q.text, o = {us: pct(q.us.value), usWords: Math.round(q.us.value) + ' percent', usN: num(q.us.n),
+    var T = q.text, o = {us: pct(q.us.value), usWords: words(q.us.value), usN: num(q.us.n),
       wave: q.wave, fielded: q.fielded};
-    if (st) { o.state = st.label; o.value = pct(st.value); o.words = Math.round(st.value) + ' percent'; o.n = num(st.n); }
+    if (st) { o.state = st.label; o.value = pct(st.value); o.words = words(st.value); o.n = num(st.n); }
     var t = v === 'states' ? T.states : T.age[st ? 'state' : 'us'];
     var spec = {question: q.id, view: v, state: st ? st.slug : null, site: q.site,
       title: fill(t.title, o), subtitle: fill(t.subtitle, o), source: fill(t.source, o),
@@ -60,6 +62,7 @@
       spec.stem = 'chip50-' + q.id + '-states' + (st ? '-' + st.slug : '');
     } else {
       spec.kind = 'bars';
+      spec.showN = true;
       spec.rows = (st ? st.by : q.by).map(function (g, i) {
         return {label: g.label, value: g.value, n: g.n, ref: st ? q.by[i].value : null};
       });
@@ -152,7 +155,9 @@
     var top = Math.max.apply(null, rows.map(function (r) { return Math.max(r.value || 0, r.ref || 0); }));
     var dom = top >= 50 ? 100 : Math.max(10, Math.ceil(top / 10) * 10);
     var labW = Math.max.apply(null, rows.map(function (r) { return measure(r.label, S.lab, 400); })) + 14 * k;
-    var barMax = g.w - labW - measure('100%', S.val, 700) - 10 * k;
+    /* spec.showN adds a column of respondent counts at the right, so small groups show as small */
+    var nW = spec.showN ? Math.max.apply(null, rows.map(function (r) { return measure('n=' + num(r.n), S.lab * 0.8, 400); })) + 12 * k : 0;
+    var barMax = g.w - labW - measure('100%', S.val, 700) - 10 * k - nW;
     var bh = Math.min(rh * 0.6, 22 * k * (g.fixed ? 1.7 : 1)), x0 = g.x + labW;
     rows.forEach(function (r, i) {
       var cy = y0 + rh * i + rh / 2, e = ease(g.p * 1.6 - i * 0.08);
@@ -165,7 +170,8 @@
         g.ops.push({t: 'line', x1: tx, y1: cy - bh / 2 - 5 * k, x2: tx, y2: cy + bh / 2 + 5 * k, c: 'ink', sw: 2.5 * k});
       }
       var a = ease((e - 0.6) / 0.4);
-      if (refs) g.text(pct(r.value), g.x + g.w, cy + S.val * 0.35, S.val, 700, 'ink', 'end', a);
+      if (spec.showN) g.text('n=' + num(r.n), g.x + g.w, cy + S.val * 0.35, S.lab * 0.8, 400, 'muted', 'end');
+      if (refs) g.text(pct(r.value), g.x + g.w - nW, cy + S.val * 0.35, S.val, 700, 'ink', 'end', a);
       else g.text(pct(r.value), x0 + bw + 8 * k, cy + S.val * 0.35, S.val, 700, 'ink', 'start', a);
       /* rows with a key (a question, in the across view) are clickable */
       if (r.key) g.ops.push({t: 'rect', x: g.x, y: cy - rh / 2, w: g.w, h: rh, c: 'hit', r: 0, key: r.key, title: r.label + ': ' + pct(r.value)});

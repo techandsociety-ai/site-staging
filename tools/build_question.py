@@ -126,7 +126,7 @@ def fill_auto(q):
     {hi}, {hiState}) from this question's numbers, and an "auto" dek with a
     plain statement of the U.S. figure ({column} names the variable). Tokens like {state} and {value} are
     left for the page, which fills them for the place picked."""
-    pct = lambda v: f"{round(v)}%"
+    pct = lambda v: f"{v:.1f}%" if v < 9.95 else f"{round(v)}%"   # the kit's rule: a decimal under 10%
     ranked = sorted((s for s in q["states"] if s["value"] is not None), key=lambda s: s["value"])
     tokens = {"label": q["label"], "column": q.get("column") or "", "lo": pct(ranked[0]["value"]), "loState": ranked[0]["label"],
               "hi": pct(ranked[-1]["value"]), "hiState": ranked[-1]["label"]}
