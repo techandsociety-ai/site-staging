@@ -11,12 +11,28 @@
 <style>
 .wrap.one{grid-template-columns:minmax(0,1fr)}
 .wrap.one main{margin:0 auto;width:100%}
-#chart svg{display:block;width:100%;height:auto}
-.snip{display:flex;gap:10px;align-items:flex-start;margin:0 0 18px}
+.eyebrow{font:600 13px/1.4 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--acct);margin:0 0 10px}
+.demo{font:400 14px/1.5 var(--sans);color:var(--muted);margin:22px 0 0}
+.place{position:sticky;top:44px;z-index:50;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  margin:0 -12px;padding:10px 12px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--rule)}
+.place label{font:600 14.5px/1 var(--sans);color:var(--ink)}
+.place select{font:500 15px/1.2 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--rule);
+  border-radius:8px;padding:7px 10px;max-width:100%}
+.place .now{font:400 14px/1.3 var(--sans);color:var(--muted)}
+.ct{font:640 18px/1.3 var(--sans);color:var(--ink);margin:0 0 4px}
+.cs{font:400 14.5px/1.5 var(--sans);color:var(--ink2);margin:0 0 16px}
+.chart svg{display:block;width:100%;height:auto}
+#stChart [data-key]{cursor:pointer}
+#stChart [data-key]:hover{fill:color-mix(in srgb,var(--ink) 7%,transparent)}
+.note{font:400 14.5px/1.5 var(--sans);color:var(--muted);margin:0 0 8px}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:9px;overflow:hidden;margin:4px 0 6px}
+.seg button{font:500 14px/1 var(--sans);color:var(--ink2);background:transparent;border:0;padding:9px 14px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--soft);color:var(--acct);font-weight:640}
+.snip{display:flex;gap:10px;align-items:flex-start;margin:0 0 8px}
 .snip pre{flex:1;min-width:0;margin:0;overflow-x:auto;background:var(--surface);border:1px solid var(--rule);
   border-radius:9px;padding:12px 14px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink2)}
-.live{border:1px dashed var(--rule);border-radius:12px;padding:12px;background:#fff}
-.note{font:400 14.5px/1.5 var(--sans);color:var(--muted);margin:0 0 8px}
 .dl{display:flex;flex-wrap:wrap;gap:10px}
 .btn span{color:var(--muted);margin-left:6px}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px;align-items:start}
@@ -27,7 +43,7 @@
 dl.brief{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px 20px;font:400 15.5px/1.55 var(--sans);margin:0 0 26px}
 dl.brief dt{color:var(--muted)}
 dl.brief dd{margin:0}
-dl.brief code{white-space:normal}
+dl.brief code{white-space:normal;font-size:13px}
 @media(max-width:620px){dl.brief{grid-template-columns:minmax(0,1fr);gap:2px}dl.brief dd{margin-bottom:12px}}
 </style>
 </head>
@@ -42,47 +58,66 @@ dl.brief code{white-space:normal}
 </header>
 <div class="wrap one">
 <main>
+<p class="demo">A working demo of the CHIP50 chart kit. Pick a place and every chart, embed, download and card on the page follows.</p>
 <div class="hero">
-  <h1>TikTok use drops with every decade of age</h1>
-  <p class="dek">Nearly three in four Americans 18 to 20 say they use TikTok. Past 70, fewer than one in five do.</p>
-  <p class="srcline">Source: CHIP50 survey, Wave 38, fielded May 14 to July 5, 2026; 31,836 U.S. adults, weighted to the adult population.</p>
+  <p class="eyebrow">One question · CHIP50</p>
+  <h1 id="question"></h1>
+  <p class="dek" id="dek"></p>
+  <p class="srcline" id="srcline"></p>
 </div>
 
-<p class="lede">This page is a working demo of the CHIP50 chart kit. One chart file feeds everything on it: the chart, the embed, the downloads, the social cards and the partner brief. The numbers are real and came from the CHIP50 MCP on Oct 24, 2026.</p>
+<div class="place">
+  <label for="place">Show</label>
+  <select id="place"><option value="">United States</option></select>
+  <span class="now" id="now"></span>
+</div>
 
+<h2 id="by"></h2>
 <figure class="chart">
-  <div id="chart"></div>
-  <figcaption><b>Share who say they ever use TikTok, by age.</b> Weighted estimates; group sizes in the table.</figcaption>
-  <details class="datatbl"><summary>Data table</summary><div class="tw"><table id="tbl"></table></div></details>
+  <p class="ct" id="byTitle"></p>
+  <p class="cs" id="bySub"></p>
+  <div id="byChart"></div>
+  <details class="datatbl"><summary>Data table</summary><div class="tw"><table id="byTbl"></table></div></details>
 </figure>
 
-<h2 id="embed">Embed it</h2>
-<p>Two lines put the chart on any page. It fits its column and redraws at every width.</p>
-<div class="snip"><pre><code id="snippet"></code></pre><button class="btn" data-copy="snippet">Copy</button></div>
-<p class="note">Live, through that snippet:</p>
-<div class="live"><div data-chip50-chart="tiktok-age-w38"></div></div>
-<script async src="embed.js"></script>
+<h2 id="states">Every state</h2>
+<p class="note">Click a state to pick it. Margins of error aren't served by the MCP yet; with 390 to 1,879 adults per state, gaps of a few points may be noise.</p>
+<figure class="chart">
+  <p class="ct" id="stTitle"></p>
+  <p class="cs" id="stSub"></p>
+  <div id="stChart"></div>
+  <details class="datatbl"><summary>Data table</summary><div class="tw"><table id="stTbl"></table></div></details>
+</figure>
 
-<h2 id="download">Download it</h2>
-<p>For newsletters, print pages and broadcast graphics, and the numbers behind the chart.</p>
+<h2 id="use">Use it</h2>
+<p>Everything here follows the place you picked. Choose the chart:</p>
+<div class="seg" role="group" aria-label="Chart to use">
+  <button type="button" data-for="by" aria-pressed="true" id="segBy"></button>
+  <button type="button" data-for="states" aria-pressed="false">Every state</button>
+</div>
+
+<h3>Embed</h3>
+<p>Two lines put the chart on any page. It fits its column and redraws at every width. <a id="preview" target="_blank" rel="noopener">Preview the embed</a></p>
+<div class="snip"><pre><code id="snippet"></code></pre><button class="btn" data-copy="snippet">Copy</button></div>
+
+<h3>Download</h3>
 <div class="dl">
-  <button class="btn" data-dl="web">PNG for web<span>2400 × 1350</span></button>
+  <button class="btn" data-dl="web">PNG for web<span id="webSize">2400 × 1350</span></button>
   <button class="btn" data-dl="print">PNG for print<span>3000 px wide</span></button>
   <button class="btn" data-dl="svg">SVG<span>editable</span></button>
   <button class="btn" data-dl="csv">CSV<span>the numbers</span></button>
 </div>
 
-<h2 id="post">Post it</h2>
-<p>A card for every feed, drawn from the same chart. The vertical card also records as a six-second clip.</p>
+<h3>Post</h3>
+<p>A card for every feed. The vertical card also records as a six-second clip.</p>
 <div class="cards" id="cards"></div>
 
-<h2 id="brief">Brief a partner</h2>
-<p>What a producer or a standards desk needs, ready to paste.</p>
-<dl class="brief" id="brieflist"></dl>
 <h3>Radio copy</h3>
 <blockquote><p id="radio"></p></blockquote>
 <button class="btn" data-copy="radio">Copy</button>
 
+<h2 id="about">About these numbers</h2>
+<dl class="brief" id="brief"></dl>
 <p class="pos">Demo only. These numbers have not been through PI review for publication.</p>
 </main>
 </div>
@@ -90,7 +125,7 @@ dl.brief code{white-space:normal}
 <script src="kit.js"></script>
 <script>
 (function () {
-  var K = CHIP50Kit, $ = function (id) { return document.getElementById(id); };
+  var K = CHIP50Kit, Q = 'tiktok-w38', $ = function (id) { return document.getElementById(id); };
   var CARDS = [
     {key: 'link', label: 'Link card', size: '1200 × 675', w: 1200, h: 675},
     {key: 'square', label: 'Square', size: '1080 × 1080', w: 1080, h: 1080},
@@ -103,62 +138,130 @@ dl.brief code{white-space:normal}
     if (text != null) e.textContent = text;
     return e;
   }
-
-  K.load('tiktok-age-w38').then(function (spec) {
-    var stem = 'chip50-' + spec.id;
-    K.mount($('chart'), spec, {bare: true, themed: true});
-
-    var tbl = $('tbl'), hr = el('tr');
-    ['Age', '% (weighted)', 'Unweighted n'].forEach(function (h) { hr.appendChild(el('th', {}, h)); });
-    tbl.appendChild(hr);
-    spec.rows.forEach(function (r) {
+  function table(t, head, rows) {
+    t.textContent = '';
+    var tr = el('tr');
+    head.forEach(function (h) { tr.appendChild(el('th', {}, h)); });
+    t.appendChild(tr);
+    rows.forEach(function (r) {
       var tr = el('tr');
-      [r.label, r.value.toFixed(1), r.n.toLocaleString('en-US')].forEach(function (v) { tr.appendChild(el('td', {}, v)); });
-      tbl.appendChild(tr);
+      r.forEach(function (v) { tr.appendChild(el('td', {}, v)); });
+      t.appendChild(tr);
+    });
+  }
+
+  K.load(Q).then(function (q) {
+    var slugs = q.states.map(function (s) { return s.slug; });
+    var place = new URLSearchParams(location.search).get('state'), use = 'by';
+    if (slugs.indexOf(place) < 0) place = null;
+    var by = 'By ' + q.byName;
+
+    $('question').textContent = q.question;
+    $('dek').textContent = q.dek;
+    $('srcline').textContent = 'Source: CHIP50 survey, ' + q.wave + ', fielded ' + q.fielded + '; ' + K.num(q.us.n) +
+      ' U.S. adults. Numbers from the CHIP50 MCP, ' + q.pulled + '.';
+    $('by').textContent = by; $('segBy').textContent = by;
+    q.states.forEach(function (s) { $('place').appendChild(el('option', {value: s.slug}, s.name)); });
+
+    var byChart = K.mount($('byChart'), K.view(q, 'by', place), {bare: true, themed: true});
+    var stChart = K.mount($('stChart'), K.view(q, 'states', place), {bare: true, themed: true});
+    table($('stTbl'), ['State', '% (weighted)', 'Unweighted n'], q.states.map(function (s) {
+      return [s.name, s.value.toFixed(1), K.num(s.n)];
+    }));
+
+    function pick(slug) {
+      place = slug || null;
+      $('place').value = place || '';
+      var u = new URL(location.href);
+      if (place) u.searchParams.set('state', place); else u.searchParams.delete('state');
+      history.replaceState(null, '', u);
+      render();
+    }
+    $('place').onchange = function () { pick(this.value); };
+    $('stChart').addEventListener('click', function (e) {
+      var k = e.target.getAttribute && e.target.getAttribute('data-key');
+      if (k) pick(k === place ? null : k);
+    });
+    [].forEach.call(document.querySelectorAll('.seg button'), function (b) {
+      b.onclick = function () { use = b.getAttribute('data-for'); renderUse(); };
     });
 
-    $('snippet').textContent = '<div data-chip50-chart="' + spec.id + '"></div>\n<script async src="' +
-      new URL('embed.js', location.href).href + '"></scr' + 'ipt>';
+    function render() {
+      var st = place ? q.states[slugs.indexOf(place)] : null;
+      var bySpec = K.view(q, 'by', place), stSpec = K.view(q, 'states', place);
+      $('place').value = place || '';
+      $('now').textContent = st ? K.num(st.n) + ' adults in ' + st.label + ' answered' : K.num(q.us.n) + ' adults answered';
+      $('byTitle').textContent = bySpec.title; $('bySub').textContent = bySpec.subtitle;
+      $('stTitle').textContent = stSpec.title; $('stSub').textContent = stSpec.subtitle;
+      byChart.set(bySpec); stChart.set(stSpec);
+      if (st) table($('byTbl'), [q.byName[0].toUpperCase() + q.byName.slice(1), st.label + ' %', 'Unweighted n', 'U.S. %'],
+        st.by.map(function (g, i) { return [g.label, g.value.toFixed(1), K.num(g.n), q.by[i].value.toFixed(1)]; }));
+      else table($('byTbl'), [q.byName[0].toUpperCase() + q.byName.slice(1), '% (weighted)', 'Unweighted n'],
+        q.by.map(function (g) { return [g.label, g.value.toFixed(1), K.num(g.n)]; }));
 
-    var dl = {
-      web: function () { K.png(spec, 1200, 675, stem + '-web.png', 2); },
-      print: function () { K.png(spec, 1000, null, stem + '-print.png', 3); },
-      svg: function () { K.svg(spec, stem + '.svg'); },
-      csv: function () { K.csv(spec, stem + '.csv'); }
-    };
-    [].forEach.call(document.querySelectorAll('[data-dl]'), function (b) { b.onclick = dl[b.getAttribute('data-dl')]; });
+      $('brief').textContent = '';
+      [['Question', q.wording],
+       ['Base', st ? K.num(st.n) + ' adults in ' + st.name + '; unweighted n per group in the CSV'
+                   : K.num(q.us.n) + ' U.S. adults; unweighted n per group in the CSV'],
+       ['Fielded', q.fielded + ' (' + q.wave + ')'],
+       ['Weight', place ? q.weight.state + '; U.S. figures use ' + q.weight.us : q.weight.us],
+       ['Small groups', q.suppression], ['Margin of error', q.moe]
+      ].forEach(function (row) {
+        $('brief').appendChild(el('dt', {}, row[0]));
+        $('brief').appendChild(el('dd', {}, row[1]));
+      });
+      $('brief').appendChild(el('dt', {}, 'Pulled with'));
+      var dd = el('dd');
+      q.provenance.forEach(function (c, i) { if (i) dd.appendChild(el('br')); dd.appendChild(el('code', {}, c)); });
+      dd.appendChild(document.createTextNode(' on the CHIP50 MCP, ' + q.pulled));
+      $('brief').appendChild(dd);
+      renderUse();
+    }
 
-    CARDS.forEach(function (c) {
-      var card = el('div', {'class': 'card'}), cv = K.canvas(spec, c.w, c.h);
-      cv.setAttribute('role', 'img');
-      cv.setAttribute('aria-label', c.label + ' card: ' + spec.title);
-      card.appendChild(cv);
-      var p = el('p', {}, c.label); p.appendChild(el('span', {}, c.size)); card.appendChild(p);
-      var b = el('button', {'class': 'btn'}, 'PNG');
-      b.onclick = function () { K.png(spec, c.w, c.h, stem + '-' + c.key + '.png'); };
-      card.appendChild(b);
-      if (c.clip) {
-        var v = el('button', {'class': 'btn'}, 'Clip');
-        v.onclick = function () {
-          v.disabled = true; v.textContent = 'Recording…';
-          K.clip(spec, c.w, c.h, stem + '-' + c.key, function (err) {
-            v.disabled = false; v.textContent = err ? 'Clip unavailable' : 'Clip';
-            if (err) v.title = err;
-          });
-        };
-        card.appendChild(v);
-      }
-      $('cards').appendChild(card);
-    });
+    function renderUse() {
+      var spec = K.view(q, use, place), stem = spec.stem;
+      [].forEach.call(document.querySelectorAll('.seg button'), function (b) {
+        b.setAttribute('aria-pressed', String(b.getAttribute('data-for') === use));
+      });
+      var attrs = 'data-chip50-chart="' + q.id + '" data-view="' + use + '"' + (place ? ' data-state="' + place + '"' : '');
+      $('snippet').textContent = '<div ' + attrs + '></div>\n<script async src="' +
+        new URL('embed.js', location.href).href + '"></scr' + 'ipt>';
+      $('preview').href = 'embed.html?q=' + q.id + '&view=' + use + (place ? '&state=' + place : '');
+      $('radio').textContent = spec.radio;
+      $('webSize').textContent = use === 'states' ? '2400 px wide' : '2400 × 1350';
 
-    [['Finding', spec.title + '. ' + $('chart').closest('main').querySelector('.dek').textContent],
-     ['Question', spec.wording], ['Base', spec.base], ['Fielded', spec.fielded], ['Weight', spec.weight],
-     ['Small groups', spec.suppression], ['Margin of error', spec.moe], ['Pulled with', spec.provenance]
-    ].forEach(function (row) {
-      $('brieflist').appendChild(el('dt', {}, row[0]));
-      $('brieflist').appendChild(el('dd', {}, row[1]));
-    });
-    $('radio').textContent = spec.radio;
+      var dl = {
+        web: function () { K.png(spec, 1200, use === 'states' ? null : 675, stem + '-web.png', 2); },
+        print: function () { K.png(spec, 1000, null, stem + '-print.png', 3); },
+        svg: function () { K.svg(spec, stem + '.svg'); },
+        csv: function () { K.csv(spec, stem + '.csv'); }
+      };
+      [].forEach.call(document.querySelectorAll('[data-dl]'), function (b) { b.onclick = dl[b.getAttribute('data-dl')]; });
+
+      $('cards').textContent = '';
+      CARDS.forEach(function (c) {
+        var card = el('div', {'class': 'card'}), cv = K.canvas(spec, c.w, c.h);
+        cv.setAttribute('role', 'img');
+        cv.setAttribute('aria-label', c.label + ' card: ' + spec.title);
+        card.appendChild(cv);
+        var p = el('p', {}, c.label); p.appendChild(el('span', {}, c.size)); card.appendChild(p);
+        var b = el('button', {'class': 'btn'}, 'PNG');
+        b.onclick = function () { K.png(spec, c.w, c.h, stem + '-' + c.key + '.png'); };
+        card.appendChild(b);
+        if (c.clip) {
+          var v = el('button', {'class': 'btn'}, 'Clip');
+          v.onclick = function () {
+            v.disabled = true; v.textContent = 'Recording…';
+            K.clip(spec, c.w, c.h, stem + '-' + c.key, function (err) {
+              v.disabled = false; v.textContent = err ? 'Clip unavailable' : 'Clip';
+              if (err) v.title = err;
+            });
+          };
+          card.appendChild(v);
+        }
+        $('cards').appendChild(card);
+      });
+    }
 
     [].forEach.call(document.querySelectorAll('[data-copy]'), function (b) {
       b.onclick = function () {
@@ -167,6 +270,7 @@ dl.brief code{white-space:normal}
         });
       };
     });
+    render();
   });
 })();
 </script>

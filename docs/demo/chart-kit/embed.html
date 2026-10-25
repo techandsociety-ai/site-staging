@@ -11,9 +11,11 @@
 <div id="c"></div>
 <script src="kit.js"></script>
 <script>
-var id = new URLSearchParams(location.search).get('chart') || 'tiktok-age-w38';
-CHIP50Kit.load(id).then(function (spec) {
-  CHIP50Kit.mount(document.getElementById('c'), spec, {bg: 'surface', onRender: function (h) {
+var qs = new URLSearchParams(location.search);
+var id = qs.get('q') || 'tiktok-w38', v = qs.get('view') === 'states' ? 'states' : 'by';
+var slug = /^[a-z-]+$/.test(qs.get('state') || '') ? qs.get('state') : null;
+CHIP50Kit.load(id).then(function (q) {
+  CHIP50Kit.mount(document.getElementById('c'), CHIP50Kit.view(q, v, slug), {bg: 'surface', onRender: function (h) {
     parent.postMessage({chip50: 'height', chart: id, height: h}, '*');
   }});
 });
