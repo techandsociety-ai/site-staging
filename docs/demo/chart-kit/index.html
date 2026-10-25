@@ -26,18 +26,17 @@
 #stChart [data-key]{cursor:pointer}
 #stChart [data-key]:hover{fill:color-mix(in srgb,var(--ink) 7%,transparent)}
 .note{font:400 14.5px/1.5 var(--sans);color:var(--muted);margin:0 0 8px}
-.seg{display:inline-flex;border:1px solid var(--rule);border-radius:9px;overflow:hidden;margin:4px 0 6px}
-.seg button{font:500 14px/1 var(--sans);color:var(--ink2);background:transparent;border:0;padding:9px 14px;cursor:pointer}
-.seg button+button{border-left:1px solid var(--rule)}
-.seg button[aria-pressed="true"]{background:var(--soft);color:var(--acct);font-weight:640}
-.snip{display:flex;gap:10px;align-items:flex-start;margin:0 0 8px}
-.snip pre{flex:1;min-width:0;margin:0;overflow-x:auto;background:var(--surface);border:1px solid var(--rule);
-  border-radius:9px;padding:12px 14px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink2)}
-.dl{display:flex;flex-wrap:wrap;gap:10px}
+.kit{margin:20px 0 0;padding-top:14px;border-top:1px solid var(--rule2)}
+.kit .lab{font:600 13px/1 var(--sans);color:var(--muted);margin:0 0 8px}
+.snip{display:flex;gap:10px;align-items:flex-start;margin:0 0 12px}
+.snip pre{flex:1;min-width:0;margin:0;overflow-x:auto;background:var(--bg);border:1px solid var(--rule);
+  border-radius:9px;padding:10px 12px;font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink2)}
+.dl{display:flex;flex-wrap:wrap;gap:8px}
+a.btn{text-decoration:none}
 .btn span{color:var(--muted);margin-left:6px}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px;align-items:start}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:18px;align-items:start;margin-top:12px}
 .card canvas{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:8px}
-.card p{font:600 14.5px/1.4 var(--sans);margin:10px 0 8px}
+.card p{font:600 14px/1.4 var(--sans);margin:8px 0 6px}
 .card p span{font-weight:400;color:var(--muted);margin-left:6px}
 .card .btn{margin:0 6px 6px 0}
 dl.brief{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px 20px;font:400 15.5px/1.55 var(--sans);margin:0 0 26px}
@@ -73,46 +72,21 @@ dl.brief code{white-space:normal;font-size:13px}
 </div>
 
 <h2 id="by"></h2>
-<figure class="chart">
+<figure class="chart" id="byFig">
   <p class="ct" id="byTitle"></p>
   <p class="cs" id="bySub"></p>
   <div id="byChart"></div>
-  <details class="datatbl"><summary>Data table</summary><div class="tw"><table id="byTbl"></table></div></details>
 </figure>
 
 <h2 id="states">Every state</h2>
 <p class="note">Click a state to pick it. Margins of error aren't served by the MCP yet; with 390 to 1,879 adults per state, gaps of a few points may be noise.</p>
-<figure class="chart">
+<figure class="chart" id="stFig">
   <p class="ct" id="stTitle"></p>
   <p class="cs" id="stSub"></p>
   <div id="stChart"></div>
-  <details class="datatbl"><summary>Data table</summary><div class="tw"><table id="stTbl"></table></div></details>
 </figure>
 
-<h2 id="use">Use it</h2>
-<p>Everything here follows the place you picked. Choose the chart:</p>
-<div class="seg" role="group" aria-label="Chart to use">
-  <button type="button" data-for="by" aria-pressed="true" id="segBy"></button>
-  <button type="button" data-for="states" aria-pressed="false">Every state</button>
-</div>
-
-<h3>Embed</h3>
-<p>Two lines put the chart on any page. It fits its column and redraws at every width. <a id="preview" target="_blank" rel="noopener">Preview the embed</a></p>
-<div class="snip"><pre><code id="snippet"></code></pre><button class="btn" data-copy="snippet">Copy</button></div>
-
-<h3>Download</h3>
-<div class="dl">
-  <button class="btn" data-dl="web">PNG for web<span id="webSize">2400 × 1350</span></button>
-  <button class="btn" data-dl="print">PNG for print<span>3000 px wide</span></button>
-  <button class="btn" data-dl="svg">SVG<span>editable</span></button>
-  <button class="btn" data-dl="csv">CSV<span>the numbers</span></button>
-</div>
-
-<h3>Post</h3>
-<p>A card for every feed. The vertical card also records as a six-second clip.</p>
-<div class="cards" id="cards"></div>
-
-<h3>Radio copy</h3>
+<h2 id="radio-copy">Radio copy</h2>
 <blockquote><p id="radio"></p></blockquote>
 <button class="btn" data-copy="radio">Copy</button>
 
@@ -138,6 +112,18 @@ dl.brief code{white-space:normal;font-size:13px}
     if (text != null) e.textContent = text;
     return e;
   }
+  function button(label, note) {
+    var b = el('button', {'class': 'btn', type: 'button'}, label);
+    if (note) b.appendChild(el('span', {}, note));
+    return b;
+  }
+  function copier(b, get) {
+    b.onclick = function () {
+      navigator.clipboard.writeText(get()).then(function () {
+        b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500);
+      });
+    };
+  }
   function table(t, head, rows) {
     t.textContent = '';
     var tr = el('tr');
@@ -150,28 +136,96 @@ dl.brief code{white-space:normal;font-size:13px}
     });
   }
 
+  /* Under each chart: its embed code, its downloads, its data table and its
+     social cards, all for the place picked. kit(fig, v) builds them
+     once; the returned function redraws them for a new spec. */
+  function kit(fig, v) {
+    var box = el('div', {'class': 'kit'});
+    box.appendChild(el('p', {'class': 'lab'}, 'Embed this chart'));
+    var snip = el('div', {'class': 'snip'}), code = el('code'), copy = button('Copy');
+    var pre = el('pre'); pre.appendChild(code); snip.appendChild(pre); snip.appendChild(copy);
+    box.appendChild(snip);
+    copier(copy, function () { return code.textContent; });
+    var row = el('div', {'class': 'dl'});
+    var preview = el('a', {'class': 'btn', target: '_blank', rel: 'noopener'}, 'Preview embed');
+    var web = button('PNG for web', v === 'states' ? '2400 px wide' : '2400 × 1350');
+    var print = button('PNG for print', '3000 px wide'), svg = button('SVG', 'editable'), csv = button('CSV', 'the numbers');
+    [preview, web, print, svg, csv].forEach(function (b) { row.appendChild(b); });
+    box.appendChild(row);
+    fig.appendChild(box);
+
+    var data = el('details', {'class': 'datatbl'}), tw = el('div', {'class': 'tw'}), tbl = el('table');
+    data.appendChild(el('summary', {}, 'Data table')); tw.appendChild(tbl); data.appendChild(tw);
+    fig.appendChild(data);
+    var social = el('details', {'class': 'datatbl'}), cards = el('div', {'class': 'cards'});
+    social.appendChild(el('summary', {}, 'Social cards'));
+    social.appendChild(el('p', {'class': 'note'}, 'A card for every feed. The vertical card also records as a six-second clip.'));
+    social.appendChild(cards);
+    fig.appendChild(social);
+
+    var spec;
+    function drawCards() {
+      cards.textContent = '';
+      CARDS.forEach(function (c) {
+        var card = el('div', {'class': 'card'}), cv = K.canvas(spec, c.w, c.h);
+        cv.setAttribute('role', 'img');
+        cv.setAttribute('aria-label', c.label + ' card: ' + spec.title);
+        card.appendChild(cv);
+        var p = el('p', {}, c.label); p.appendChild(el('span', {}, c.size)); card.appendChild(p);
+        var b = button('PNG'), s = spec;
+        b.onclick = function () { K.png(s, c.w, c.h, s.stem + '-' + c.key + '.png'); };
+        card.appendChild(b);
+        if (c.clip) {
+          var r = button('Clip');
+          r.onclick = function () {
+            r.disabled = true; r.textContent = 'Recording…';
+            K.clip(s, c.w, c.h, s.stem + '-' + c.key, function (err) {
+              r.disabled = false; r.textContent = err ? 'Clip unavailable' : 'Clip';
+              if (err) r.title = err;
+            });
+          };
+          card.appendChild(r);
+        }
+        cards.appendChild(card);
+      });
+    }
+    social.addEventListener('toggle', function () { if (social.open) drawCards(); });
+
+    return {table: tbl, set: function (s) {
+      spec = s;
+      var attrs = 'data-chip50-chart="' + s.question + '" data-view="' + v + '"' + (s.state ? ' data-state="' + s.state + '"' : '');
+      code.textContent = '<div ' + attrs + '></div>\n<script async src="' + new URL('embed.js', location.href).href + '"></scr' + 'ipt>';
+      preview.href = 'embed.html?q=' + s.question + '&view=' + v + (s.state ? '&state=' + s.state : '');
+      web.onclick = function () { K.png(s, 1200, v === 'states' ? null : 675, s.stem + '-web.png', 2); };
+      print.onclick = function () { K.png(s, 1000, null, s.stem + '-print.png', 3); };
+      svg.onclick = function () { K.svg(s, s.stem + '.svg'); };
+      csv.onclick = function () { K.csv(s, s.stem + '.csv'); };
+      if (social.open) drawCards();
+    }};
+  }
+
   K.load(Q).then(function (q) {
     var slugs = q.states.map(function (s) { return s.slug; });
-    var place = new URLSearchParams(location.search).get('state'), use = 'by';
+    var place = new URLSearchParams(location.search).get('state');
     if (slugs.indexOf(place) < 0) place = null;
-    var by = 'By ' + q.byName;
+    var by = 'By ' + q.byName, By = q.byName[0].toUpperCase() + q.byName.slice(1);
 
     $('question').textContent = q.question;
     $('dek').textContent = q.dek;
     $('srcline').textContent = 'Source: CHIP50 survey, ' + q.wave + ', fielded ' + q.fielded + '; ' + K.num(q.us.n) +
       ' U.S. adults. Numbers from the CHIP50 MCP, ' + q.pulled + '.';
-    $('by').textContent = by; $('segBy').textContent = by;
+    $('by').textContent = by;
     q.states.forEach(function (s) { $('place').appendChild(el('option', {value: s.slug}, s.name)); });
 
     var byChart = K.mount($('byChart'), K.view(q, 'by', place), {bare: true, themed: true});
     var stChart = K.mount($('stChart'), K.view(q, 'states', place), {bare: true, themed: true});
-    table($('stTbl'), ['State', '% (weighted)', 'Unweighted n'], q.states.map(function (s) {
+    var byKit = kit($('byFig'), 'by'), stKit = kit($('stFig'), 'states');
+    table(stKit.table, ['State', '% (weighted)', 'Unweighted n'], q.states.map(function (s) {
       return [s.name, s.value.toFixed(1), K.num(s.n)];
     }));
 
     function pick(slug) {
       place = slug || null;
-      $('place').value = place || '';
       var u = new URL(location.href);
       if (place) u.searchParams.set('state', place); else u.searchParams.delete('state');
       history.replaceState(null, '', u);
@@ -182,9 +236,7 @@ dl.brief code{white-space:normal;font-size:13px}
       var k = e.target.getAttribute && e.target.getAttribute('data-key');
       if (k) pick(k === place ? null : k);
     });
-    [].forEach.call(document.querySelectorAll('.seg button'), function (b) {
-      b.onclick = function () { use = b.getAttribute('data-for'); renderUse(); };
-    });
+    copier(document.querySelector('[data-copy="radio"]'), function () { return $('radio').textContent; });
 
     function render() {
       var st = place ? q.states[slugs.indexOf(place)] : null;
@@ -194,9 +246,11 @@ dl.brief code{white-space:normal;font-size:13px}
       $('byTitle').textContent = bySpec.title; $('bySub').textContent = bySpec.subtitle;
       $('stTitle').textContent = stSpec.title; $('stSub').textContent = stSpec.subtitle;
       byChart.set(bySpec); stChart.set(stSpec);
-      if (st) table($('byTbl'), [q.byName[0].toUpperCase() + q.byName.slice(1), st.label + ' %', 'Unweighted n', 'U.S. %'],
+      byKit.set(bySpec); stKit.set(stSpec);
+      $('radio').textContent = bySpec.radio;
+      if (st) table(byKit.table, [By, st.label + ' %', 'Unweighted n', 'U.S. %'],
         st.by.map(function (g, i) { return [g.label, g.value.toFixed(1), K.num(g.n), q.by[i].value.toFixed(1)]; }));
-      else table($('byTbl'), [q.byName[0].toUpperCase() + q.byName.slice(1), '% (weighted)', 'Unweighted n'],
+      else table(byKit.table, [By, '% (weighted)', 'Unweighted n'],
         q.by.map(function (g) { return [g.label, g.value.toFixed(1), K.num(g.n)]; }));
 
       $('brief').textContent = '';
@@ -215,61 +269,7 @@ dl.brief code{white-space:normal;font-size:13px}
       q.provenance.forEach(function (c, i) { if (i) dd.appendChild(el('br')); dd.appendChild(el('code', {}, c)); });
       dd.appendChild(document.createTextNode(' on the CHIP50 MCP, ' + q.pulled));
       $('brief').appendChild(dd);
-      renderUse();
     }
-
-    function renderUse() {
-      var spec = K.view(q, use, place), stem = spec.stem;
-      [].forEach.call(document.querySelectorAll('.seg button'), function (b) {
-        b.setAttribute('aria-pressed', String(b.getAttribute('data-for') === use));
-      });
-      var attrs = 'data-chip50-chart="' + q.id + '" data-view="' + use + '"' + (place ? ' data-state="' + place + '"' : '');
-      $('snippet').textContent = '<div ' + attrs + '></div>\n<script async src="' +
-        new URL('embed.js', location.href).href + '"></scr' + 'ipt>';
-      $('preview').href = 'embed.html?q=' + q.id + '&view=' + use + (place ? '&state=' + place : '');
-      $('radio').textContent = spec.radio;
-      $('webSize').textContent = use === 'states' ? '2400 px wide' : '2400 × 1350';
-
-      var dl = {
-        web: function () { K.png(spec, 1200, use === 'states' ? null : 675, stem + '-web.png', 2); },
-        print: function () { K.png(spec, 1000, null, stem + '-print.png', 3); },
-        svg: function () { K.svg(spec, stem + '.svg'); },
-        csv: function () { K.csv(spec, stem + '.csv'); }
-      };
-      [].forEach.call(document.querySelectorAll('[data-dl]'), function (b) { b.onclick = dl[b.getAttribute('data-dl')]; });
-
-      $('cards').textContent = '';
-      CARDS.forEach(function (c) {
-        var card = el('div', {'class': 'card'}), cv = K.canvas(spec, c.w, c.h);
-        cv.setAttribute('role', 'img');
-        cv.setAttribute('aria-label', c.label + ' card: ' + spec.title);
-        card.appendChild(cv);
-        var p = el('p', {}, c.label); p.appendChild(el('span', {}, c.size)); card.appendChild(p);
-        var b = el('button', {'class': 'btn'}, 'PNG');
-        b.onclick = function () { K.png(spec, c.w, c.h, stem + '-' + c.key + '.png'); };
-        card.appendChild(b);
-        if (c.clip) {
-          var v = el('button', {'class': 'btn'}, 'Clip');
-          v.onclick = function () {
-            v.disabled = true; v.textContent = 'Recording…';
-            K.clip(spec, c.w, c.h, stem + '-' + c.key, function (err) {
-              v.disabled = false; v.textContent = err ? 'Clip unavailable' : 'Clip';
-              if (err) v.title = err;
-            });
-          };
-          card.appendChild(v);
-        }
-        $('cards').appendChild(card);
-      });
-    }
-
-    [].forEach.call(document.querySelectorAll('[data-copy]'), function (b) {
-      b.onclick = function () {
-        navigator.clipboard.writeText($(b.getAttribute('data-copy')).textContent).then(function () {
-          b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500);
-        });
-      };
-    });
     render();
   });
 })();
