@@ -144,6 +144,7 @@ def fill_auto(q):
         q["dek"] = f"{pct(q['us']['value'])} of U.S. adults say they use {q['label']}."
     walk(q["text"])
     q["question"] = sub(q["question"])
+    q["provenance"] = [sub(c) for c in q["provenance"]]
     q["wording"] = q["wording"].replace("{option}", q.pop("option", q["label"]))
 
 

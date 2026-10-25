@@ -107,7 +107,7 @@
     var k = fixed ? Math.min(W, H) / 600 : Math.max(0.85, Math.min(1.15, W / 700));
     var tall = fixed && H / W > 1.5;
     var map = spec.kind === 'states' && fixed && !tall, wide = map && W / H > 1.5;
-    var pad = fixed ? 44 * k : (opt.bare ? 0 : 20 * k);
+    var pad = fixed ? (opt.bare ? 6 * k : 44 * k) : (opt.bare ? 0 : 20 * k);
     var inner = W - 2 * pad, ops = [], y = pad;
     var colW = wide ? inner * 0.36 : inner;
     var S = {head: 28 * k * (tall ? 1.3 : 1), sub: 16 * k * (tall ? 1.15 : 1),
@@ -129,7 +129,7 @@
     var footH = opt.bare ? 0 : 14 * k + foot.length * S.foot * 1.45 + S.foot * 1.7;
     var g = {ops: ops, text: text, k: k, S: S, p: p, fixed: fixed, x: pad, y: y, w: inner};
     if (wide) { g.x = pad + colW + 32 * k; g.w = inner - colW - 32 * k; g.y = pad; }
-    if (fixed) g.region = H - pad - footH - 24 * k - g.y;
+    if (fixed) g.region = H - pad - footH - (opt.bare ? 0 : 24 * k) - g.y;
     y = (map ? tiles : spec.kind === 'states' ? ranked : bars)(spec, g);
 
     if (opt.bare) return {w: W, h: Math.ceil(y + 4 * k), ops: ops};

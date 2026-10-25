@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex"/>
+<title>Matrix explorer — CHIP50</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<meta name="color-scheme" content="light dark"/>
+<link rel="stylesheet" href="../../assets/report.css"/>
+<style>
+/* An app page, not a report: full width, sans, dense, tabular figures. */
+body{font:400 14px/1.45 var(--sans);font-variant-numeric:tabular-nums}
+.mono{font:500 12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+/* ---------- sticky bar: the two filters, side by side, then the answer ---------- */
+.xbar{position:sticky;top:0;z-index:70;display:flex;align-items:center;gap:14px;padding:10px 24px;
+  background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:saturate(180%) blur(12px);
+  border-bottom:1px solid var(--rule)}
+.brand{display:flex;flex-direction:column;gap:2px;flex:none;margin-right:6px;text-decoration:none}
+.brand b{font:650 14px/1 var(--sans);color:var(--ink);display:flex;align-items:center;gap:7px}
+.brand b::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--acc)}
+.brand span{font:500 11.5px/1 var(--sans);color:var(--muted);padding-left:16px}
+.field{position:relative;width:340px;flex:none}
+.field label{position:absolute;left:12px;top:6px;font:650 10px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);pointer-events:none}
+.field input{width:100%;font:600 15px/1.2 var(--sans);color:var(--ink);background:var(--surface);
+  border:1px solid var(--rule);border-radius:9px;padding:20px 40px 7px 12px;outline:none}
+.field input:focus{border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 22%,transparent)}
+.field kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%)}
+kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);border:1px solid var(--rule);
+  border-bottom-width:2px;border-radius:5px;padding:2px 5px;background:var(--surface)}
+.list{position:absolute;left:0;right:0;top:calc(100% + 6px);max-height:min(62vh,560px);overflow:auto;margin:0;padding:4px;
+  list-style:none;background:var(--surface);border:1px solid var(--rule);border-radius:10px;
+  box-shadow:0 14px 40px rgba(0,0,0,.16);display:none}
+.field.open .list{display:block}
+.list li{margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:baseline;padding:6px 9px;border-radius:7px;cursor:pointer}
+.list li .a{grid-area:1/1;font:600 13.5px/1.3 var(--sans);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list li .v{grid-area:1/2;font:600 13px/1.3 var(--sans);color:var(--ink2);text-align:right}
+.list li .b{grid-area:2/1;font:400 12px/1.3 var(--sans);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list li .w{grid-area:2/2;font:400 11.5px/1.3 var(--sans);color:var(--muted);text-align:right}
+.list li[aria-selected=true]{background:var(--soft)}
+.list li.cur .a::after{content:" ●";color:var(--acc);font-size:10px}
+.list .none{color:var(--muted);padding:10px;display:block}
+.answer{display:flex;align-items:baseline;gap:14px;min-width:0;margin-left:8px;white-space:nowrap}
+.answer .where{font:600 13px/1.2 var(--sans);color:var(--ink2);overflow:hidden;text-overflow:ellipsis}
+.answer .big{font:700 30px/1 var(--sans);color:var(--ink);letter-spacing:-.02em}
+.answer .us{font:500 14px/1 var(--sans);color:var(--ink2)}
+.answer .gap{font:700 14px/1 var(--sans)}
+.answer .n{font:400 13px/1 var(--sans);color:var(--muted)}
+.up{color:var(--acct)} .down{color:var(--s2)}
+.xbar .tools{margin-left:auto;display:flex;gap:8px;align-items:center;flex:none}
+
+main.app{max-width:none;padding:18px 24px 60px}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:14px 16px 12px}
+.ph{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:10px}
+.ph h2{font:650 16px/1.3 var(--sans);letter-spacing:-.005em;margin:0;color:var(--ink)}
+.ph h2::before{display:none}
+.ph p{font:400 13px/1.45 var(--sans);color:var(--muted);margin:2px 0 0}
+.ph .grow{flex:1;min-width:260px}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;flex:none}
+.seg button{font:500 12.5px/1 var(--sans);color:var(--ink2);background:transparent;border:0;padding:7px 10px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed=true]{background:var(--soft);color:var(--acct);font-weight:650}
+.ctl{display:flex;align-items:center;gap:8px;font:500 12px/1 var(--sans);color:var(--muted);flex:none}
+.btn.sm{font-size:12.5px;padding:6px 9px}
+
+/* ---------- the matrix ---------- */
+#grid{position:relative;outline:none;border-radius:8px}
+#grid:focus-visible{box-shadow:0 0 0 2px var(--acc)}
+#grid svg{display:block;width:100%;height:auto;user-select:none}
+#grid [data-c]{cursor:pointer}
+.legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:10px;font:400 12.5px/1.4 var(--sans);color:var(--muted)}
+.ramp{display:flex;align-items:center;gap:6px}
+.ramp i{display:block;width:18px;height:12px;border-radius:2px}
+.keys{display:flex;gap:12px;align-items:center;font:400 12px/1 var(--sans);color:var(--muted);margin-right:6px}
+@media (max-width:1760px){.xbar .keys{display:none}}
+.keys span{white-space:nowrap}
+#tip{position:fixed;z-index:90;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:8px;padding:8px 10px;
+  font:400 12.5px/1.45 var(--sans);box-shadow:0 8px 24px rgba(0,0,0,.25);display:none;max-width:280px}
+#tip b{font-weight:650}
+#tip .t{opacity:.75}
+
+/* ---------- detail for the selected pair ---------- */
+.dhead{display:flex;align-items:baseline;gap:14px;margin:26px 2px 12px}
+.dhead h2{font:700 21px/1.2 var(--sans);letter-spacing:-.015em;margin:0}
+.dhead h2::before{display:none}
+.dhead p{margin:0;font:400 13px/1.4 var(--sans);color:var(--muted)}
+.detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.05fr);gap:16px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.chart-el svg{display:block;width:100%;height:auto}
+.click [data-key]{cursor:pointer}
+.click [data-key]:hover{fill:color-mix(in srgb,var(--ink) 7%,transparent)}
+.ct{font:650 14.5px/1.3 var(--sans);color:var(--ink);margin:0}
+.cs{font:400 12.5px/1.45 var(--sans);color:var(--muted);margin:2px 0 12px}
+.out{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--rule2)}
+.out .lab{font:600 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.out a.btn{text-decoration:none}
+.emb{display:none;margin-top:8px}
+.emb.on{display:flex;gap:8px;align-items:flex-start}
+.emb pre{flex:1;min-width:0;margin:0;overflow-x:auto;background:var(--bg);border:1px solid var(--rule);border-radius:8px;
+  padding:8px 10px;color:var(--ink2);white-space:pre}
+dl.notes{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 14px;margin:0;font:400 13px/1.5 var(--sans)}
+dl.notes dt{color:var(--muted)}
+dl.notes dd{margin:0;color:var(--ink)}
+dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bottom:2px}
+.radio{margin:12px 0 6px;padding:10px 12px;background:var(--soft);border-radius:8px;font:400 13.5px/1.5 var(--sans);color:var(--ink)}
+.pos{font:400 12.5px/1.5 var(--sans);color:var(--muted);font-style:italic;margin:10px 0 0}
+/* very wide screens: the notes take their own fourth column */
+@media (min-width:2300px){
+  .detail{grid-template-columns:minmax(0,.95fr) minmax(0,.95fr) minmax(0,1.05fr) minmax(0,.9fr)}
+  .detail>.stack:first-child{display:contents}
+  #pBy{order:1} .detail>.stack:nth-child(2){order:2} .detail>.stack:nth-child(3){order:3} #pNotes{order:4}
+}
+@media (max-width:1560px){
+  .field{width:290px}
+  .answer .where{max-width:150px}
+}
+</style>
+</head>
+<body>
+<header class="xbar">
+  <a class="brand" href="index.html"><b>CHIP50</b><span>Matrix explorer</span></a>
+  <div class="field" id="fq">
+    <label for="qi">Question</label>
+    <input id="qi" role="combobox" aria-expanded="false" aria-controls="ql" aria-autocomplete="list" autocomplete="off" spellcheck="false">
+    <kbd>/</kbd>
+    <ul class="list" id="ql" role="listbox" aria-label="Questions"></ul>
+  </div>
+  <div class="field" id="fp">
+    <label for="pi">Place</label>
+    <input id="pi" role="combobox" aria-expanded="false" aria-controls="pl" aria-autocomplete="list" autocomplete="off" spellcheck="false">
+    <kbd>s</kbd>
+    <ul class="list" id="pl" role="listbox" aria-label="Places"></ul>
+  </div>
+  <div class="answer" id="answer" aria-live="polite"></div>
+  <div class="tools">
+    <div class="keys" aria-label="Keyboard shortcuts">
+      <span><kbd>/</kbd> question</span><span><kbd>s</kbd> place</span><span><kbd>u</kbd> U.S.</span>
+      <span><kbd>←</kbd><kbd>→</kbd><kbd>↑</kbd><kbd>↓</kbd> move in grid</span>
+    </div>
+    <button class="btn" id="tt" aria-label="Toggle dark mode">Theme</button>
+  </div>
+</header>
+
+<main class="app">
+  <section class="panel" aria-labelledby="gh">
+    <div class="ph">
+      <div class="grow">
+        <h2 id="gh">Every platform in every state</h2>
+        <p id="gsub"></p>
+      </div>
+      <div class="ctl">Shade
+        <div class="seg" role="group" aria-label="Shade cells by">
+          <button type="button" data-shade="gap" aria-pressed="true">Gap from U.S.</button>
+          <button type="button" data-shade="level" aria-pressed="false">Level, within row</button>
+        </div>
+      </div>
+      <div class="ctl">Columns
+        <div class="seg" role="group" aria-label="Order columns by">
+          <button type="button" data-order="region" aria-pressed="true">Region</button>
+          <button type="button" data-order="rank" aria-pressed="false" id="rankBtn">Rank</button>
+        </div>
+      </div>
+      <button class="btn sm" type="button" id="gridCsv">CSV of the grid</button>
+    </div>
+    <div id="grid" tabindex="0" role="application" aria-label="Question by place grid. Arrow keys move the selection."></div>
+    <div class="legend">
+      <div class="ramp" id="ramp"></div>
+      <span id="noise">Margins of error aren't served yet (#273). With 390 to 1,879 adults per state, gaps of a few points, and pale-to-mid shades in small states, may be noise.</span>
+    </div>
+  </section>
+
+  <div class="dhead"><h2 id="dh"></h2><p id="dp"></p></div>
+  <div class="detail">
+    <div class="stack">
+      <section class="panel" id="pBy"></section>
+      <section class="panel" id="pNotes"></section>
+    </div>
+    <div class="stack"><section class="panel click" id="pAcross"></section></div>
+    <div class="stack"><section class="panel click" id="pStates"></section></div>
+  </div>
+</main>
+<div id="tip" role="tooltip"></div>
+
+<script src="../../assets/report.js"></script>
+<script src="kit.js"></script>
+<script>
+(function () {
+  'use strict';
+  const K = CHIP50Kit, $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  /* screenshot hook: ?theme=dark|light */
+  if (/^(dark|light)$/.test(params.get('theme') || '')) document.documentElement.setAttribute('data-theme', params.get('theme'));
+
+  const REGIONS = [
+    ['Northeast', 'CT ME MA NH RI VT NJ NY PA'],
+    ['Midwest', 'IL IN MI OH WI IA KS MN MO NE ND SD'],
+    ['South', 'DE DC FL GA MD NC SC VA WV AL KY MS TN AR LA OK TX'],
+    ['West', 'AZ CO ID MT NV NM UT WY AK CA HI OR WA']
+  ].map(([name, s]) => ({name, abbrs: s.split(' ')}));
+  const CLAMP = 10;   /* gap shading saturates at ±10 points */
+  const el = (tag, attrs, text) => {
+    const e = document.createElement(tag);
+    for (const a in attrs || {}) e.setAttribute(a, attrs[a]);
+    if (text != null) e.textContent = text;
+    return e;
+  };
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const pct = K.pct, num = K.num;
+  const signed = g => (g > 0 ? '+' : g < 0 ? '−' : '±') + Math.abs(g).toFixed(Math.abs(g) < 9.95 ? 1 : 0);
+
+  K.loadSet().then(({index, questions: Q}) => {
+    const qById = new Map(Q.map(q => [q.id, q]));
+    const places = Q[0].states.map(s => ({slug: s.slug, name: s.name, label: s.label, abbr: s.abbr, n: s.n}));
+    const pBySlug = new Map(places.map(p => [p.slug, p])), pByAbbr = new Map(places.map(p => [p.abbr, p]));
+    const cell = (q, slug) => q.states.find(s => s.slug === slug);
+    /* q.states[] is in the same alphabetical order for every question */
+    const sIndex = new Map(places.map((p, i) => [p.slug, i]));
+    const val = (q, slug) => slug ? q.states[sIndex.get(slug)] : null;
+
+    const cur = {q: Q[0].id, s: null};
+    function fromURL() {
+      const u = new URLSearchParams(location.search);
+      cur.q = qById.has(u.get('q')) ? u.get('q') : Q[0].id;
+      cur.s = pBySlug.has(u.get('state')) ? u.get('state') : null;
+    }
+    fromURL();
+    /* view modes can be linked too: ?shade=level, ?order=rank */
+    let shade = params.get('shade') === 'level' ? 'level' : 'gap', order = params.get('order') === 'rank' ? 'rank' : 'region';
+    document.querySelectorAll('[data-shade]').forEach(x => x.setAttribute('aria-pressed', String(x.getAttribute('data-shade') === shade)));
+    document.querySelectorAll('[data-order]').forEach(x => x.setAttribute('aria-pressed', String(x.getAttribute('data-order') === order)));
+
+    /* ---------- selection ---------- */
+    function select(q, s, how) {
+      const changed = q !== cur.q || s !== cur.s;
+      cur.q = q; cur.s = s;
+      if (changed && how !== 'none') {
+        const u = new URL(location.href);
+        u.searchParams.set('q', q);
+        if (s) u.searchParams.set('state', s); else u.searchParams.delete('state');
+        history[how === 'replace' ? 'replaceState' : 'pushState'](null, '', u);
+      }
+      render();
+    }
+    addEventListener('popstate', () => { fromURL(); render(); });
+
+    /* ---------- the two comboboxes ---------- */
+    function combobox(root, cfg) {
+      const input = root.querySelector('input'), list = root.querySelector('.list');
+      let items = [], active = 0, open = false;
+      function show(query) {
+        const qy = (query || '').trim().toLowerCase();
+        items = cfg.items().filter(it => !qy || it.search.indexOf(qy) >= 0);
+        list.textContent = '';
+        if (!items.length) { list.appendChild(el('li', {'class': 'none'}, 'No match')); }
+        const cid = cfg.current();
+        active = Math.max(0, items.findIndex(it => it.id === cid));
+        if (qy) active = 0;
+        items.forEach((it, i) => {
+          const li = el('li', {role: 'option', id: root.id + '-o' + i, 'aria-selected': String(i === active)});
+          if (it.id === cid) li.classList.add('cur');
+          li.appendChild(el('span', {'class': 'a'}, it.a));
+          li.appendChild(el('span', {'class': 'v'}, it.v || ''));
+          li.appendChild(el('span', {'class': 'b'}, it.b || ''));
+          li.appendChild(el('span', {'class': 'w'}, it.w || ''));
+          li.addEventListener('mousedown', e => { e.preventDefault(); pick(i); });
+          li.addEventListener('mousemove', () => move(i, false));
+          list.appendChild(li);
+        });
+        root.classList.add('open'); open = true; input.setAttribute('aria-expanded', 'true');
+        move(active, qy ? true : 'center');
+      }
+      function move(i, scroll) {
+        if (!items.length) return;
+        active = (i + items.length) % items.length;
+        [].forEach.call(list.children, (li, j) => li.setAttribute('aria-selected', String(j === active)));
+        input.setAttribute('aria-activedescendant', root.id + '-o' + active);
+        if (scroll && list.children[active]) list.children[active].scrollIntoView({block: scroll === 'center' ? 'center' : 'nearest'});
+      }
+      function close() { root.classList.remove('open'); open = false; input.setAttribute('aria-expanded', 'false'); input.value = cfg.text(); }
+      function pick(i) { const it = items[i]; close(); input.blur(); if (it) cfg.pick(it.id); }
+      input.addEventListener('focus', () => { input.select(); show(''); });
+      input.addEventListener('input', () => show(input.value));
+      input.addEventListener('blur', () => setTimeout(close, 0));
+      input.addEventListener('keydown', e => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); open ? move(active + 1, true) : show(''); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); move(active - 1, true); }
+        else if (e.key === 'Enter') { e.preventDefault(); pick(active); }
+        else if (e.key === 'Escape') { e.preventDefault(); close(); input.blur(); }
+      });
+      return {sync: () => { if (!open) input.value = cfg.text(); }, focus: () => input.focus()};
+    }
+    const qBox = combobox($('fq'), {
+      items: () => Q.map(q => {
+        const c = val(q, cur.s);
+        return {id: q.id, a: q.label, b: q.question, search: (q.label + ' ' + q.question + ' ' + q.column + ' ' + q.topic).toLowerCase(),
+          v: c ? c.abbr + ' ' + pct(c.value) : 'U.S. ' + pct(q.us.value), w: c ? 'U.S. ' + pct(q.us.value) : ''};
+      }),
+      current: () => cur.q, text: () => qById.get(cur.q).label, pick: id => select(id, cur.s)
+    });
+    const pBox = combobox($('fp'), {
+      items: () => {
+        const q = qById.get(cur.q);
+        return [{id: '', a: 'United States', b: 'All 50 states and D.C. · ' + num(q.us.n) + ' adults', v: pct(q.us.value),
+          search: 'united states us u.s. usa national america'}]
+          .concat(places.map(p => {
+            const c = val(q, p.slug);
+            return {id: p.slug, a: p.name, b: p.abbr + ' · ' + num(p.n) + ' adults', v: pct(c.value), w: signed(c.value - q.us.value),
+              search: (p.name + ' ' + p.abbr).toLowerCase()};
+          }));
+      },
+      current: () => cur.s || '', text: () => cur.s ? pBySlug.get(cur.s).name : 'United States', pick: id => select(cur.q, id || null)
+    });
+
+    /* ---------- global keys ---------- */
+    addEventListener('keydown', e => {
+      const t = e.target, typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+      if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === '/') { e.preventDefault(); qBox.focus(); }
+      else if (e.key === 's') { e.preventDefault(); pBox.focus(); }
+      else if (e.key === 'u') { e.preventDefault(); select(cur.q, null); }
+    });
+
+    /* ---------- the matrix ---------- */
+    function columns() {
+      if (order === 'rank') {
+        const q = qById.get(cur.q);
+        return places.slice().sort((a, b) => val(q, b.slug).value - val(q, a.slug).value)
+          .map((p, i) => ({p, region: null, first: i === 0}));
+      }
+      const out = [];
+      REGIONS.forEach(r => r.abbrs.forEach((a, i) => out.push({p: pByAbbr.get(a), region: r.name, first: i === 0})));
+      return out;
+    }
+    function fillFor(q, c, rowMin, rowMax) {
+      if (shade === 'level') {
+        const t = rowMax > rowMin ? (c.value - rowMin) / (rowMax - rowMin) : 0.5;
+        const m = Math.round(6 + t * 80);
+        return {fill: 'color-mix(in srgb,var(--acc) ' + m + '%,var(--surface))', dark: t > 0.62};
+      }
+      const g = c.value - q.us.value, t = Math.min(1, Math.abs(g) / CLAMP), m = Math.round(4 + t * 82);
+      return {fill: 'color-mix(in srgb,var(' + (g >= 0 ? '--acc' : '--s2') + ') ' + m + '%,var(--surface))', dark: t > 0.62};
+    }
+    let geom = null;
+    function drawGrid() {
+      const box = $('grid'), W = Math.max(900, box.clientWidth), cols = columns();
+      const nGaps = order === 'region' ? REGIONS.length - 1 : 0;
+      const LAB = 168, USW = 50, GAP0 = 14, RG = 8, top = 40;
+      const cw = (W - LAB - USW - GAP0 - nGaps * RG) / cols.length;
+      const rh = cw >= 30 ? 26 : cw >= 24 ? 24 : 22, H = top + Q.length * rh + 4;
+      const xs = [];
+      let x = LAB + USW + GAP0;
+      cols.forEach((c, i) => { if (c.first && i > 0 && order === 'region') x += RG; xs.push(x); x += cw; });
+      const fs = cw >= 30 ? 12 : 11, showNum = cw >= 19, pad = 1;
+      const selRow = Q.findIndex(q => q.id === cur.q), selCol = cur.s ? cols.findIndex(c => c.p.slug === cur.s) : -1;
+      const o = ['<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" font-family=\'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif\' style="font-variant-numeric:tabular-nums">'];
+      /* region labels */
+      if (order === 'region') {
+        let i = 0;
+        REGIONS.forEach(r => {
+          const x0 = xs[i], x1 = xs[i + r.abbrs.length - 1] + cw;
+          o.push('<text x="' + x0 + '" y="12" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">' + r.name.toUpperCase() + '</text>');
+          o.push('<line x1="' + x0 + '" x2="' + x1 + '" y1="17" y2="17" stroke-width="1" style="stroke:var(--rule)"/>');
+          i += r.abbrs.length;
+        });
+      } else {
+        o.push('<text x="' + xs[0] + '" y="12" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">RANKED ON ' +
+          esc(qById.get(cur.q).label.toUpperCase()) + ', HIGHEST FIRST →</text>');
+        o.push('<line x1="' + xs[0] + '" x2="' + (xs[xs.length - 1] + cw) + '" y1="17" y2="17" stroke-width="1" style="stroke:var(--rule)"/>');
+      }
+      const hy = top - 8;
+      /* column headers: U.S. then states */
+      o.push('<rect data-c="us" data-r="head" x="' + LAB + '" y="' + (hy - 13) + '" width="' + USW + '" height="18" fill="transparent"/>');
+      o.push('<text x="' + (LAB + USW / 2) + '" y="' + hy + '" text-anchor="middle" font-size="11.5" font-weight="' + (cur.s ? 600 : 800) +
+        '" pointer-events="none" style="fill:' + (cur.s ? 'var(--ink2)' : 'var(--acct)') + '">U.S.</text>');
+      cols.forEach((c, i) => {
+        const on = i === selCol;
+        o.push('<rect data-c="' + i + '" data-r="head" x="' + xs[i] + '" y="' + (hy - 13) + '" width="' + cw + '" height="18" fill="transparent"/>');
+        o.push('<text x="' + (xs[i] + cw / 2) + '" y="' + hy + '" text-anchor="middle" font-size="' + (cw >= 24 ? 11 : 10) + '" font-weight="' + (on ? 800 : 500) +
+          '" pointer-events="none" style="fill:' + (on ? 'var(--acct)' : 'var(--ink2)') + '">' + c.p.abbr + '</text>');
+      });
+      /* rows */
+      Q.forEach((q, r) => {
+        const y = top + r * rh, on = r === selRow;
+        const vals = q.states.map(s => s.value), mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
+        o.push('<rect data-c="label" data-r="' + r + '" x="0" y="' + y + '" width="' + (LAB - 6) + '" height="' + rh + '" rx="5" style="fill:' +
+          (on ? 'var(--soft)' : 'transparent') + '"/>');
+        if (on) o.push('<rect x="0" y="' + (y + 3) + '" width="3" height="' + (rh - 6) + '" rx="1.5" style="fill:var(--acc)" pointer-events="none"/>');
+        o.push('<text x="10" y="' + (y + rh / 2 + 4.5) + '" font-size="13" font-weight="' + (on ? 700 : 500) + '" pointer-events="none" style="fill:' +
+          (on ? 'var(--ink)' : 'var(--ink2)') + '">' + esc(q.label) + '</text>');
+        /* U.S. cell */
+        const usOn = on && !cur.s;
+        o.push('<rect data-c="us" data-r="' + r + '" x="' + (LAB + pad) + '" y="' + (y + pad) + '" width="' + (USW - 2 * pad) + '" height="' + (rh - 2 * pad) +
+          '" rx="3" style="fill:var(--rule2)"/>');
+        o.push('<text x="' + (LAB + USW / 2) + '" y="' + (y + rh / 2 + 4) + '" text-anchor="middle" font-size="' + fs + '" font-weight="750" pointer-events="none" style="fill:var(--ink)">' +
+          (q.us.value < 9.95 ? q.us.value.toFixed(1) : Math.round(q.us.value)) + '</text>');
+        cols.forEach((c, i) => {
+          const s = val(q, c.p.slug), f = fillFor(q, s, mn, mx);
+          o.push('<rect data-c="' + i + '" data-r="' + r + '" x="' + (xs[i] + pad) + '" y="' + (y + pad) + '" width="' + (cw - 2 * pad) + '" height="' + (rh - 2 * pad) +
+            '" rx="3" style="fill:' + f.fill + '"/>');
+          if (showNum) {
+            const t = s.value < 9.95 && cw >= 30 ? s.value.toFixed(1) : String(Math.round(s.value));
+            o.push('<text x="' + (xs[i] + cw / 2) + '" y="' + (y + rh / 2 + 4) + '" text-anchor="middle" font-size="' + fs + '" pointer-events="none" style="fill:' +
+              (f.dark ? '#fff' : 'var(--ink)') + '">' + t + '</text>');
+          }
+        });
+        if (usOn) o.push('<rect x="' + (LAB + 0.5) + '" y="' + (y + 0.5) + '" width="' + (USW - 1) + '" height="' + (rh - 1) + '" rx="4" fill="none" stroke-width="2.5" style="stroke:var(--ink)" pointer-events="none"/>');
+      });
+      /* crosshair: the selected row and column outlined, their meeting cell heavier */
+      const gx0 = LAB, gx1 = xs[xs.length - 1] + cw, gy0 = top, gy1 = top + Q.length * rh;
+      if (selRow >= 0) o.push('<rect x="' + (gx0 + 0.5) + '" y="' + (gy0 + selRow * rh + 0.5) + '" width="' + (gx1 - gx0 - 1) + '" height="' + (rh - 1) +
+        '" rx="4" fill="none" stroke-width="1.25" style="stroke:var(--ink2)" pointer-events="none"/>');
+      if (!cur.s) o.push('<rect x="' + (LAB + 0.5) + '" y="' + (hy - 15) + '" width="' + (USW - 1) + '" height="' + (gy1 - hy + 15.5) +
+        '" rx="4" fill="none" stroke-width="1.25" style="stroke:var(--ink2)" pointer-events="none"/>');
+      if (selCol >= 0) {
+        const cx = xs[selCol];
+        o.push('<rect x="' + (cx + 0.5) + '" y="' + (hy - 15) + '" width="' + (cw - 1) + '" height="' + (gy1 - hy + 15.5) +
+          '" rx="4" fill="none" stroke-width="1.25" style="stroke:var(--ink2)" pointer-events="none"/>');
+        o.push('<rect x="' + (cx + 0.5) + '" y="' + (gy0 + selRow * rh + 0.5) + '" width="' + (cw - 1) + '" height="' + (rh - 1) +
+          '" rx="4" fill="none" stroke-width="2.5" style="stroke:var(--ink)" pointer-events="none"/>');
+      }
+      o.push('</svg>');
+      box.innerHTML = o.join('');
+      geom = {cols, rh, top};
+    }
+
+    /* grid events: hover tip, click to select, arrows to move */
+    const tip = $('tip');
+    function target(e) {
+      const t = e.target.closest && e.target.closest('[data-c]');
+      return t ? {c: t.getAttribute('data-c'), r: t.getAttribute('data-r')} : null;
+    }
+    function placeAt(c) { return c === 'us' ? null : c === 'label' ? undefined : geom.cols[+c].p.slug; }
+    $('grid').addEventListener('mousemove', e => {
+      const t = target(e);
+      if (!t || t.r === 'head' || t.c === 'label') { tip.style.display = 'none'; return; }
+      const q = Q[+t.r], slug = placeAt(t.c), s = slug ? val(q, slug) : null;
+      const g = s ? s.value - q.us.value : null;
+      tip.innerHTML = '<b>' + esc(s ? pBySlug.get(slug).name : 'United States') + '</b> · ' + esc(q.label) + '<br>' +
+        '<b>' + pct(s ? s.value : q.us.value) + '</b>' + (s ? ' <span class="t">U.S. ' + pct(q.us.value) + ', ' + signed(g) + ' pts</span>' : '') +
+        '<br><span class="t">' + num(s ? s.n : q.us.n) + ' adults answered</span>';
+      tip.style.display = 'block';
+      const w = tip.offsetWidth, h = tip.offsetHeight;
+      let x = e.clientX + 14, y = e.clientY + 16;
+      if (x + w > innerWidth - 8) x = e.clientX - w - 14;
+      if (y + h > innerHeight - 8) y = e.clientY - h - 14;
+      tip.style.left = x + 'px'; tip.style.top = y + 'px';
+    });
+    $('grid').addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+    $('grid').addEventListener('click', e => {
+      const t = target(e);
+      if (!t) return;
+      if (t.r === 'head') return select(cur.q, placeAt(t.c));
+      if (t.c === 'label') return select(Q[+t.r].id, cur.s);
+      select(Q[+t.r].id, placeAt(t.c));
+    });
+    $('grid').addEventListener('keydown', e => {
+      const k = e.key;
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(k) < 0) return;
+      e.preventDefault();
+      const cols = geom.cols, r = Q.findIndex(q => q.id === cur.q);
+      let c = cur.s ? cols.findIndex(x => x.p.slug === cur.s) : -1;   /* -1 = the U.S. column */
+      let nr = r;
+      if (k === 'ArrowUp') nr = Math.max(0, r - 1);
+      if (k === 'ArrowDown') nr = Math.min(Q.length - 1, r + 1);
+      if (k === 'ArrowLeft') c = Math.max(-1, c - 1);
+      if (k === 'ArrowRight') c = Math.min(cols.length - 1, c + 1);
+      select(Q[nr].id, c < 0 ? null : cols[c].p.slug, 'replace');
+    });
+    let rw = 0;
+    addEventListener('resize', () => { const w = $('grid').clientWidth; if (w !== rw) { rw = w; drawGrid(); } });
+
+    /* legend ramp */
+    function drawRamp() {
+      const r = $('ramp');
+      r.textContent = '';
+      if (shade === 'gap') {
+        r.appendChild(el('span', {}, 'Below U.S.'));
+        [-10, -6, -3, 0, 3, 6, 10].forEach(g => {
+          const t = Math.min(1, Math.abs(g) / CLAMP), m = Math.round(4 + t * 82);
+          const i = el('i', {title: (g > 0 ? '+' : g < 0 ? '−' : '') + Math.abs(g) + ' pts'});
+          i.style.background = 'color-mix(in srgb,var(' + (g >= 0 ? '--acc' : '--s2') + ') ' + m + '%,var(--surface))';
+          if (g === 0) i.style.boxShadow = 'inset 0 0 0 1px var(--rule)';
+          r.appendChild(i);
+        });
+        r.appendChild(el('span', {}, 'Above · ±10 pts and beyond at full shade'));
+      } else {
+        r.appendChild(el('span', {}, 'Lowest state'));
+        [0, .25, .5, .75, 1].forEach(t => {
+          const i = el('i'); i.style.background = 'color-mix(in srgb,var(--acc) ' + Math.round(6 + t * 80) + '%,var(--surface))'; r.appendChild(i);
+        });
+        r.appendChild(el('span', {}, 'highest, within each row'));
+      }
+    }
+    document.querySelectorAll('[data-shade]').forEach(b => b.onclick = () => {
+      shade = b.getAttribute('data-shade');
+      document.querySelectorAll('[data-shade]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      drawRamp(); drawGrid();
+    });
+    document.querySelectorAll('[data-order]').forEach(b => b.onclick = () => {
+      order = b.getAttribute('data-order');
+      document.querySelectorAll('[data-order]').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      drawGrid();
+    });
+    $('gridCsv').onclick = () => {
+      const cols = columns();
+      const rows = [['question', 'column', 'United States'].concat(cols.map(c => c.p.name))].concat(
+        Q.map(q => [q.label, q.column, q.us.value].concat(cols.map(c => val(q, c.p.slug).value))));
+      K.csv({csv: rows}, 'chip50-' + index.set + '-grid.csv');
+    };
+
+    /* ---------- detail panels, each with its own outputs ---------- */
+    function panel(root, v) {
+      const title = el('p', {'class': 'ct'}), sub = el('p', {'class': 'cs'}), chart = el('div', {'class': 'chart-el'});
+      root.appendChild(title); root.appendChild(sub); root.appendChild(chart);
+      const out = el('div', {'class': 'out'});
+      out.appendChild(el('span', {'class': 'lab'}, 'Use'));
+      const bEmb = el('button', {'class': 'btn sm', type: 'button', 'aria-expanded': 'false'}, 'Embed');
+      const bPng = el('button', {'class': 'btn sm', type: 'button'}, 'PNG');
+      const bSvg = el('button', {'class': 'btn sm', type: 'button'}, 'SVG');
+      const bCsv = el('button', {'class': 'btn sm', type: 'button'}, 'CSV');
+      const prev = el('a', {'class': 'btn sm', target: '_blank', rel: 'noopener'}, 'Preview ↗');
+      [bEmb, bPng, bSvg, bCsv, prev].forEach(b => out.appendChild(b));
+      root.appendChild(out);
+      const emb = el('div', {'class': 'emb'}), pre = el('pre', {'class': 'mono'}), copy = el('button', {'class': 'btn sm', type: 'button'}, 'Copy');
+      emb.appendChild(pre); emb.appendChild(copy); root.appendChild(emb);
+      bEmb.onclick = () => { const on = emb.classList.toggle('on'); bEmb.setAttribute('aria-expanded', String(on)); };
+      copy.onclick = () => navigator.clipboard.writeText(pre.textContent).then(() => {
+        copy.textContent = 'Copied'; setTimeout(() => { copy.textContent = 'Copy'; }, 1400);
+      });
+      let m = null, spec = null;
+      return {set(s) {
+        spec = s;
+        title.textContent = s.title; sub.textContent = s.subtitle;
+        if (!m) m = K.mount(chart, s, {bare: true, themed: true, animate: false}); else m.set(s);
+        const chartId = v === 'questions' ? index.set : s.question;
+        const attrs = 'data-chip50-chart="' + chartId + '" data-view="' + v + '"' + (s.state ? ' data-state="' + s.state + '"' : '');
+        pre.textContent = '<div ' + attrs + '></div>\n<script async src="' + new URL('embed.js', location.href).href + '"></scr' + 'ipt>';
+        prev.href = 'embed.html?q=' + encodeURIComponent(chartId) + '&view=' + v + (s.state ? '&state=' + s.state : '');
+        bPng.onclick = () => K.png(spec, 1200, v === 'by' ? 675 : null, spec.stem + '.png', 2);
+        bSvg.onclick = () => K.svg(spec, spec.stem + '.svg');
+        bCsv.onclick = () => K.csv(spec, spec.stem + '.csv');
+      }};
+    }
+    const pBy = panel($('pBy'), 'by'), pAcross = panel($('pAcross'), 'questions'), pStates = panel($('pStates'), 'states');
+    $('pAcross').addEventListener('click', e => {
+      const k = e.target.getAttribute && e.target.getAttribute('data-key');
+      if (k && qById.has(k)) select(k, cur.s);
+    });
+    $('pStates').addEventListener('click', e => {
+      const k = e.target.getAttribute && e.target.getAttribute('data-key');
+      if (k && pBySlug.has(k)) select(cur.q, k === cur.s ? null : k);
+    });
+
+    function notes(q, st) {
+      const root = $('pNotes');
+      root.textContent = '';
+      root.appendChild(el('p', {'class': 'ct'}, 'About these numbers'));
+      root.appendChild(el('p', {'class': 'cs'}, q.question));
+      const dl = el('dl', {'class': 'notes'});
+      const add = (k, v) => { dl.appendChild(el('dt', {}, k)); const d = el('dd'); if (v instanceof Node) d.appendChild(v); else d.textContent = v; dl.appendChild(d); };
+      add('Wording', q.wording);
+      add('Base', st ? num(st.n) + ' adults in ' + st.name + '; unweighted n per group in each CSV'
+        : num(q.us.n) + ' U.S. adults; unweighted n per group in each CSV');
+      add('Fielded', q.fielded + ' (' + q.wave + ')');
+      add('Weight', st ? q.weight.state + '; U.S. figures use ' + q.weight.us : q.weight.us);
+      add('Small groups', q.suppression);
+      add('Margin of error', q.moe);
+      const pv = el('span');
+      q.provenance.forEach((c, i) => { if (i) pv.appendChild(el('br')); pv.appendChild(el('code', {}, c.replace(/\{column\}/g, q.column))); });
+      pv.appendChild(document.createTextNode(' on the CHIP50 MCP, ' + q.pulled));
+      add('Pulled with', pv);
+      root.appendChild(dl);
+      const spec = K.view(q, 'by', st ? st.slug : null);
+      root.appendChild(el('p', {'class': 'ct', style: 'margin-top:14px'}, 'Radio copy'));
+      const rc = el('div', {'class': 'radio'}, spec.radio);
+      root.appendChild(rc);
+      const b = el('button', {'class': 'btn sm', type: 'button'}, 'Copy radio copy');
+      b.onclick = () => navigator.clipboard.writeText(rc.textContent).then(() => { b.textContent = 'Copied'; setTimeout(() => { b.textContent = 'Copy radio copy'; }, 1400); });
+      root.appendChild(b);
+      root.appendChild(el('p', {'class': 'pos'}, 'Demo only. These numbers have not been through PI review for publication.'));
+    }
+
+    /* ---------- render everything for the current pair ---------- */
+    function render() {
+      const q = qById.get(cur.q), st = cur.s ? val(q, cur.s) : null;
+      qBox.sync(); pBox.sync();
+      const a = $('answer');
+      const g = st ? st.value - q.us.value : null;
+      a.innerHTML = '<span class="where">' + esc((st ? st.name : 'United States') + ' · ' + q.label) + '</span>' +
+        '<span class="big">' + pct(st ? st.value : q.us.value) + '</span>' +
+        (st ? '<span class="us">U.S. ' + pct(q.us.value) + '</span><span class="gap ' + (g >= 0 ? 'up' : 'down') + '">' + signed(g) + ' pts</span>' : '') +
+        '<span class="n">' + num(st ? st.n : q.us.n) + ' adults</span>';
+      $('gsub').textContent = 'Share of adults who say they ever use each platform, ' + q.wave + ' (' + q.fielded + '). ' +
+        (shade === 'gap' ? 'Cells shaded by the gap from the U.S. on that row.' : 'Cells shaded from each row\'s lowest state to its highest.') +
+        ' Click a cell to pick both; a row name or a column head to pick one.';
+      $('rankBtn').textContent = 'Rank on ' + q.label;
+      drawGrid();
+      $('dh').textContent = q.label + ' · ' + (st ? st.name : 'United States');
+      $('dp').textContent = st ? num(st.n) + ' adults in ' + st.name + ' answered · rows in the charts below are clickable' :
+        num(q.us.n) + ' U.S. adults answered · rows in the charts below are clickable';
+      pBy.set(K.view(q, 'by', cur.s));
+      pAcross.set(K.across(Q, cur.s, index));
+      pStates.set(K.view(q, 'states', cur.s));
+      notes(q, st ? Object.assign({name: pBySlug.get(cur.s).name}, st) : null);
+      document.title = q.label + ' · ' + (st ? st.name : 'U.S.') + ' — CHIP50 matrix explorer';
+    }
+    drawRamp();
+    render();
+    rw = $('grid').clientWidth;
+    /* ?open=question|place opens that picker on load */
+    if (params.get('open') === 'question') qBox.focus();
+    if (params.get('open') === 'place') pBox.focus();
+  }).catch(err => {
+    document.querySelector('main').insertAdjacentHTML('afterbegin', '<p class="panel">Could not load the questions: ' + err.message + '</p>');
+  });
+})();
+</script>
+</body>
+</html>
