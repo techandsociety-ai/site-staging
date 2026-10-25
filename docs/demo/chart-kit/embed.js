@@ -1,7 +1,9 @@
 /* CHIP50 chart embed. Paste where the chart should go:
      <div data-chip50-chart="tiktok-w38" data-view="states" data-state="ohio"></div>
      <script async src="https://techandsociety.ai/demo/chart-kit/embed.js"></script>
-   data-view is "by" (the default) or "states"; data-state is optional.
+   data-view is "by" (the default), "states", or "questions" (one place across
+   every question in the set; data-chip50-chart then names the set);
+   data-state is optional.
    Each div becomes an iframe that sizes itself to its chart. */
 (function () {
   var src = (document.currentScript && document.currentScript.src) || '';

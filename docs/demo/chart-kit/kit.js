@@ -32,7 +32,8 @@
     return lines;
   }
   function ease(t) { t = Math.max(0, Math.min(1, t)); return 1 - Math.pow(1 - t, 3); }
-  function pct(v) { return v == null ? '—' : Math.round(v) + '%'; }
+  /* shares under 10% keep a decimal, so small platforms still read */
+  function pct(v) { return v == null ? '—' : (v < 9.95 ? (Math.round(v * 10) / 10) : Math.round(v)) + '%'; }
   function num(n) { return n.toLocaleString('en-US'); }
   function fill(t, o) { return t.replace(/\{(\w+)\}/g, function (m, k) { return o[k] != null ? o[k] : m; }); }
 
@@ -69,6 +70,29 @@
       spec.stem = 'chip50-' + q.id + '-' + q.byName + (st ? '-' + st.slug : '');
     }
     return spec;
+  }
+
+  /* across(qs, slug, meta) → a chart spec for one place across every
+     question in a set: the place's share on each, with U.S. ticks when the
+     place is a state. Rows keep the set's order so they don't jump when the
+     place changes. */
+  function across(qs, slug, meta) {
+    var st = null;
+    var rows = qs.map(function (q) {
+      var s = slug ? q.states.filter(function (x) { return x.slug === slug; })[0] : null;
+      if (s) st = s;
+      return {label: q.label, key: q.id, value: s ? s.value : q.us.value, n: s ? s.n : q.us.n, ref: s ? q.us.value : null};
+    });
+    var q0 = qs[0], where = st ? st.label : 'U.S.';
+    return {kind: 'bars', question: meta.set, view: 'questions', state: st ? st.slug : null, site: q0.site, rows: rows,
+      title: st ? st.label + ' across ' + qs.length + ' platforms' : 'Which platforms U.S. adults use',
+      subtitle: 'Share of ' + (st ? st.label : 'U.S.') + ' adults who say they ever use each, spring 2026' +
+        (st ? '. Ticks mark the U.S.' : ''),
+      source: 'CHIP50 survey, ' + q0.wave + ', ' + q0.fielded + '. ' + num(st ? st.n : q0.us.n) + ' adults' +
+        (st ? ' in ' + st.label + ', weighted within the state' : ', weighted to the adult population') + '.',
+      radio: '', csv: [['platform', where + ' pct_weighted', 'unweighted_n'].concat(st ? ['us_pct_weighted'] : [])].concat(
+        rows.map(function (r) { return [r.label, r.value, r.n].concat(st ? [r.ref] : []); })),
+      stem: 'chip50-' + meta.set + (st ? '-' + st.slug : '')};
   }
 
   /* layout(spec, W, H, opt) → {w, h, ops}. With H the drawing fills a fixed
@@ -124,22 +148,27 @@
     var k = g.k, S = g.S, rows = spec.rows, n = rows.length, rh = 34 * k, y0 = g.y;
     if (g.fixed) { rh = Math.min(g.region / n, 72 * k); y0 = g.y + (g.region - rh * n) / 2; }
     var refs = rows.some(function (r) { return r.ref != null; });
+    /* 0–100 on a grey track, unless every share is small: then 0 to the next ten, no track */
+    var top = Math.max.apply(null, rows.map(function (r) { return Math.max(r.value || 0, r.ref || 0); }));
+    var dom = top >= 50 ? 100 : Math.max(10, Math.ceil(top / 10) * 10);
     var labW = Math.max.apply(null, rows.map(function (r) { return measure(r.label, S.lab, 400); })) + 14 * k;
     var barMax = g.w - labW - measure('100%', S.val, 700) - 10 * k;
     var bh = Math.min(rh * 0.6, 22 * k * (g.fixed ? 1.7 : 1)), x0 = g.x + labW;
     rows.forEach(function (r, i) {
       var cy = y0 + rh * i + rh / 2, e = ease(g.p * 1.6 - i * 0.08);
-      var bw = r.value == null ? 0 : barMax * r.value / 100 * e;
+      var bw = r.value == null ? 0 : barMax * r.value / dom * e;
       g.text(r.label, x0 - 14 * k, cy + S.lab * 0.35, S.lab, 400, 'ink2', 'end');
-      g.ops.push({t: 'rect', x: x0, y: cy - bh / 2, w: barMax, h: bh, c: 'track'});
+      if (dom === 100) g.ops.push({t: 'rect', x: x0, y: cy - bh / 2, w: barMax, h: bh, c: 'track'});
       g.ops.push({t: 'rect', x: x0, y: cy - bh / 2, w: bw, h: bh, c: 'acc', title: r.label + ': ' + pct(r.value)});
       if (r.ref != null) {
-        var tx = x0 + barMax * r.ref / 100;
+        var tx = x0 + barMax * r.ref / dom;
         g.ops.push({t: 'line', x1: tx, y1: cy - bh / 2 - 5 * k, x2: tx, y2: cy + bh / 2 + 5 * k, c: 'ink', sw: 2.5 * k});
       }
       var a = ease((e - 0.6) / 0.4);
       if (refs) g.text(pct(r.value), g.x + g.w, cy + S.val * 0.35, S.val, 700, 'ink', 'end', a);
       else g.text(pct(r.value), x0 + bw + 8 * k, cy + S.val * 0.35, S.val, 700, 'ink', 'start', a);
+      /* rows with a key (a question, in the across view) are clickable */
+      if (r.key) g.ops.push({t: 'rect', x: g.x, y: cy - rh / 2, w: g.w, h: rh, c: 'hit', r: 0, key: r.key, title: r.label + ': ' + pct(r.value)});
     });
     return y0 + rh * n;
   }
@@ -320,12 +349,14 @@
 
   /* Draws a chart into el at its width, redraws on resize, and grows the
      bars the first time it scrolls into view and whenever set() swaps the
-     spec. opt.themed follows the site theme; opt.onRender(height) lets an
-     embed report its height. */
+     spec. opt.themed follows the site theme; opt.animate false draws
+     every state at once (the explorer); opt.onRender(height) lets an embed
+     report its height. */
   function mount(el, spec, opt) {
     opt = opt || {};
     var pal = opt.themed ? THEMED : LIGHT, p = 0, w = 0, seen = false;
-    var still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var still = opt.animate === false || matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (opt.animate === false) p = 1;
     function render() {
       var L = layout(spec, el.clientWidth || 700, null, {bare: opt.bare, progress: p});
       el.innerHTML = toSVG(spec, L, pal, opt.bg);
@@ -356,6 +387,13 @@
     return fetch(id + '.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
   }
 
-  window.CHIP50Kit = {view: view, layout: layout, toSVG: toSVG, draw: draw, canvas: canvas, mount: mount, load: load,
+  /* every question the set's index.json lists, in its order */
+  function loadSet() {
+    return fetch('index.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (ix) {
+      return Promise.all(ix.questions.map(function (q) { return load(q.id); })).then(function (qs) { return {index: ix, questions: qs}; });
+    });
+  }
+
+  window.CHIP50Kit = {view: view, across: across, loadSet: loadSet, GRID: GRID, LIGHT: LIGHT, THEMED: THEMED, layout: layout, toSVG: toSVG, draw: draw, canvas: canvas, mount: mount, load: load,
     png: png, svg: svg, csv: csv, clip: clip, save: save, pct: pct, num: num};
 })();
