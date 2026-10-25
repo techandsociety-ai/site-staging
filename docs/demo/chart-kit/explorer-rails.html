@@ -13,7 +13,7 @@
    picks the place; both are the same width and weight, both stay on screen,
    and each list is itself a chart (the place across questions, the question
    across places). The canvas between them shows the pair. */
-:root{--rail:340px;--bar:#2a78d6;--neg:var(--s2);--pos:var(--acc);--hd:44px}
+:root{--rail:300px;--neg:var(--s2);--pos:var(--acc);--hd:44px}
 html,body{height:100%}
 body{overflow:hidden;font:400 14px/1.45 var(--sans);font-variant-numeric:tabular-nums}
 button{font:inherit;color:inherit}
@@ -31,12 +31,13 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink2
 .rail{display:flex;flex-direction:column;min-height:0;background:var(--surface)}
 .rail.l{border-right:1px solid var(--rule)}
 .rail.r{border-left:1px solid var(--rule)}
-.rhead{padding:14px 14px 10px;border-bottom:1px solid var(--rule)}
+.rhead{padding:13px 12px 10px;border-bottom:1px solid var(--rule)}
 .rlab{display:flex;align-items:center;justify-content:space-between;font:640 11.5px/1 var(--sans);
   letter-spacing:.08em;text-transform:uppercase;color:var(--acct);margin:0 0 6px}
 .rlab .tools{letter-spacing:0;text-transform:none}
-.rnow{font:680 20px/1.2 var(--sans);color:var(--ink);margin:0 0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rnow small{font:400 13px/1 var(--sans);color:var(--muted);margin-left:6px}
+.rlab .cnt{color:var(--muted);font:500 12px/1 var(--sans);letter-spacing:0;text-transform:none}
+.rnow{font:680 19px/1.2 var(--sans);color:var(--ink);margin:0 0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rnow small{font:400 12.5px/1 var(--sans);color:var(--muted);margin-left:6px}
 .srch{position:relative}
 .srch input{width:100%;font:400 14px/1.2 var(--sans);color:var(--ink);background:var(--bg);border:1px solid var(--rule);
   border-radius:8px;padding:8px 34px 8px 10px;outline:none}
@@ -47,44 +48,59 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink2
 .seg button+button{border-left:1px solid var(--rule)}
 .seg button[aria-pressed="true"]{background:var(--soft);color:var(--acct);font-weight:650}
 .seg button:disabled{color:var(--muted);opacity:.5;cursor:default}
-.colh{display:grid;grid-template-columns:minmax(0,1fr) 64px 46px 42px;gap:8px;padding:7px 14px 5px;
-  font:600 11px/1 var(--sans);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--rule2)}
-.colh span:nth-child(n+3){text-align:right}
-.rail.r .colh{grid-template-columns:minmax(0,1fr) 104px 48px}
-.list{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:0 0 10px}
-.rail.l .list{padding-top:4px}
-.row{display:grid;grid-template-columns:minmax(0,1fr) 64px 46px 42px;gap:8px;align-items:center;width:100%;
-  height:28px;padding:0 14px;border:0;background:transparent;text-align:left;cursor:pointer;position:relative}
-.rail.r .row{grid-template-columns:minmax(0,1fr) 104px 48px;height:23px}
+.colh{display:grid;gap:6px;padding:7px 12px 5px;font:600 11px/1 var(--sans);color:var(--muted);
+  text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--rule2)}
+.list{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:0 0 14px}
+.row{display:grid;gap:6px;align-items:center;width:100%;padding:0 12px;border:0;background:transparent;
+  text-align:left;cursor:pointer;position:relative}
 .row:hover{background:color-mix(in srgb,var(--ink) 5%,transparent)}
 .row.on{background:var(--soft)}
 .row.on::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--acc)}
 .row.act{outline:2px solid color-mix(in srgb,var(--acc) 60%,transparent);outline-offset:-2px}
-.row .nm{font:400 13.5px/1.2 var(--sans);color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rail.r .row .nm{font-size:13px}
+.row .nm{color:var(--ink2);min-width:0}
 .row.on .nm{color:var(--ink);font-weight:650}
 .row .v{font:600 13px/1 var(--sans);color:var(--ink);text-align:right}
-.row .gp{font:500 12.5px/1 var(--sans);text-align:right}
+.empty{padding:14px 12px;color:var(--muted);font-size:13px}
+.usl{padding:4px 12px 5px;font:600 11px/1.3 var(--sans);color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+
+/* question rail: label | bar 0–100 with U.S. tick | share | gap */
+.rail.l .colh,.rail.l .row{grid-template-columns:minmax(0,1fr) 56px 40px 38px}
+.rail.l .colh span:nth-child(n+3){text-align:right}
+.rail.l .row{min-height:28px;padding-top:3px;padding-bottom:3px}
+/* long labels wrap rather than cut off */
+.rail.l .row .nm{font:400 13px/1.15 var(--sans)}
+.rail.l .usl{border-bottom:1px solid var(--rule2)}
+.rail.l .list{padding-top:3px}
+.gp{font:500 12.5px/1 var(--sans);text-align:right}
 .gp.p{color:var(--pos)}.gp.n{color:var(--neg)}.gp.z{color:var(--muted)}
 .mb{position:relative;height:8px;border-radius:4px;background:var(--rule2)}
 .mb i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--acc)}
 .mb b{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:var(--ink);border-radius:1px}
-.rail.r .mb{background:transparent}
-.rail.r .mb i{background:color-mix(in srgb,var(--acc) 55%,var(--surface))}
-.rail.r .row.on .mb i,.rail.r .row.us .mb i{background:var(--acc)}
-/* the U.S. tick runs the full row height, so stacked rows draw one line */
-.rail.r .mb b{top:-8px;bottom:-8px;width:1.5px;background:color-mix(in srgb,var(--ink) 70%,transparent)}
+
+/* place rail: rank | place | dot on a zoomed track with a U.S. line | share | n */
+.rail.r .colh,.rail.r .row{grid-template-columns:18px minmax(0,1fr) 72px 34px 34px;column-gap:5px}
+.rail.r .colh span:nth-child(1),.rail.r .colh span:nth-child(n+4){text-align:right}
+.rail.r .row{height:23px}
+.rail.r .row .nm{font:400 12.5px/1 var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk{font:400 11px/1 var(--sans);color:var(--muted);text-align:right}
+.nn{font:400 11px/1 var(--sans);color:var(--muted);text-align:right}
+.dp{position:relative;height:23px}
+.dp::before{content:"";position:absolute;left:0;right:0;top:11px;height:1px;background:var(--rule2)}
+/* the U.S. line runs the full row height, so stacked rows draw one line */
+.dp b{position:absolute;top:0;bottom:0;width:1.5px;margin-left:-.75px;background:color-mix(in srgb,var(--ink) 55%,transparent)}
+.dp i{position:absolute;top:7.5px;width:8px;height:8px;margin-left:-4px;border-radius:50%;
+  background:color-mix(in srgb,var(--acc) 60%,var(--surface));border:1px solid var(--acc)}
+.row.on .dp i,.row.us .dp i{width:10px;height:10px;top:6.5px;margin-left:-5px;background:var(--acc);
+  box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--acc)}
 .rail.r .row.us{height:30px;position:sticky;top:0;z-index:2;background:var(--surface)}
 .rail.r .row.us.on{background:var(--soft)}
-.rail.r .usl{position:sticky;top:30px;z-index:2;background:var(--surface);border-bottom:1px solid var(--rule);padding-bottom:5px}
-.rail.l .usl{border-bottom:1px solid var(--rule2);padding:2px 14px 6px}
-.rail.r .row.us .mb b{display:none}
-.usl{padding:4px 14px 2px;font:600 11px/1 var(--sans);color:var(--muted);display:flex;justify-content:space-between}
-.empty{padding:14px;color:var(--muted);font-size:13px}
+.rail.r .row.us .dp{height:30px}.rail.r .row.us .dp::before{top:14.5px}.rail.r .row.us .dp i{top:10px}
+.rail.r .usl{position:sticky;top:30px;z-index:2;background:var(--surface);border-bottom:1px solid var(--rule)}
+.dom{display:flex;justify-content:space-between;font:500 10.5px/1 var(--sans);letter-spacing:0;text-transform:none}
 
 /* ---------- canvas ---------- */
 main.canvas{overflow-y:auto;min-width:0;background:var(--bg);max-width:none;padding:0}
-.inner{padding:22px 26px 40px;max-width:1900px}
+.inner{padding:22px 26px 96px;max-width:1900px}
 .eyebrow{font:600 12px/1.3 var(--sans);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
 h1.q{font:680 28px/1.2 var(--sans);letter-spacing:-.015em;margin:0 0 4px;color:var(--ink)}
 h1.q .pl{display:inline-block;vertical-align:4px;margin-left:6px;font:650 15px/1 var(--sans);letter-spacing:0;
@@ -97,7 +113,7 @@ h1.q .pl{display:inline-block;vertical-align:4px;margin-left:6px;font:650 15px/1
 .stat .n.p{color:var(--pos)}.stat .n.neg{color:var(--neg)}
 .stat .s{font:400 12.5px/1.3 var(--sans);color:var(--muted);margin-top:6px}
 .stat.main{border-color:color-mix(in srgb,var(--acc) 45%,var(--rule));box-shadow:inset 3px 0 0 var(--acc)}
-.caveat{font:400 13px/1.5 var(--sans);color:var(--muted);margin:0 0 18px}
+.caveat{font:400 13px/1.5 var(--sans);color:var(--muted);margin:0 0 18px;max-width:120ch}
 .grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
 @media (min-width:1700px){.grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
   #mapCard{grid-column:2;grid-row:1 / span 2}}
@@ -120,22 +136,24 @@ h1.q .pl{display:inline-block;vertical-align:4px;margin-left:6px;font:650 15px/1
 .tools .what{font:400 12px/1 var(--sans);color:var(--muted);margin-left:auto}
 .emb{display:none;margin-top:8px}
 .emb.open{display:block}
-.emb pre{margin:0 0 6px;overflow-x:auto;background:var(--bg);border:1px solid var(--rule);border-radius:7px;
-  padding:9px 11px;font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink2);white-space:pre}
+.emb pre{margin:0 0 6px;background:var(--bg);border:1px solid var(--rule);border-radius:7px;padding:9px 11px;
+  font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink2);white-space:pre-wrap;word-break:break-all}
 .emb .tools{gap:8px}
-.pop{position:absolute;z-index:70;width:560px;background:var(--surface);border:1px solid var(--rule);border-radius:10px;
+.pop{position:absolute;z-index:70;width:520px;background:var(--surface);border:1px solid var(--rule);border-radius:10px;
   box-shadow:0 12px 40px rgba(0,0,0,.18);padding:12px 14px}
 .pop .kind{font:600 11px/1 var(--sans);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-.pop .emb{display:block}
-dl.notes{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:7px 16px;font:400 13.5px/1.5 var(--sans);margin:0}
+details.meth{border-top:1px solid var(--rule2);border-bottom:1px solid var(--rule2);padding:9px 0;margin:6px 0 12px}
+details.meth summary{cursor:pointer;font:600 13.5px/1.3 var(--sans);color:var(--ink);list-style:none}
+details.meth summary::-webkit-details-marker{display:none}
+details.meth summary::before{content:"▸ ";color:var(--acc)}
+details.meth[open] summary::before{content:"▾ "}
+details.meth summary span{font-weight:400;color:var(--muted);margin-left:6px}
+dl.notes{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:7px 16px;font:400 13.5px/1.5 var(--sans);margin:10px 0 2px}
 dl.notes dt{color:var(--muted)}
 dl.notes dd{margin:0;color:var(--ink2)}
 dl.notes code{white-space:normal;font-size:12px}
-.radio{margin:12px 0 0;padding:10px 12px;background:var(--soft);border-radius:8px;font:400 13.5px/1.55 var(--sans);color:var(--ink)}
+.radio{margin:6px 0 0;padding:10px 12px;background:var(--soft);border-radius:8px;font:400 13.5px/1.55 var(--sans);color:var(--ink)}
 .foot{font:400 12.5px/1.5 var(--sans);color:var(--muted);margin:22px 0 0;border:0;padding:0;font-style:italic}
-@media (max-width:1600px){:root{--rail:300px}.colh,.row{grid-template-columns:minmax(0,1fr) 62px 44px 40px}
-  .rail.r .colh,.rail.r .row{grid-template-columns:minmax(0,1fr) 88px 46px}}
-@media (min-width:2300px){:root{--rail:380px}}
 </style>
 </head>
 <body>
@@ -148,7 +166,7 @@ dl.notes code{white-space:normal;font-size:12px}
 <div class="app">
   <aside class="rail l" aria-label="Questions">
     <div class="rhead">
-      <div class="rlab"><span>Question</span><span class="tools"><button class="tb" id="acrossBtn" aria-expanded="false">Use this list</button></span></div>
+      <div class="rlab"><span>Question</span><span class="tools"><button class="tb" id="acrossBtn" aria-expanded="false">Export this list</button></span></div>
       <p class="rnow" id="qNow"></p>
       <div class="srch"><input type="search" id="qSearch" placeholder="Search questions" autocomplete="off" aria-label="Search questions"><kbd>/</kbd></div>
       <div class="seg" role="group" aria-label="Sort questions">
@@ -184,10 +202,10 @@ dl.notes code{white-space:normal;font-size:12px}
         </section>
         <section class="panel" id="notesCard">
           <p class="kind">About these numbers</p>
-          <h2>Method and sources</h2>
-          <p class="sub">What a standards desk needs before quoting the pair above.</p>
-          <dl class="notes" id="notes"></dl>
-          <p class="kind" style="margin-top:14px">Radio copy</p>
+          <details class="meth"><summary>Method and sources<span>wording, base, weight, margin of error, MCP calls</span></summary>
+            <dl class="notes" id="notes"></dl>
+          </details>
+          <p class="kind">Radio copy</p>
           <p class="radio" id="radio"></p>
           <div class="tools" style="margin-top:8px"><button class="tb" id="radioCopy">Copy radio copy</button></div>
         </section>
@@ -198,11 +216,11 @@ dl.notes code{white-space:normal;font-size:12px}
 
   <aside class="rail r" aria-label="Places">
     <div class="rhead">
-      <div class="rlab"><span>Place</span><span class="tools" style="color:var(--muted);font-weight:500;font-size:12px" id="pCount"></span></div>
+      <div class="rlab"><span>Place</span><span class="cnt">51 places</span></div>
       <p class="rnow" id="pNow"></p>
       <div class="srch"><input type="search" id="pSearch" placeholder="Search states" autocomplete="off" aria-label="Search places"><kbd>s</kbd></div>
     </div>
-    <div class="colh"><span id="pColName">Ranked by share</span><span id="pColBar"></span><span>Share</span></div>
+    <div class="colh"><span>#</span><span>Place</span><span class="dom" id="pDom"></span><span>Share</span><span>n</span></div>
     <div class="list" id="pList" role="listbox" aria-label="Places"></div>
   </aside>
 </div>
@@ -223,14 +241,19 @@ dl.notes code{white-space:normal;font-size:12px}
     if (text != null) e.textContent = text;
     return e;
   }
-  /* a signed gap in points: one decimal under 10, so small platforms still read */
-  function gapTxt(d) {
-    if (d == null) return '';
-    var a = Math.abs(d), v = a < 9.95 ? (Math.round(a * 10) / 10).toFixed(1) : String(Math.round(a));
-    if (Number(v) === 0) return '0';
-    return (d > 0 ? '+' : MINUS) + v;
+  /* Gaps are worked out from the shares as shown (K.pct: whole numbers from
+     10% up, one decimal under), so the arithmetic on screen adds up. A gap
+     that involves a one-decimal share keeps one decimal. */
+  function shown(v) { return v < 9.95 ? Math.round(v * 10) / 10 : Math.round(v); }
+  function gap(a, b) {
+    var fine = a < 9.95 || b < 9.95, d = shown(a) - shown(b);
+    return {d: fine ? Math.round(d * 10) / 10 : Math.round(d), fine: fine};
   }
-  function gapCls(d) { var a = Math.abs(d); return a < 0.05 ? 'z' : d > 0 ? 'p' : 'n'; }
+  function gapTxt(g) {
+    var a = Math.abs(g.d), t = g.fine ? a.toFixed(1) : String(a);
+    return a === 0 ? t : (g.d > 0 ? '+' : MINUS) + t;
+  }
+  function gapCls(g) { return g.d === 0 ? 'z' : g.d > 0 ? 'p' : 'n'; }
   function copy(text, btn, label) {
     navigator.clipboard.writeText(text).then(function () {
       btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = label; }, 1400);
@@ -241,41 +264,46 @@ dl.notes code{white-space:normal;font-size:12px}
   }
 
   /* Output tools for one chart: an embed drawer (snippet, copy, preview) and
-     PNG / SVG / CSV. get() returns {spec, attrs, preview, png, svg} for the
-     chart as it stands, so the tools always export what's on screen. */
-  function tools(host, get) {
-    var row = el('div', {'class': 'tools'});
-    var eb = el('button', {'class': 'tb', 'aria-expanded': 'false'}, 'Embed');
-    var pb = el('button', {'class': 'tb'}, 'PNG'), sb = el('button', {'class': 'tb'}, 'SVG'), cb = el('button', {'class': 'tb'}, 'CSV');
+     PNG / SVG / CSV, each optional. get() returns {spec, attrs, preview, png,
+     svg, what} for the chart as it stands, so exports match the screen. */
+  function tools(host, get, opt) {
+    opt = opt || {};
+    var row = el('div', {'class': 'tools'}), drawer = null, pre = null, pv = null;
     var what = el('span', {'class': 'what'});
-    [eb, pb, sb, cb, what].forEach(function (b) { row.appendChild(b); });
-    var drawer = el('div', {'class': 'emb'}), pre = el('pre'), dt = el('div', {'class': 'tools'});
-    var cp = el('button', {'class': 'tb'}, 'Copy code'), pv = el('a', {'class': 'tb', target: '_blank', rel: 'noopener'}, 'Preview embed');
-    dt.appendChild(cp); dt.appendChild(pv); drawer.appendChild(pre); drawer.appendChild(dt);
-    host.appendChild(row); host.appendChild(drawer);
-    eb.onclick = function () { var o = drawer.classList.toggle('open'); eb.setAttribute('aria-expanded', String(o)); };
-    cp.onclick = function () { copy(pre.textContent, cp, 'Copy code'); };
-    pb.onclick = function () { get().png(); };
-    sb.onclick = function () { get().svg(); };
+    if (opt.embed !== false) {
+      var eb = el('button', {'class': 'tb', 'aria-expanded': 'false'}, 'Embed');
+      row.appendChild(eb);
+      drawer = el('div', {'class': 'emb'}); pre = el('pre');
+      var dt = el('div', {'class': 'tools'}), cp = el('button', {'class': 'tb'}, 'Copy code');
+      pv = el('a', {'class': 'tb', target: '_blank', rel: 'noopener'}, 'Preview embed');
+      dt.appendChild(cp); dt.appendChild(pv); drawer.appendChild(pre); drawer.appendChild(dt);
+      eb.onclick = function () { var o = drawer.classList.toggle('open'); eb.setAttribute('aria-expanded', String(o)); };
+      cp.onclick = function () { copy(pre.textContent, cp, 'Copy code'); };
+    }
+    var pb = el('button', {'class': 'tb'}, 'PNG'); pb.onclick = function () { get().png(); }; row.appendChild(pb);
+    if (opt.svg !== false) { var sb = el('button', {'class': 'tb'}, 'SVG'); sb.onclick = function () { get().svg(); }; row.appendChild(sb); }
+    var cb = el('button', {'class': 'tb'}, 'CSV');
     cb.onclick = function () { var g = get(); K.csv(g.spec, g.spec.stem + '.csv'); };
-    return function refresh() {
+    row.appendChild(cb); row.appendChild(what);
+    host.appendChild(row); if (drawer) host.appendChild(drawer);
+    return {drawer: drawer, refresh: function () {
       var g = get();
-      pre.textContent = embedCode(g.attrs);
-      pv.href = g.preview;
+      if (pre) { pre.textContent = embedCode(g.attrs); pv.href = g.preview; }
       what.textContent = g.what || '';
-    };
+    }};
   }
 
   K.loadSet().then(function (S) {
     var QS = S.questions, IX = S.index, byId = {};
-    QS.forEach(function (q, i) { byId[q.id] = q; q.order = i; });
+    QS.forEach(function (q) { byId[q.id] = q; });
     var places = QS[0].states.map(function (s) { return {slug: s.slug, name: s.name, label: s.label, abbr: s.abbr}; });
     var slugs = places.map(function (p) { return p.slug; });
     var state = {q: QS[0].id, place: null, sort: 'set', qFilter: '', pFilter: '', qAct: -1, pAct: -1};
 
+    /* the URL is the state: no ?q means the set's first question, no ?state the U.S. */
     function readURL() {
       var u = new URLSearchParams(location.search);
-      state.q = byId[u.get('q')] ? u.get('q') : (byId[state.q] ? state.q : QS[0].id);
+      state.q = byId[u.get('q')] ? u.get('q') : QS[0].id;
       state.place = slugs.indexOf(u.get('state')) >= 0 ? u.get('state') : null;
     }
     function writeURL() {
@@ -285,10 +313,8 @@ dl.notes code{white-space:normal;font-size:12px}
       if (u.href !== location.href) history.pushState(null, '', u);
     }
     readURL();
-    history.replaceState(null, '', location.href);
 
     $('meta').textContent = IX.wave + ' · ' + QS[0].fielded + ' · ' + QS.length + ' platform questions · 50 states and D.C.';
-    $('pCount').textContent = '52 places';
 
     var byChart = K.mount($('byChart'), K.view(byId[state.q], 'by', state.place), {bare: true, themed: true, animate: false});
     function st(q) { return state.place ? q.states[slugs.indexOf(state.place)] : null; }
@@ -301,83 +327,101 @@ dl.notes code{white-space:normal;font-size:12px}
         return !f || (q.label + ' ' + q.question + ' ' + q.column + ' ' + q.topic).toLowerCase().indexOf(f) >= 0;
       });
       var val = function (q) { var s = st(q); return s ? s.value : q.us.value; };
-      if (state.sort === 'value') rows.sort(function (a, b) { return val(b) - val(a); });
-      if (state.sort === 'gap' && state.place) rows.sort(function (a, b) { return (st(b).value - b.us.value) - (st(a).value - a.us.value); });
+      if (state.sort === 'value') rows.sort(function (a, b) { return shown(val(b)) - shown(val(a)) || val(b) - val(a); });
+      if (state.sort === 'gap' && state.place) rows.sort(function (a, b) {
+        return gap(st(b).value, b.us.value).d - gap(st(a).value, a.us.value).d;
+      });
       return rows;
     }
     function renderQ() {
       var list = $('qList'), rows = qRows();
       list.textContent = '';
-      if (!rows.length) { list.appendChild(el('div', {'class': 'empty'}, 'No question matches “' + state.qFilter + '”.')); return; }
+      if (!rows.length) list.appendChild(el('div', {'class': 'empty'}, 'No question matches “' + state.qFilter + '”.'));
       rows.forEach(function (q, i) {
         var s = st(q), v = s ? s.value : q.us.value;
         var b = el('button', {'class': 'row' + (q.id === state.q ? ' on' : '') + (i === state.qAct ? ' act' : ''),
           role: 'option', 'aria-selected': String(q.id === state.q), 'data-id': q.id, title: q.wording});
         b.appendChild(el('span', {'class': 'nm'}, q.label));
-        var mb = el('span', {'class': 'mb'}), fillEl = el('i');
-        fillEl.style.width = v + '%'; mb.appendChild(fillEl);
+        var mb = el('span', {'class': 'mb'}), fi = el('i');
+        fi.style.width = v + '%'; mb.appendChild(fi);
         if (s) { var t = el('b'); t.style.left = q.us.value + '%'; mb.appendChild(t); }
         b.appendChild(mb);
         b.appendChild(el('span', {'class': 'v'}, K.pct(v)));
-        var d = s ? s.value - q.us.value : null;
-        b.appendChild(el('span', {'class': 'gp ' + (s ? gapCls(d) : 'z')}, s ? gapTxt(d) : '—'));
+        var g = s ? gap(s.value, q.us.value) : null;
+        b.appendChild(el('span', {'class': 'gp ' + (g ? gapCls(g) : 'z')}, g ? gapTxt(g) : '—'));
         b.onclick = function () { pickQ(q.id); };
         list.appendChild(b);
       });
       $('qColVal').textContent = state.place ? places[slugs.indexOf(state.place)].abbr : 'U.S.';
       $('qColPlace').textContent = 'Platform (' + rows.length + ')';
-      $('qLegend').textContent = state.place ? 'Bars: ' + placeName() + ' · ticks: U.S. · gap in points' : 'Bars: U.S. share · pick a place for gaps';
+      $('qLegend').textContent = state.place ? 'Bars: ' + placeName() + ', 0–100% · ticks: U.S. · gap in points' :
+        'Bars: U.S. share, 0–100% · pick a place for gaps';
       [].forEach.call(document.querySelectorAll('.seg button'), function (x) {
         x.setAttribute('aria-pressed', String(x.getAttribute('data-sort') === state.sort));
         if (x.getAttribute('data-sort') === 'gap') x.disabled = !state.place;
       });
     }
 
-    /* ---------- place rail: the question across every place ---------- */
+    /* ---------- place rail: the question across every place, as a dot plot ----------
+       The track is zoomed to the states' range (to the nearest 5 points), so
+       states a few points apart sit visibly apart; it is a dot plot, not bars,
+       because a zoomed axis can't carry bar lengths. */
+    function ranked(q) { return q.states.slice().sort(function (a, b) { return b.value - a.value; }); }
     function pRows() {
-      var q = byId[state.q], f = state.pFilter.trim().toLowerCase();
-      return q.states.slice().sort(function (a, b) { return b.value - a.value; }).filter(function (s) {
-        return !f || (s.name + ' ' + s.abbr + ' ' + s.label).toLowerCase().indexOf(f) >= 0;
+      var f = state.pFilter.trim().toLowerCase();
+      return ranked(byId[state.q]).map(function (s, i) { return {s: s, rank: i + 1}; }).filter(function (r) {
+        return !f || (r.s.name + ' ' + r.s.abbr + ' ' + r.s.label).toLowerCase().indexOf(f) >= 0;
       });
     }
     function renderP() {
       var q = byId[state.q], list = $('pList'), rows = pRows();
-      var top = Math.max.apply(null, q.states.map(function (s) { return s.value; }));
-      var dom = Math.max(10, Math.ceil(top / 10) * 10);
+      var vals = q.states.map(function (s) { return s.value; }).concat([q.us.value]);
+      var lo = Math.floor(Math.min.apply(null, vals) / 5) * 5, hi = Math.ceil(Math.max.apply(null, vals) / 5) * 5;
+      if (hi - lo < 5) hi = lo + 5;
+      var X = function (v) { return ((v - lo) / (hi - lo) * 100) + '%'; };
       list.textContent = '';
-      var us = el('button', {'class': 'row us' + (state.place ? '' : ' on') + (state.pAct === -2 ? ' act' : ''),
+      function dot(v, us) {
+        var d = el('span', {'class': 'dp'});
+        if (us) { var t = el('b'); t.style.left = X(q.us.value); d.appendChild(t); }
+        var i = el('i'); i.style.left = X(v); d.appendChild(i);
+        return d;
+      }
+      var u = el('button', {'class': 'row us' + (state.place ? '' : ' on') + (state.pAct === -2 ? ' act' : ''),
         role: 'option', 'aria-selected': String(!state.place), 'data-slug': ''});
-      us.appendChild(el('span', {'class': 'nm'}, 'United States'));
-      var umb = el('span', {'class': 'mb'}), uf = el('i'); uf.style.width = (q.us.value / dom * 100) + '%'; umb.appendChild(uf);
-      us.appendChild(umb); us.appendChild(el('span', {'class': 'v'}, K.pct(q.us.value)));
-      us.onclick = function () { pickP(null); };
-      list.appendChild(us);
+      u.appendChild(el('span', {'class': 'rk'}, ''));
+      u.appendChild(el('span', {'class': 'nm'}, 'United States'));
+      u.appendChild(dot(q.us.value, false));
+      u.appendChild(el('span', {'class': 'v'}, K.pct(q.us.value)));
+      u.appendChild(el('span', {'class': 'nn'}, K.num(q.us.n)));
+      u.onclick = function () { pickP(null); };
+      list.appendChild(u);
       var lab = el('div', {'class': 'usl'});
-      lab.appendChild(el('span', {}, q.label + ' · ' + rows.length + ' of 51, highest first'));
+      lab.appendChild(el('span', {}, q.label + ', highest first'));
       lab.appendChild(el('span', {}, 'line = U.S. ' + K.pct(q.us.value)));
       list.appendChild(lab);
       if (!rows.length) list.appendChild(el('div', {'class': 'empty'}, 'No place matches “' + state.pFilter + '”.'));
-      rows.forEach(function (s, i) {
+      rows.forEach(function (r, i) {
+        var s = r.s;
         var b = el('button', {'class': 'row' + (s.slug === state.place ? ' on' : '') + (i === state.pAct ? ' act' : ''),
           role: 'option', 'aria-selected': String(s.slug === state.place), 'data-slug': s.slug,
-          title: s.name + ': ' + K.pct(s.value) + ' of ' + K.num(s.n) + ' adults'});
-        b.appendChild(el('span', {'class': 'nm'}, s.name));
-        var mb = el('span', {'class': 'mb'}), fi = el('i'), t = el('b');
-        fi.style.width = (s.value / dom * 100) + '%'; t.style.left = (q.us.value / dom * 100) + '%';
-        mb.appendChild(fi); mb.appendChild(t); b.appendChild(mb);
+          title: s.name + ': ' + K.pct(s.value) + ' of ' + K.num(s.n) + ' adults (rank ' + r.rank + ' of 51)'});
+        b.appendChild(el('span', {'class': 'rk'}, String(r.rank)));
+        b.appendChild(el('span', {'class': 'nm'}, s.label));
+        b.appendChild(dot(s.value, true));
         b.appendChild(el('span', {'class': 'v'}, K.pct(s.value)));
+        b.appendChild(el('span', {'class': 'nn'}, K.num(s.n)));
         b.onclick = function () { pickP(s.slug); };
         list.appendChild(b);
       });
-      $('pColBar').textContent = '0–' + dom + '%';
+      var dom = $('pDom'); dom.textContent = '';
+      dom.appendChild(el('span', {}, lo + '%')); dom.appendChild(el('span', {}, hi + '%'));
     }
 
     /* ---------- canvas ---------- */
     var mapSpec;
     function drawMap() {
       var box = $('map'), W = Math.max(420, Math.round(box.clientWidth || 600)), H = Math.round(W * 0.7);
-      var L = K.layout(mapSpec, W, H, {bare: true});
-      box.innerHTML = K.toSVG(mapSpec, L, K.THEMED);
+      box.innerHTML = K.toSVG(mapSpec, K.layout(mapSpec, W, H, {bare: true}), K.THEMED);
     }
     function renderCanvas() {
       var q = byId[state.q], s = st(q), name = placeName();
@@ -399,17 +443,16 @@ dl.notes code{white-space:normal;font-size:12px}
       if (s) {
         stat(name, K.pct(s.value), 'say they use ' + q.label, ' main');
         stat('United States', K.pct(q.us.value), 'all ' + K.num(q.us.n) + ' adults');
-        var d = s.value - q.us.value, g = stat('Gap', gapTxt(d) + ' pts', name + ' minus U.S.');
-        g.className = 'n ' + (gapCls(d) === 'p' ? 'p' : gapCls(d) === 'n' ? 'neg' : '');
+        var g = gap(s.value, q.us.value), gn = stat('Gap', gapTxt(g) + ' pts', name + ' minus U.S.');
+        gn.className = 'n ' + ({p: 'p', n: 'neg', z: ''})[gapCls(g)];
         stat('Respondents', K.num(s.n), 'adults in ' + name);
         $('caveat').textContent = 'Margins of error aren’t served by the MCP yet (#273). With ' + K.num(s.n) +
           ' respondents in ' + name + ', a gap of a few points may be noise.';
       } else {
+        var r = ranked(q);
         stat('United States', K.pct(q.us.value), 'say they use ' + q.label, ' main');
-        var lo = q.states.reduce(function (a, b) { return b.value < a.value ? b : a; });
-        var hi = q.states.reduce(function (a, b) { return b.value > a.value ? b : a; });
-        stat('Highest state', K.pct(hi.value), hi.name);
-        stat('Lowest state', K.pct(lo.value), lo.name);
+        stat('Highest state', K.pct(r[0].value), r[0].name);
+        stat('Lowest state', K.pct(r[r.length - 1].value), r[r.length - 1].name);
         stat('Respondents', K.num(q.us.n), 'U.S. adults · 390 to 1,879 per state');
         $('caveat').textContent = 'Pick a place on the right to compare it with the U.S. Margins of error aren’t served by the MCP yet (#273); state gaps of a few points may be noise.';
       }
@@ -429,7 +472,7 @@ dl.notes code{white-space:normal;font-size:12px}
       ].forEach(function (r) { notes.appendChild(el('dt', {}, r[0])); notes.appendChild(el('dd', {}, r[1])); });
       notes.appendChild(el('dt', {}, 'Pulled with'));
       var dd = el('dd');
-      q.provenance.forEach(function (c, i) { if (i) dd.appendChild(el('br')); dd.appendChild(el('code', {}, c.replace(/\{column\}/g, q.column))); });
+      q.provenance.forEach(function (c, i) { if (i) dd.appendChild(el('br')); dd.appendChild(el('code', {}, c)); });
       dd.appendChild(document.createTextNode(' on the CHIP50 MCP, ' + q.pulled));
       notes.appendChild(dd);
       $('radio').textContent = bySpec.radio;
@@ -437,12 +480,12 @@ dl.notes code{white-space:normal;font-size:12px}
       $('qNow').textContent = q.label;
       $('qNow').appendChild(el('small', {}, K.pct(s ? s.value : q.us.value)));
       $('pNow').textContent = name;
-      $('pNow').appendChild(el('small', {}, s ? K.num(s.n) + ' respondents' : K.num(q.us.n) + ' respondents'));
+      $('pNow').appendChild(el('small', {}, K.num(s ? s.n : q.us.n) + ' respondents'));
       document.title = q.label + ' · ' + name + ' — CHIP50 Explorer';
-      refreshBy(); refreshMap(); if (acrossRefresh) acrossRefresh();
+      byTools.refresh(); mapTools.refresh(); if (acrossTools) acrossTools.refresh();
     }
 
-    var refreshBy = tools($('byCard'), function () {
+    var byTools = tools($('byCard'), function () {
       var q = byId[state.q], sp = K.view(q, 'by', state.place);
       return {spec: sp, what: 'by ' + q.byName + (state.place ? ' · ' + placeName() : ''),
         attrs: 'data-chip50-chart="' + q.id + '" data-view="by"' + (state.place ? ' data-state="' + state.place + '"' : ''),
@@ -450,28 +493,25 @@ dl.notes code{white-space:normal;font-size:12px}
         png: function () { K.png(sp, 1200, 675, sp.stem + '-web.png', 2); },
         svg: function () { K.svg(sp, sp.stem + '.svg'); }};
     });
-    var refreshMap = tools($('mapCard'), function () {
+    /* the tile map has no embed (the embed draws the ranked list); its PNG is the square tile card */
+    var mapTools = tools($('mapCard'), function () {
       var q = byId[state.q], sp = K.view(q, 'states', state.place);
-      return {spec: sp, what: 'tile map, 1080 × 1080',
-        attrs: 'data-chip50-chart="' + q.id + '" data-view="states"' + (state.place ? ' data-state="' + state.place + '"' : ''),
-        preview: 'embed.html?q=' + q.id + '&view=states' + (state.place ? '&state=' + state.place : ''),
-        png: function () { K.png(sp, 1080, 1080, sp.stem + '-map.png'); },
-        svg: function () {
-          K.save(new Blob([K.toSVG(sp, K.layout(sp, 1080, 1080), K.LIGHT, 'surface')], {type: 'image/svg+xml'}), sp.stem + '-map.svg');
-        }};
-    });
+      return {spec: sp, what: 'tile map PNG, 1080 × 1080',
+        png: function () { K.png(sp, 1080, 1080, sp.stem + '-map.png'); }};
+    }, {embed: false, svg: false});
 
-    /* the question rail is a chart too: its tools sit in a popover */
-    var acrossRefresh = null, pop = null;
+    /* the question rail is a chart too: its exports sit in a popover */
+    var acrossTools = null, pop = null;
+    function closePop() { if (pop) { pop.remove(); pop = null; acrossTools = null; $('acrossBtn').setAttribute('aria-expanded', 'false'); } }
     $('acrossBtn').onclick = function (e) {
       e.stopPropagation();
-      if (pop) { pop.remove(); pop = null; acrossRefresh = null; $('acrossBtn').setAttribute('aria-expanded', 'false'); return; }
+      if (pop) { closePop(); return; }
       pop = el('div', {'class': 'pop'});
       pop.appendChild(el('p', {'class': 'kind'}, 'This list as a chart: one place across every platform'));
       var r = $('acrossBtn').getBoundingClientRect();
-      pop.style.left = (r.left) + 'px'; pop.style.top = (r.bottom + 6) + 'px';
+      pop.style.left = r.left + 'px'; pop.style.top = (r.bottom + 6) + 'px';
       document.body.appendChild(pop);
-      acrossRefresh = tools(pop, function () {
+      acrossTools = tools(pop, function () {
         var sp = K.across(QS, state.place, IX);
         return {spec: sp, what: placeName() + ' · ' + QS.length + ' platforms',
           attrs: 'data-chip50-chart="' + IX.set + '" data-view="questions"' + (state.place ? ' data-state="' + state.place + '"' : ''),
@@ -479,15 +519,13 @@ dl.notes code{white-space:normal;font-size:12px}
           png: function () { K.png(sp, 1200, null, sp.stem + '-web.png', 2); },
           svg: function () { K.svg(sp, sp.stem + '.svg'); }};
       });
-      pop.querySelector('.emb').classList.add('open');
+      acrossTools.drawer.classList.add('open');
       pop.querySelector('.tb').setAttribute('aria-expanded', 'true');
-      acrossRefresh();
+      acrossTools.refresh();
       $('acrossBtn').setAttribute('aria-expanded', 'true');
       pop.addEventListener('click', function (ev) { ev.stopPropagation(); });
     };
-    document.addEventListener('click', function () {
-      if (pop) { pop.remove(); pop = null; acrossRefresh = null; $('acrossBtn').setAttribute('aria-expanded', 'false'); }
-    });
+    document.addEventListener('click', closePop);
 
     $('radioCopy').onclick = function () { copy($('radio').textContent, $('radioCopy'), 'Copy radio copy'); };
     $('map').addEventListener('click', function (e) {
@@ -507,30 +545,39 @@ dl.notes code{white-space:normal;font-size:12px}
       if (push) writeURL();
       renderQ(); renderP(); renderCanvas();
     }
-    function pickQ(id) { state.q = id; render(true); scrollOn($('qList')); scrollOn($('pList'), true); }
-    function pickP(slug) { state.place = slug; render(true); scrollOn($('pList')); }
+    /* picking from a filtered list clears the search, so the full list comes back */
+    function clearSearch(which) {
+      var input = $(which + 'Search');
+      input.value = ''; state[which + 'Filter'] = ''; state[which + 'Act'] = -1;
+    }
+    function pickQ(id) { clearSearch('q'); state.q = id; render(true); scrollOn($('qList'), true); scrollOn($('pList'), true); }
+    function pickP(slug) { clearSearch('p'); state.place = slug; render(true); scrollOn($('pList'), true); }
 
     [].forEach.call(document.querySelectorAll('.seg button'), function (b) {
-      b.onclick = function () { state.sort = b.getAttribute('data-sort'); state.qAct = -1; renderQ(); scrollOn($('qList')); };
+      b.onclick = function () { state.sort = b.getAttribute('data-sort'); state.qAct = -1; renderQ(); scrollOn($('qList'), true); };
     });
     $('qSearch').oninput = function () { state.qFilter = this.value; state.qAct = this.value ? 0 : -1; renderQ(); };
     $('pSearch').oninput = function () { state.pFilter = this.value; state.pAct = this.value ? 0 : -1; renderP(); };
 
-    /* arrows and Enter inside a focused search move through and pick from its list */
+    /* in a search box: arrows move through its list, Enter picks the
+       highlighted row (then the box clears and lets go of focus), Esc clears */
     function listKeys(input, which) {
       input.addEventListener('keydown', function (e) {
-        var rows = which === 'q' ? qRows() : pRows(), act = which === 'q' ? 'qAct' : 'pAct';
+        var rows = which === 'q' ? qRows() : pRows(), act = which + 'Act';
         if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
           e.preventDefault();
+          if (!rows.length) return;
           var i = state[act] < 0 ? -1 : state[act];
           i = e.key === 'ArrowDown' ? Math.min(rows.length - 1, i + 1) : Math.max(0, i - 1);
           state[act] = i; which === 'q' ? renderQ() : renderP(); scrollOn($(which + 'List'));
         } else if (e.key === 'Enter') {
+          e.preventDefault();
           var r = rows[Math.max(0, state[act])];
-          if (r) { if (which === 'q') pickQ(r.id); else pickP(r.slug); }
+          input.blur();
+          if (r) { if (which === 'q') pickQ(r.id); else pickP(r.s.slug); }
+          else { clearSearch(which); which === 'q' ? renderQ() : renderP(); }
         } else if (e.key === 'Escape') {
-          input.value = ''; state[which === 'q' ? 'qFilter' : 'pFilter'] = ''; state[act] = -1;
-          which === 'q' ? renderQ() : renderP(); input.blur();
+          clearSearch(which); which === 'q' ? renderQ() : renderP(); input.blur();
         }
       });
     }
@@ -543,17 +590,20 @@ dl.notes code{white-space:normal;font-size:12px}
       else if (e.key === 's') { e.preventDefault(); $('pSearch').focus(); $('pSearch').select(); }
       else if (e.key === 'u') { pickP(null); }
       else if (e.key === 'j' || e.key === 'k') {
-        var rows = qRows(), i = rows.map(function (q) { return q.id; }).indexOf(state.q);
-        i = e.key === 'j' ? Math.min(rows.length - 1, i + 1) : Math.max(0, i - 1);
-        if (rows[i]) pickQ(rows[i].id);
-      } else if (e.key === 'Escape' && pop) { pop.remove(); pop = null; acrossRefresh = null; }
+        /* next / previous question in the list's current order, wrapping at the ends */
+        var rows = qRows(), n = rows.length, i = rows.map(function (q) { return q.id; }).indexOf(state.q);
+        if (!n) return;
+        i = e.key === 'j' ? (i + 1) % n : (i - 1 + n) % n;
+        pickQ(rows[i].id);
+      } else if (e.key === 'Escape') { closePop(); }
     });
-    addEventListener('popstate', function () { readURL(); render(false); });
+    addEventListener('popstate', function () { readURL(); render(false); scrollOn($('qList'), true); scrollOn($('pList'), true); });
 
     render(false);
     scrollOn($('qList'), true); scrollOn($('pList'), true);
   });
 })();
 </script>
+<script src="concepts.js"></script>
 </body>
 </html>
