@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex"/>
+<title>Chart kit demo — CHIP50</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<meta name="color-scheme" content="light dark"/>
+<link rel="stylesheet" href="../../assets/report.css"/>
+<style>
+.wrap.one{grid-template-columns:minmax(0,1fr)}
+.wrap.one main{margin:0 auto;width:100%}
+#chart svg{display:block;width:100%;height:auto}
+.snip{display:flex;gap:10px;align-items:flex-start;margin:0 0 18px}
+.snip pre{flex:1;min-width:0;margin:0;overflow-x:auto;background:var(--surface);border:1px solid var(--rule);
+  border-radius:9px;padding:12px 14px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink2)}
+.live{border:1px dashed var(--rule);border-radius:12px;padding:12px;background:#fff}
+.note{font:400 14.5px/1.5 var(--sans);color:var(--muted);margin:0 0 8px}
+.dl{display:flex;flex-wrap:wrap;gap:10px}
+.btn span{color:var(--muted);margin-left:6px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px;align-items:start}
+.card canvas{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:8px}
+.card p{font:600 14.5px/1.4 var(--sans);margin:10px 0 8px}
+.card p span{font-weight:400;color:var(--muted);margin-left:6px}
+.card .btn{margin:0 6px 6px 0}
+dl.brief{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px 20px;font:400 15.5px/1.55 var(--sans);margin:0 0 26px}
+dl.brief dt{color:var(--muted)}
+dl.brief dd{margin:0}
+dl.brief code{white-space:normal}
+@media(max-width:620px){dl.brief{grid-template-columns:minmax(0,1fr);gap:2px}dl.brief dd{margin-bottom:12px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="topin">
+    <a class="mark" href="../../index.html"><span class="dot"></span>Tech &amp; Society</a>
+    <div class="crumb">Chart kit demo</div>
+    <div class="tools"><button class="btn" id="tt" aria-label="Toggle dark mode">Theme</button></div>
+  </div>
+  <div class="prog" id="pg"></div>
+</header>
+<div class="wrap one">
+<main>
+<div class="hero">
+  <h1>TikTok use drops with every decade of age</h1>
+  <p class="dek">Nearly three in four Americans 18 to 20 say they use TikTok. Past 70, fewer than one in five do.</p>
+  <p class="srcline">Source: CHIP50 survey, Wave 38, fielded May 14 to July 5, 2026; 31,836 U.S. adults, weighted to the adult population.</p>
+</div>
+
+<p class="lede">This page is a working demo of the CHIP50 chart kit. One chart file feeds everything on it: the chart, the embed, the downloads, the social cards and the partner brief. The numbers are real and came from the CHIP50 MCP on Oct 24, 2026.</p>
+
+<figure class="chart">
+  <div id="chart"></div>
+  <figcaption><b>Share who say they ever use TikTok, by age.</b> Weighted estimates; group sizes in the table.</figcaption>
+  <details class="datatbl"><summary>Data table</summary><div class="tw"><table id="tbl"></table></div></details>
+</figure>
+
+<h2 id="embed">Embed it</h2>
+<p>Two lines put the chart on any page. It fits its column and redraws at every width.</p>
+<div class="snip"><pre><code id="snippet"></code></pre><button class="btn" data-copy="snippet">Copy</button></div>
+<p class="note">Live, through that snippet:</p>
+<div class="live"><div data-chip50-chart="tiktok-age-w38"></div></div>
+<script async src="embed.js"></script>
+
+<h2 id="download">Download it</h2>
+<p>For newsletters, print pages and broadcast graphics, and the numbers behind the chart.</p>
+<div class="dl">
+  <button class="btn" data-dl="web">PNG for web<span>2400 × 1350</span></button>
+  <button class="btn" data-dl="print">PNG for print<span>3000 px wide</span></button>
+  <button class="btn" data-dl="svg">SVG<span>editable</span></button>
+  <button class="btn" data-dl="csv">CSV<span>the numbers</span></button>
+</div>
+
+<h2 id="post">Post it</h2>
+<p>A card for every feed, drawn from the same chart. The vertical card also records as a six-second clip.</p>
+<div class="cards" id="cards"></div>
+
+<h2 id="brief">Brief a partner</h2>
+<p>What a producer or a standards desk needs, ready to paste.</p>
+<dl class="brief" id="brieflist"></dl>
+<h3>Radio copy</h3>
+<blockquote><p id="radio"></p></blockquote>
+<button class="btn" data-copy="radio">Copy</button>
+
+<p class="pos">Demo only. These numbers have not been through PI review for publication.</p>
+</main>
+</div>
+<script src="../../assets/report.js"></script>
+<script src="kit.js"></script>
+<script>
+(function () {
+  var K = CHIP50Kit, $ = function (id) { return document.getElementById(id); };
+  var CARDS = [
+    {key: 'link', label: 'Link card', size: '1200 × 675', w: 1200, h: 675},
+    {key: 'square', label: 'Square', size: '1080 × 1080', w: 1080, h: 1080},
+    {key: 'portrait', label: 'Portrait', size: '1080 × 1350', w: 1080, h: 1350},
+    {key: 'vertical', label: 'Vertical', size: '1080 × 1920', w: 1080, h: 1920, clip: true}
+  ];
+  function el(tag, attrs, text) {
+    var e = document.createElement(tag);
+    for (var a in attrs) e.setAttribute(a, attrs[a]);
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  K.load('tiktok-age-w38').then(function (spec) {
+    var stem = 'chip50-' + spec.id;
+    K.mount($('chart'), spec, {bare: true, themed: true});
+
+    var tbl = $('tbl'), hr = el('tr');
+    ['Age', '% (weighted)', 'Unweighted n'].forEach(function (h) { hr.appendChild(el('th', {}, h)); });
+    tbl.appendChild(hr);
+    spec.rows.forEach(function (r) {
+      var tr = el('tr');
+      [r.label, r.value.toFixed(1), r.n.toLocaleString('en-US')].forEach(function (v) { tr.appendChild(el('td', {}, v)); });
+      tbl.appendChild(tr);
+    });
+
+    $('snippet').textContent = '<div data-chip50-chart="' + spec.id + '"></div>\n<script async src="' +
+      new URL('embed.js', location.href).href + '"></scr' + 'ipt>';
+
+    var dl = {
+      web: function () { K.png(spec, 1200, 675, stem + '-web.png', 2); },
+      print: function () { K.png(spec, 1000, null, stem + '-print.png', 3); },
+      svg: function () { K.svg(spec, stem + '.svg'); },
+      csv: function () { K.csv(spec, stem + '.csv'); }
+    };
+    [].forEach.call(document.querySelectorAll('[data-dl]'), function (b) { b.onclick = dl[b.getAttribute('data-dl')]; });
+
+    CARDS.forEach(function (c) {
+      var card = el('div', {'class': 'card'}), cv = K.canvas(spec, c.w, c.h);
+      cv.setAttribute('role', 'img');
+      cv.setAttribute('aria-label', c.label + ' card: ' + spec.title);
+      card.appendChild(cv);
+      var p = el('p', {}, c.label); p.appendChild(el('span', {}, c.size)); card.appendChild(p);
+      var b = el('button', {'class': 'btn'}, 'PNG');
+      b.onclick = function () { K.png(spec, c.w, c.h, stem + '-' + c.key + '.png'); };
+      card.appendChild(b);
+      if (c.clip) {
+        var v = el('button', {'class': 'btn'}, 'Clip');
+        v.onclick = function () {
+          v.disabled = true; v.textContent = 'Recording…';
+          K.clip(spec, c.w, c.h, stem + '-' + c.key, function (err) {
+            v.disabled = false; v.textContent = err ? 'Clip unavailable' : 'Clip';
+            if (err) v.title = err;
+          });
+        };
+        card.appendChild(v);
+      }
+      $('cards').appendChild(card);
+    });
+
+    [['Finding', spec.title + '. ' + $('chart').closest('main').querySelector('.dek').textContent],
+     ['Question', spec.wording], ['Base', spec.base], ['Fielded', spec.fielded], ['Weight', spec.weight],
+     ['Small groups', spec.suppression], ['Margin of error', spec.moe], ['Pulled with', spec.provenance]
+    ].forEach(function (row) {
+      $('brieflist').appendChild(el('dt', {}, row[0]));
+      $('brieflist').appendChild(el('dd', {}, row[1]));
+    });
+    $('radio').textContent = spec.radio;
+
+    [].forEach.call(document.querySelectorAll('[data-copy]'), function (b) {
+      b.onclick = function () {
+        navigator.clipboard.writeText($(b.getAttribute('data-copy')).textContent).then(function () {
+          b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500);
+        });
+      };
+    });
+  });
+})();
+</script>
+</body>
+</html>
