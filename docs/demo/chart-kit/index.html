@@ -4,275 +4,777 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="robots" content="noindex"/>
-<title>Chart kit demo — CHIP50</title>
+<title>Matrix explorer — CHIP50</title>
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <meta name="color-scheme" content="light dark"/>
 <link rel="stylesheet" href="../../assets/report.css"/>
 <style>
-.wrap.one{grid-template-columns:minmax(0,1fr)}
-.wrap.one main{margin:0 auto;width:100%}
-.eyebrow{font:600 13px/1.4 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--acct);margin:0 0 10px}
-.demo{font:400 14px/1.5 var(--sans);color:var(--muted);margin:22px 0 0}
-.place{position:sticky;top:44px;z-index:50;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  margin:0 -12px;padding:10px 12px;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(6px);
-  border-bottom:1px solid var(--rule)}
-.place label{font:600 14.5px/1 var(--sans);color:var(--ink)}
-.place select{font:500 15px/1.2 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--rule);
-  border-radius:8px;padding:7px 10px;max-width:100%}
-.place .now{font:400 14px/1.3 var(--sans);color:var(--muted)}
-.ct{font:640 18px/1.3 var(--sans);color:var(--ink);margin:0 0 4px}
-.cs{font:400 14.5px/1.5 var(--sans);color:var(--ink2);margin:0 0 16px}
-.chart svg{display:block;width:100%;height:auto}
-#stChart [data-key]{cursor:pointer}
-#stChart [data-key]:hover{fill:color-mix(in srgb,var(--ink) 7%,transparent)}
-.note{font:400 14.5px/1.5 var(--sans);color:var(--muted);margin:0 0 8px}
-.kit{margin:20px 0 0;padding-top:14px;border-top:1px solid var(--rule2)}
-.kit .lab{font:600 13px/1 var(--sans);color:var(--muted);margin:0 0 8px}
-.snip{display:flex;gap:10px;align-items:flex-start;margin:0 0 12px}
-.snip pre{flex:1;min-width:0;margin:0;overflow-x:auto;background:var(--bg);border:1px solid var(--rule);
-  border-radius:9px;padding:10px 12px;font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink2)}
-.dl{display:flex;flex-wrap:wrap;gap:8px}
-a.btn{text-decoration:none}
-.btn span{color:var(--muted);margin-left:6px}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:18px;align-items:start;margin-top:12px}
-.card canvas{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:8px}
-.card p{font:600 14px/1.4 var(--sans);margin:8px 0 6px}
-.card p span{font-weight:400;color:var(--muted);margin-left:6px}
-.card .btn{margin:0 6px 6px 0}
-dl.brief{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:8px 20px;font:400 15.5px/1.55 var(--sans);margin:0 0 26px}
-dl.brief dt{color:var(--muted)}
-dl.brief dd{margin:0}
-dl.brief code{white-space:normal;font-size:13px}
-@media(max-width:620px){dl.brief{grid-template-columns:minmax(0,1fr);gap:2px}dl.brief dd{margin-bottom:12px}}
+/* An app page, not a report: full width, sans, dense, tabular figures.
+   Cells are coloured by points from the U.S. (the default) or by share,
+   both drawn in the script per theme. Points use orange (below the U.S.)
+   and blue (above) through a grey midpoint: a colourblind-safe pair that
+   doesn't read as red/blue partisanship, kept light enough for dark ink. */
+:root{--below-ink:#a84800;--above-ink:#1c5cab}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme=light])){--below-ink:#f5a465;--above-ink:#86b6ef}}
+:root[data-theme=dark]{--below-ink:#f5a465;--above-ink:#86b6ef}
+body{font:400 14px/1.45 var(--sans);font-variant-numeric:tabular-nums}
+.mono{font:500 12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.up{color:var(--above-ink)} .down{color:var(--below-ink)}
+
+/* ---------- sticky bar: the two filters, side by side ---------- */
+.xbar{position:sticky;top:0;z-index:70;display:flex;align-items:center;gap:14px;padding:9px 24px;height:64px;
+  background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--rule)}
+.brand{display:flex;flex-direction:column;gap:2px;flex:none;margin-right:4px;text-decoration:none}
+.brand b{font:650 14px/1 var(--sans);color:var(--ink);display:flex;align-items:center;gap:7px}
+.brand b::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--acc)}
+.brand span{font:500 11.5px/1 var(--sans);color:var(--muted);padding-left:16px}
+.setpick{display:flex;flex-direction:column;gap:3px;flex:none}
+.setpick label{font:650 10px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.setpick select{font:600 13px/1.2 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:5px 8px}
+.field{position:relative;width:320px;flex:none}
+.field label{position:absolute;left:12px;top:6px;font:650 10px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);pointer-events:none}
+.field input{width:100%;font:600 15px/1.2 var(--sans);color:var(--ink);background:var(--surface);
+  border:1px solid var(--rule);border-radius:9px;padding:20px 40px 7px 12px;outline:none}
+.field input:focus{border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 22%,transparent)}
+.field>kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%)}
+kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);border:1px solid var(--rule);
+  border-bottom-width:2px;border-radius:5px;padding:2px 5px;background:var(--surface)}
+.xbar .tools{margin-left:auto;display:flex;gap:10px;align-items:center;flex:none}
+.keys{display:flex;gap:11px;align-items:center;font:400 12px/1 var(--sans);color:var(--muted)}
+.keys span{white-space:nowrap}
+@media (max-width:1900px){.xbar .keys .wide{display:none}}
+@media (max-width:1600px){.xbar .keys{display:none}}
+
+/* ---------- flyouts: the pickers are small charts ---------- */
+.fly{position:absolute;left:0;top:calc(100% + 7px);z-index:120;background:var(--surface);border:1px solid var(--rule);border-radius:12px;
+  box-shadow:0 18px 48px rgba(0,0,0,.18);display:none;padding:6px 6px 0}
+.field.open .fly{display:block}
+#fq .fly{width:600px} #fp .fly{width:640px}
+.fh{display:flex;align-items:center;gap:10px;padding:6px 8px 8px;font:400 12.5px/1.3 var(--sans);color:var(--muted)}
+.fh b{color:var(--ink);font-weight:650}
+.fh .sp{flex:1}
+.cols,.row{display:grid;align-items:center;gap:0 10px;padding:0 8px}
+.qc{grid-template-columns:minmax(0,1fr) 150px 52px 46px 50px}
+.pc{grid-template-columns:22px minmax(0,1fr) 150px 52px 50px 52px}
+.cols{font:650 10.5px/1 var(--sans);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding-bottom:6px;border-bottom:1px solid var(--rule2)}
+.cols .r,.row .r{text-align:right}
+.fl{max-height:min(60vh,540px);overflow:auto;padding:3px 0}
+.row{height:27px;border-radius:6px;cursor:pointer;font:400 13px/1 var(--sans);color:var(--ink2)}
+.row .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.row .rk{color:var(--muted);font-size:11.5px}
+.row .v{font-weight:650;color:var(--ink);text-align:right}
+.row .g,.row .nn{text-align:right;font-size:12px}
+.row .nn{color:var(--muted)}
+.row svg{display:block;width:100%;height:12px}
+.row.hi{background:var(--soft)}
+.row.cur .nm{font-weight:700}
+.row.cur .nm::after{content:" ●";color:var(--acc);font-size:9px}
+.empty{padding:14px 10px;color:var(--muted);margin:0}
+.ff{display:flex;gap:14px;flex-wrap:wrap;padding:8px;border-top:1px solid var(--rule2);font:400 11.5px/1.2 var(--sans);color:var(--muted)}
+
+main.app{max-width:none;padding:16px 24px 80px}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:14px 16px 12px}
+.ph{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+.ph h2{font:650 16px/1.3 var(--sans);letter-spacing:-.005em;margin:0;color:var(--ink)}
+.ph h2::before{display:none}
+.ph p{font:400 12.5px/1.45 var(--sans);color:var(--muted);margin:2px 0 0}
+.ph .grow{flex:1;min-width:280px}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;flex:none}
+.seg button{font:500 12px/1 var(--sans);color:var(--ink2);background:transparent;border:0;padding:7px 9px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed=true]{background:var(--soft);color:var(--acct);font-weight:650}
+.ctl{display:flex;align-items:center;gap:7px;font:500 12px/1 var(--sans);color:var(--muted);flex:none}
+.btn.sm{font-size:12px;padding:6px 9px}
+
+/* ---------- the matrix ---------- */
+#grid{position:relative;outline:none;border-radius:8px;transition:box-shadow .12s}
+#grid:focus{box-shadow:0 0 0 2px var(--acc),0 0 0 6px color-mix(in srgb,var(--acc) 20%,transparent)}
+#grid svg{display:block;width:100%;height:auto;user-select:none}
+#grid [data-c]{cursor:pointer}
+.legend{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;margin-top:9px;font:400 12px/1.4 var(--sans);color:var(--muted)}
+.scale{position:relative;width:300px;height:27px;font:400 11px/1 var(--sans);color:var(--muted)}
+.scale .bar{position:absolute;left:0;right:0;top:0;height:11px;border-radius:3px}
+.scale span{position:absolute;top:15px;transform:translateX(-50%);white-space:nowrap}
+.scale span:first-of-type{transform:none}
+.scale span:last-of-type{transform:translateX(-100%)}
+
+/* the selected row, pinned under the bar once it scrolls out of view */
+.pin{position:fixed;top:64px;z-index:65;display:none;box-sizing:border-box;padding:6px 16px 8px;
+  background:color-mix(in srgb,var(--surface) 95%,transparent);backdrop-filter:blur(8px);
+  border:1px solid var(--rule);border-top:0;border-radius:0 0 12px 12px;box-shadow:0 10px 24px rgba(0,0,0,.10)}
+.pin.on{display:block}
+.pin svg{display:block;width:100%;height:auto;user-select:none}
+.pin [data-c]{cursor:pointer}
+#tip{position:fixed;z-index:130;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:8px;padding:8px 10px;
+  font:400 12.5px/1.45 var(--sans);box-shadow:0 8px 24px rgba(0,0,0,.25);display:none;max-width:300px}
+#tip b{font-weight:650}
+#tip .t{opacity:.75}
+
+/* ---------- detail for the selected pair ---------- */
+.dhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:22px 2px 12px}
+.dhead h2{font:700 20px/1.2 var(--sans);letter-spacing:-.015em;margin:0}
+.dhead h2::before{display:none}
+.dhead p{margin:0;font:400 12.5px/1.4 var(--sans);color:var(--muted)}
+.detail{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
+@media (max-width:1400px){.detail{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.chart-el svg{display:block;width:100%;height:auto}
+.click [data-key]{cursor:pointer}
+.click [data-key]:hover{fill:color-mix(in srgb,var(--ink) 7%,transparent)}
+.ct{font:650 14.5px/1.3 var(--sans);color:var(--ink);margin:0}
+.cs{font:400 12.5px/1.45 var(--sans);color:var(--muted);margin:2px 0 12px}
+.out{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--rule2)}
+.out .lab{font:600 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.out a.btn{text-decoration:none}
+.emb{display:none;margin-top:8px}
+.emb.on{display:flex;gap:8px;align-items:flex-start}
+.emb pre{flex:1;min-width:0;margin:0;background:var(--bg);border:1px solid var(--rule);border-radius:8px;
+  padding:8px 10px;color:var(--ink2);white-space:pre-wrap;word-break:break-all}
+dl.notes{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 14px;margin:0;font:400 13px/1.5 var(--sans)}
+dl.notes dt{color:var(--muted)}
+dl.notes dd{margin:0;color:var(--ink)}
+dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bottom:2px;word-break:break-word}
+.radio{margin:12px 0 6px;padding:10px 12px;background:var(--soft);border-radius:8px;font:400 13.5px/1.5 var(--sans);color:var(--ink)}
+.pos{font:400 12.5px/1.5 var(--sans);color:var(--muted);font-style:italic;margin:10px 0 0}
+
 </style>
 </head>
 <body>
-<header class="top">
-  <div class="topin">
-    <a class="mark" href="../../index.html"><span class="dot"></span>Tech &amp; Society</a>
-    <div class="crumb">Chart kit demo</div>
-    <div class="tools"><button class="btn" id="tt" aria-label="Toggle dark mode">Theme</button></div>
+<header class="xbar">
+  <a class="brand" href="../../index.html"><b>CHIP50</b><span>Matrix explorer</span></a>
+  <div class="setpick"><label for="setSel">Topic</label><select id="setSel"></select></div>
+  <div class="field" id="fq">
+    <label for="qi">Item</label>
+    <input id="qi" role="combobox" aria-expanded="false" aria-controls="ql" aria-autocomplete="list" autocomplete="off" spellcheck="false">
+    <kbd>/</kbd>
+    <div class="fly">
+      <div class="fh" id="qh"></div>
+      <div class="cols qc" id="qcols"></div>
+      <div class="fl" id="ql" role="listbox" aria-label="Items"></div>
+      <div class="ff"><span><kbd>↑</kbd> <kbd>↓</kbd> move</span><span><kbd>Enter</kbd> choose</span><span><kbd>Esc</kbd> close</span><span><kbd>j</kbd> <kbd>k</kbd> step without opening</span></div>
+    </div>
   </div>
-  <div class="prog" id="pg"></div>
+  <div class="field" id="fp">
+    <label for="pi">Place</label>
+    <input id="pi" role="combobox" aria-expanded="false" aria-controls="pl" aria-autocomplete="list" autocomplete="off" spellcheck="false">
+    <kbd>s</kbd>
+    <div class="fly">
+      <div class="fh" id="ph"></div>
+      <div class="cols pc" id="pcols"></div>
+      <div class="fl" id="pl" role="listbox" aria-label="Places"></div>
+      <div class="ff"><span><kbd>↑</kbd> <kbd>↓</kbd> move</span><span><kbd>Enter</kbd> choose</span><span><kbd>Esc</kbd> close</span><span><kbd>h</kbd> <kbd>l</kbd> step A to Z without opening</span><span><kbd>u</kbd> United States</span></div>
+    </div>
+  </div>
+  <div class="tools">
+    <div class="keys" aria-label="Keyboard shortcuts">
+      <span><kbd>j</kbd><kbd>k</kbd> item</span><span><kbd>h</kbd><kbd>l</kbd> place</span><span><kbd>g</kbd> grid</span>
+      <span class="wide"><kbd>/</kbd><kbd>s</kbd> search</span><span class="wide"><kbd>u</kbd> U.S.</span>
+    </div>
+    <button class="btn" id="tt" aria-label="Toggle dark mode">Theme</button>
+  </div>
 </header>
-<div class="wrap one">
-<main>
-<p class="demo">A working demo of the CHIP50 chart kit. Pick a place and every chart, embed, download and card on the page follows.</p>
-<div class="hero">
-  <p class="eyebrow">One question · CHIP50</p>
-  <h1 id="question"></h1>
-  <p class="dek" id="dek"></p>
-  <p class="srcline" id="srcline"></p>
-</div>
 
-<div class="place">
-  <label for="place">Show</label>
-  <select id="place"><option value="">United States</option></select>
-  <span class="now" id="now"></span>
-</div>
+<main class="app">
+  <div class="gridcol" id="gridcol">
+  <section class="panel" aria-labelledby="gh">
+    <div class="ph">
+      <div class="grow">
+        <h2 id="gh">Every platform in every state</h2>
+        <p id="gsub"></p>
+      </div>
+      <div class="ctl">Colour
+        <div class="seg" role="group" aria-label="Colour cells by">
+          <button type="button" data-shade="gap" aria-pressed="true" title="Points above or below the U.S., full colour at 15 points on every row">vs U.S.</button>
+          <button type="button" data-shade="share" aria-pressed="false" title="Share of the base, 0 to 100% on every row">Share</button>
+        </div>
+      </div>
+      <div class="ctl">Columns
+        <div class="seg" role="group" aria-label="Order columns by">
+          <button type="button" data-order="rank" aria-pressed="true" id="rankBtn">Rank</button>
+          <button type="button" data-order="region" aria-pressed="false" title="Census regions, most populous state first">Region</button>
+        </div>
+      </div>
+      <button class="btn sm" type="button" id="gridCsv">CSV</button>
+    </div>
+    <div id="grid" tabindex="0" role="application" aria-label="The grid: every item by place. Arrow keys move the selection; g focuses it."></div>
+    <div class="pin" id="pin" aria-hidden="true"></div>
+    <div class="legend">
+      <div id="ramp"></div>
+      <span id="noise"></span>
+    </div>
+  </section>
+  </div>
 
-<h2 id="by"></h2>
-<figure class="chart" id="byFig">
-  <p class="ct" id="byTitle"></p>
-  <p class="cs" id="bySub"></p>
-  <div id="byChart"></div>
-</figure>
-
-<h2 id="states">Every state</h2>
-<p class="note">Click a state to pick it. Margins of error aren't served by the MCP yet; with 390 to 1,879 adults per state, gaps of a few points may be noise.</p>
-<figure class="chart" id="stFig">
-  <p class="ct" id="stTitle"></p>
-  <p class="cs" id="stSub"></p>
-  <div id="stChart"></div>
-</figure>
-
-<h2 id="radio-copy">Radio copy</h2>
-<blockquote><p id="radio"></p></blockquote>
-<button class="btn" data-copy="radio">Copy</button>
-
-<h2 id="about">About these numbers</h2>
-<dl class="brief" id="brief"></dl>
-<p class="pos">Demo only. These numbers have not been through PI review for publication.</p>
+  <div class="detailcol">
+    <div class="dhead"><h2 id="dh"></h2><p id="dp"></p></div>
+    <div class="detail">
+      <div class="stack">
+        <section class="panel" id="pBy"></section>
+        <section class="panel" id="pRadio"></section>
+      </div>
+      <div class="stack">
+        <section class="panel click" id="pAcross"></section>
+        <section class="panel" id="pNotes"></section>
+      </div>
+      <div class="stack"><section class="panel click" id="pStates"></section></div>
+    </div>
+  </div>
 </main>
-</div>
+<div id="tip" role="tooltip"></div>
+
 <script src="../../assets/report.js"></script>
 <script src="kit.js"></script>
 <script>
 (function () {
-  var K = CHIP50Kit, Q = 'tiktok-w38', $ = function (id) { return document.getElementById(id); };
-  var CARDS = [
-    {key: 'link', label: 'Link card', size: '1200 × 675', w: 1200, h: 675},
-    {key: 'square', label: 'Square', size: '1080 × 1080', w: 1080, h: 1080},
-    {key: 'portrait', label: 'Portrait', size: '1080 × 1350', w: 1080, h: 1350},
-    {key: 'vertical', label: 'Vertical', size: '1080 × 1920', w: 1080, h: 1920, clip: true}
-  ];
-  function el(tag, attrs, text) {
-    var e = document.createElement(tag);
-    for (var a in attrs) e.setAttribute(a, attrs[a]);
+  'use strict';
+  const K = CHIP50Kit, $ = id => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  /* screenshot hook: ?theme=dark|light */
+  if (/^(dark|light)$/.test(params.get('theme') || '')) document.documentElement.setAttribute('data-theme', params.get('theme'));
+
+  /* Census regions, each in order of 2020 Census population */
+  const REGIONS = [
+    ['Northeast', 'NY PA NJ MA CT NH ME RI VT'],
+    ['Midwest', 'IL OH MI IN MO WI MN IA KS NE SD ND'],
+    ['South', 'TX FL GA NC VA TN MD SC AL LA KY OK AR MS WV DE DC'],
+    ['West', 'CA WA AZ CO OR UT NV NM ID HI MT AK WY']
+  ].map(([name, s]) => ({name, abbrs: s.split(' ')}));
+  const SPAN = K.SPAN;   /* vs U.S.: full colour at this many points either side */
+  const setName = /^[a-z0-9-]+$/.test(params.get('set') || '') ? params.get('set') : K.DEFAULT_SET;
+
+  /* the share and points scales come from the kit (K.scales), so the matrix,
+     the rails and the tile map colour alike; they're rebuilt per theme */
+  let SCALE = [], DIV = [], HATCH = null;
+  function buildScale() { const sc = K.scales(); SCALE = sc.share; DIV = sc.div; HATCH = sc.hatch; }
+  buildScale();
+  const el = (tag, attrs, text) => {
+    const e = document.createElement(tag);
+    for (const a in attrs || {}) e.setAttribute(a, attrs[a]);
     if (text != null) e.textContent = text;
     return e;
-  }
-  function button(label, note) {
-    var b = el('button', {'class': 'btn', type: 'button'}, label);
-    if (note) b.appendChild(el('span', {}, note));
-    return b;
-  }
-  function copier(b, get) {
-    b.onclick = function () {
-      navigator.clipboard.writeText(get()).then(function () {
-        b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500);
-      });
-    };
-  }
-  function table(t, head, rows) {
-    t.textContent = '';
-    var tr = el('tr');
-    head.forEach(function (h) { tr.appendChild(el('th', {}, h)); });
-    t.appendChild(tr);
-    rows.forEach(function (r) {
-      var tr = el('tr');
-      r.forEach(function (v) { tr.appendChild(el('td', {}, v)); });
-      t.appendChild(tr);
-    });
+  };
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const pct = K.pct, num = K.num;
+  /* the value as printed (one decimal under 10%, else whole), so gaps are
+     computed from what's on screen and the arithmetic adds up */
+  const shown = v => v < 9.95 ? Math.round(v * 10) / 10 : Math.round(v);
+  const gapOf = (v, us) => Math.round((shown(v) - shown(us)) * 10) / 10;
+  const signed = g => (g > 0 ? '+' : g < 0 ? '−' : '±') + (Number.isInteger(g) ? Math.abs(g) : Math.abs(g).toFixed(1));
+  const cls = g => g > 0 ? 'up' : g < 0 ? 'down' : '';
+  /* Table 8's test, per cell: 1 if the state is above the U.S. by more than
+     its 95% margin of error, -1 if below by more, 0 if the gap is inside it */
+  const side = (q, st) => { const g = gapOf(st.value, q.us.value); return Math.abs(g) <= K.moe(st.value, st.n) ? 0 : g > 0 ? 1 : -1; };
+  /* a mini bar on a 0–dom scale, with a tick at the U.S. share */
+  function mini(v, ref, dom, soft) {
+    const x = t => Math.max(0, Math.min(100, t / dom * 100));
+    return '<svg viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><rect x="0" y="3" width="100" height="6" rx="3" style="fill:var(--rule2)"/>' +
+      '<rect x="0" y="3" width="' + x(v) + '" height="6" rx="3" style="fill:' + (soft ? 'color-mix(in srgb,var(--acc) 45%,var(--surface))' : 'var(--acc)') + '"/>' +
+      (ref != null ? '<rect x="' + (x(ref) - 0.7) + '" y="0" width="1.4" height="12" style="fill:var(--ink)"/>' : '') + '</svg>';
   }
 
-  /* Under each chart: its embed code, its downloads, its data table and its
-     social cards, all for the place picked. kit(fig, v) builds them
-     once; the returned function redraws them for a new spec. */
-  function kit(fig, v) {
-    var box = el('div', {'class': 'kit'});
-    box.appendChild(el('p', {'class': 'lab'}, 'Embed this chart'));
-    var snip = el('div', {'class': 'snip'}), code = el('code'), copy = button('Copy');
-    var pre = el('pre'); pre.appendChild(code); snip.appendChild(pre); snip.appendChild(copy);
-    box.appendChild(snip);
-    copier(copy, function () { return code.textContent; });
-    var row = el('div', {'class': 'dl'});
-    var preview = el('a', {'class': 'btn', target: '_blank', rel: 'noopener'}, 'Preview embed');
-    var web = button('PNG for web', v === 'states' ? '2400 px wide' : '2400 × 1350');
-    var print = button('PNG for print', '3000 px wide'), svg = button('SVG', 'editable'), csv = button('CSV', 'the numbers');
-    [preview, web, print, svg, csv].forEach(function (b) { row.appendChild(b); });
-    box.appendChild(row);
-    fig.appendChild(box);
+  K.loadSet(setName).then(({index, questions: Q}) => {
+    const TX = index.text || {}, BASE = TX.base || 'adults';
+    K.topicPicker($('setSel'), index.set);
+    /* the set's own word for one of its items (an issue, a platform), for every label */
+    const ITEM = TX.item || 'Item', NOUN = TX.noun || 'items', item = ITEM.toLowerCase();
+    document.querySelector('label[for=qi]').textContent = ITEM;
+    $('ql').setAttribute('aria-label', NOUN[0].toUpperCase() + NOUN.slice(1));
+    $('grid').setAttribute('aria-label', 'Every ' + item + ' by place. Arrow keys move the selection; g focuses it.');
+    document.querySelector('.keys span').innerHTML = '<kbd>j</kbd><kbd>k</kbd> ' + esc(item);
+    K.flag($('gridcol'), index);
+    const qById = new Map(Q.map(q => [q.id, q]));
+    /* q.states[] is alphabetical by name and in the same order for every question */
+    const places = Q[0].states.map(s => ({slug: s.slug, name: s.name, label: s.label, abbr: s.abbr, n: s.n}));
+    const sIndex = new Map(places.map((p, i) => [p.slug, i]));
+    const pBySlug = new Map(places.map(p => [p.slug, p])), pByAbbr = new Map(places.map(p => [p.abbr, p]));
+    const val = (q, slug) => slug ? q.states[sIndex.get(slug)] : null;
+    const STEPS = [null].concat(places.map(p => p.slug));   /* h/l order: U.S., then A to Z */
+    const ns = places.map(p => p.n), nLo = num(Math.min.apply(null, ns)), nHi = num(Math.max.apply(null, ns));
 
-    var data = el('details', {'class': 'datatbl'}), tw = el('div', {'class': 'tw'}), tbl = el('table');
-    data.appendChild(el('summary', {}, 'Data table')); tw.appendChild(tbl); data.appendChild(tw);
-    fig.appendChild(data);
-    var social = el('details', {'class': 'datatbl'}), cards = el('div', {'class': 'cards'});
-    social.appendChild(el('summary', {}, 'Social cards'));
-    social.appendChild(el('p', {'class': 'note'}, 'A card for every feed. The vertical card also records as a six-second clip.'));
-    social.appendChild(cards);
-    fig.appendChild(social);
-
-    var spec;
-    function drawCards() {
-      cards.textContent = '';
-      CARDS.forEach(function (c) {
-        var card = el('div', {'class': 'card'}), cv = K.canvas(spec, c.w, c.h);
-        cv.setAttribute('role', 'img');
-        cv.setAttribute('aria-label', c.label + ' card: ' + spec.title);
-        card.appendChild(cv);
-        var p = el('p', {}, c.label); p.appendChild(el('span', {}, c.size)); card.appendChild(p);
-        var b = button('PNG'), s = spec;
-        b.onclick = function () { K.png(s, c.w, c.h, s.stem + '-' + c.key + '.png'); };
-        card.appendChild(b);
-        if (c.clip) {
-          var r = button('Clip');
-          r.onclick = function () {
-            r.disabled = true; r.textContent = 'Recording…';
-            K.clip(s, c.w, c.h, s.stem + '-' + c.key, function (err) {
-              r.disabled = false; r.textContent = err ? 'Clip unavailable' : 'Clip';
-              if (err) r.title = err;
-            });
-          };
-          card.appendChild(r);
-        }
-        cards.appendChild(card);
-      });
+    /* a set may name the question to open on (W39's midterm issues open on immigration) */
+    const FIRST = qById.has(TX.default_q) ? TX.default_q : Q[0].id;
+    const cur = {q: FIRST, s: null};
+    function fromURL() {
+      const u = new URLSearchParams(location.search);
+      cur.q = qById.has(u.get('q')) ? u.get('q') : FIRST;
+      cur.s = pBySlug.has(u.get('state')) ? u.get('state') : null;
     }
-    social.addEventListener('toggle', function () { if (social.open) drawCards(); });
+    fromURL();
+    /* view modes can be linked too: ?shade=share, ?order=region */
+    let shade = params.get('shade') === 'share' ? 'share' : 'gap';
+    let order = params.get('order') === 'region' ? 'region' : 'rank';
+    const pressAll = () => {
+      document.querySelectorAll('[data-shade]').forEach(x => x.setAttribute('aria-pressed', String(x.getAttribute('data-shade') === shade)));
+      document.querySelectorAll('[data-order]').forEach(x => x.setAttribute('aria-pressed', String(x.getAttribute('data-order') === order)));
+    };
+    pressAll();
 
-    return {table: tbl, set: function (s) {
-      spec = s;
-      var attrs = 'data-chip50-chart="' + s.question + '" data-view="' + v + '"' + (s.state ? ' data-state="' + s.state + '"' : '');
-      code.textContent = '<div ' + attrs + '></div>\n<script async src="' + new URL('embed.js', location.href).href + '"></scr' + 'ipt>';
-      preview.href = 'embed.html?q=' + s.question + '&view=' + v + (s.state ? '&state=' + s.state : '');
-      web.onclick = function () { K.png(s, 1200, v === 'states' ? null : 675, s.stem + '-web.png', 2); };
-      print.onclick = function () { K.png(s, 1000, null, s.stem + '-print.png', 3); };
-      svg.onclick = function () { K.svg(s, s.stem + '.svg'); };
-      csv.onclick = function () { K.csv(s, s.stem + '.csv'); };
-      if (social.open) drawCards();
-    }};
-  }
-
-  K.load(Q).then(function (q) {
-    var slugs = q.states.map(function (s) { return s.slug; });
-    var place = new URLSearchParams(location.search).get('state');
-    if (slugs.indexOf(place) < 0) place = null;
-    var by = 'By ' + q.byName, By = q.byName[0].toUpperCase() + q.byName.slice(1);
-
-    $('question').textContent = q.question;
-    $('dek').textContent = q.dek;
-    $('srcline').textContent = 'Source: CHIP50 survey, ' + q.wave + ', fielded ' + q.fielded + '; ' + K.num(q.us.n) +
-      ' U.S. adults. Numbers from the CHIP50 MCP, ' + q.pulled + '.';
-    $('by').textContent = by;
-    q.states.forEach(function (s) { $('place').appendChild(el('option', {value: s.slug}, s.name)); });
-
-    var byChart = K.mount($('byChart'), K.view(q, 'by', place), {bare: true, themed: true});
-    var stChart = K.mount($('stChart'), K.view(q, 'states', place), {bare: true, themed: true});
-    var byKit = kit($('byFig'), 'by'), stKit = kit($('stFig'), 'states');
-    table(stKit.table, ['State', '% (weighted)', 'Unweighted n'], q.states.map(function (s) {
-      return [s.name, s.value.toFixed(1), K.num(s.n)];
-    }));
-
-    function pick(slug) {
-      place = slug || null;
-      var u = new URL(location.href);
-      if (place) u.searchParams.set('state', place); else u.searchParams.delete('state');
-      history.replaceState(null, '', u);
+    /* ---------- selection and history ---------- */
+    let pushTimer = null;
+    function pushURL() {
+      clearTimeout(pushTimer);
+      const u = new URL(location.href);
+      u.searchParams.set('q', cur.q);
+      if (cur.s) u.searchParams.set('state', cur.s); else u.searchParams.delete('state');
+      if (u.href !== location.href) history.pushState(null, '', u);
+    }
+    /* how: 'push' records a history entry now; 'step' (arrows, j/k/h/l)
+       records one once movement pauses, so Back walks the stops, not every key */
+    function select(q, s, how) {
+      if (q === cur.q && s === cur.s) return;
+      cur.q = q; cur.s = s;
+      if (how === 'step') { clearTimeout(pushTimer); pushTimer = setTimeout(pushURL, 400); }
+      else pushURL();
       render();
     }
-    $('place').onchange = function () { pick(this.value); };
-    $('stChart').addEventListener('click', function (e) {
-      var k = e.target.getAttribute && e.target.getAttribute('data-key');
-      if (k) pick(k === place ? null : k);
-    });
-    copier(document.querySelector('[data-copy="radio"]'), function () { return $('radio').textContent; });
+    addEventListener('popstate', () => { clearTimeout(pushTimer); fromURL(); render(); });
 
-    function render() {
-      var st = place ? q.states[slugs.indexOf(place)] : null;
-      var bySpec = K.view(q, 'by', place), stSpec = K.view(q, 'states', place);
-      $('place').value = place || '';
-      $('now').textContent = st ? K.num(st.n) + ' adults in ' + st.label + ' answered' : K.num(q.us.n) + ' adults answered';
-      $('byTitle').textContent = bySpec.title; $('bySub').textContent = bySpec.subtitle;
-      $('stTitle').textContent = stSpec.title; $('stSub').textContent = stSpec.subtitle;
-      byChart.set(bySpec); stChart.set(stSpec);
-      byKit.set(bySpec); stKit.set(stSpec);
-      $('radio').textContent = bySpec.radio;
-      if (st) table(byKit.table, [By, st.label + ' %', 'Unweighted n', 'U.S. %'],
-        st.by.map(function (g, i) { return [g.label, g.value.toFixed(1), K.num(g.n), q.by[i].value.toFixed(1)]; }));
-      else table(byKit.table, [By, '% (weighted)', 'Unweighted n'],
-        q.by.map(function (g) { return [g.label, g.value.toFixed(1), K.num(g.n)]; }));
-
-      $('brief').textContent = '';
-      [['Question', q.wording],
-       ['Base', st ? K.num(st.n) + ' adults in ' + st.name + '; unweighted n per group in the CSV'
-                   : K.num(q.us.n) + ' U.S. adults; unweighted n per group in the CSV'],
-       ['Fielded', q.fielded + ' (' + q.wave + ')'],
-       ['Weight', place ? q.weight.state + '; U.S. figures use ' + q.weight.us : q.weight.us],
-       ['Small groups', q.suppression], ['Margin of error', q.moe]
-      ].forEach(function (row) {
-        $('brief').appendChild(el('dt', {}, row[0]));
-        $('brief').appendChild(el('dd', {}, row[1]));
+    /* ---------- the two flyouts ---------- */
+    function flyout(root, cfg) {
+      const input = root.querySelector('input'), list = root.querySelector('.fl');
+      let rows = [], active = 0, open = false;
+      function draw(query, center) {
+        const qy = (query || '').trim().toLowerCase();
+        rows = cfg.rows().filter(r => !qy || r.search.indexOf(qy) >= 0);
+        cfg.head(rows.length);
+        const cid = cfg.current();
+        active = qy ? 0 : Math.max(0, rows.findIndex(r => r.id === cid));
+        list.innerHTML = rows.length ? rows.map((r, i) =>
+          '<div class="row ' + cfg.cls + (r.id === cid ? ' cur' : '') + '" role="option" id="' + root.id + '-o' + i + '" data-i="' + i +
+          '" aria-selected="' + (i === active) + '"' + (r.title ? ' title="' + esc(r.title) + '"' : '') + '>' + r.html + '</div>').join('')
+          : '<p class="empty">Nothing matches.</p>';
+        root.classList.add('open'); open = true; input.setAttribute('aria-expanded', 'true');
+        move(active, center ? 'center' : 'nearest');
+      }
+      function move(i, block) {
+        if (!rows.length) return;
+        active = (i + rows.length) % rows.length;
+        [].forEach.call(list.children, (c, j) => { c.classList.toggle('hi', j === active); c.setAttribute('aria-selected', String(j === active)); });
+        input.setAttribute('aria-activedescendant', root.id + '-o' + active);
+        if (block && list.children[active]) list.children[active].scrollIntoView({block});
+      }
+      function close() { root.classList.remove('open'); open = false; input.setAttribute('aria-expanded', 'false'); input.value = cfg.text(); }
+      /* a pick hands focus to the grid, so the arrow keys move the crosshair next */
+      function pick(i) { const r = rows[i]; close(); $('grid').focus(); if (r) cfg.pick(r.id); }
+      list.addEventListener('mousedown', e => { const r = e.target.closest('.row'); if (r) { e.preventDefault(); pick(+r.getAttribute('data-i')); } });
+      list.addEventListener('mousemove', e => { const r = e.target.closest('.row'); if (r && +r.getAttribute('data-i') !== active) move(+r.getAttribute('data-i')); });
+      input.addEventListener('focus', () => { input.select(); draw('', true); });
+      input.addEventListener('input', () => draw(input.value));
+      input.addEventListener('blur', () => setTimeout(() => { if (document.activeElement !== input) close(); }, 0));
+      input.addEventListener('keydown', e => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); open ? move(active + 1, 'nearest') : draw(''); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); move(active - 1, 'nearest'); }
+        else if (e.key === 'Enter') { e.preventDefault(); pick(active); }
+        else if (e.key === 'Escape') { e.preventDefault(); close(); $('grid').focus(); }
       });
-      $('brief').appendChild(el('dt', {}, 'Pulled with'));
-      var dd = el('dd');
-      q.provenance.forEach(function (c, i) { if (i) dd.appendChild(el('br')); dd.appendChild(el('code', {}, c)); });
-      dd.appendChild(document.createTextNode(' on the CHIP50 MCP, ' + q.pulled));
-      $('brief').appendChild(dd);
+      return {sync: () => { if (!open) input.value = cfg.text(); else draw(input.value === cfg.text() ? '' : input.value); },
+        focus: () => input.focus(), isOpen: () => open};
     }
+    const qFly = flyout($('fq'), {
+      cls: 'qc',
+      rows: () => Q.map(q => {
+        const s = val(q, cur.s), v = s ? s.value : q.us.value, g = s ? gapOf(v, q.us.value) : null;
+        return {id: q.id, title: q.wording, search: (q.label + ' ' + q.question + ' ' + q.column + ' ' + q.topic).toLowerCase(),
+          html: '<span class="nm">' + esc(q.label) + '</span>' + mini(v, s ? q.us.value : null, 100) +
+            '<span class="v">' + pct(v) + '</span><span class="r nn">' + (s ? pct(q.us.value) : '') + '</span>' +
+            '<span class="g r ' + cls(g) + '">' + (s ? signed(g) : '') + '</span>'};
+      }),
+      head: n => {
+        $('qh').innerHTML = '<b>' + n + ' of ' + Q.length + '</b> ' + esc(NOUN) + ' · shares for <b>' + esc(cur.s ? pBySlug.get(cur.s).name : 'the United States') + '</b>' +
+          (cur.s ? ' · tick = U.S.' : '') + '<span class="sp"></span>' + esc(Q[0].wave);
+        $('qcols').innerHTML = '<span>' + esc(ITEM) + '</span><span>Share</span><span class="r">' + esc(cur.s ? pBySlug.get(cur.s).abbr : 'U.S.') +
+          '</span><span class="r">' + (cur.s ? 'U.S.' : '') + '</span><span class="r">' + (cur.s ? 'vs U.S.' : '') + '</span>';
+      },
+      current: () => cur.q, text: () => qById.get(cur.q).label, pick: id => select(id, cur.s)
+    });
+    let pSort = 'az';
+    const pFly = flyout($('fp'), {
+      cls: 'pc',
+      rows: () => {
+        const q = qById.get(cur.q), dom = Math.max(10, Math.ceil(Math.max.apply(null, q.states.map(s => s.value)) / 10) * 10);
+        const ranked = q.states.slice().sort((a, b) => b.value - a.value);
+        const order = pSort === 'share' ? ranked : q.states;
+        return [{id: '', search: 'united states us u.s. usa national america',
+          html: '<span class="rk"></span><span class="nm"><b>United States</b></span>' + mini(q.us.value, null, dom) +
+            '<span class="v">' + pct(q.us.value) + '</span><span class="g r"></span><span class="r nn">' + num(q.us.n) + '</span>'}]
+          .concat(order.map(s => {
+            const g = gapOf(s.value, q.us.value);
+            return {id: s.slug, search: (s.name + ' ' + s.abbr).toLowerCase(),
+              html: '<span class="rk">' + (ranked.indexOf(s) + 1) + '</span><span class="nm">' + esc(s.name) + '</span>' +
+                mini(s.value, q.us.value, dom, cur.s && s.slug !== cur.s) + '<span class="v">' + pct(s.value) + '</span>' +
+                '<span class="g r ' + cls(g) + '">' + signed(g) + '</span><span class="r nn">' + num(s.n) + '</span>'};
+          }));
+      },
+      head: n => {
+        const q = qById.get(cur.q);
+        $('ph').innerHTML = '<b>' + esc(q.label) + '</b> in 50 states and D.C. · U.S. ' + pct(q.us.value) + ' · tick = U.S.<span class="sp"></span>' +
+          '<span class="seg" id="pSort"><button type="button" data-p="az" aria-pressed="' + (pSort === 'az') + '">A to Z</button>' +
+          '<button type="button" data-p="share" aria-pressed="' + (pSort === 'share') + '">By share</button></span>';
+        $('pcols').innerHTML = '<span title="Rank on this ' + esc(item) + '">#</span><span>Place</span><span>Share</span><span class="r">%</span><span class="r">vs U.S.</span><span class="r">n</span>';
+      },
+      current: () => cur.s || '', text: () => cur.s ? pBySlug.get(cur.s).name : 'United States', pick: id => select(cur.q, id || null)
+    });
+    $('ph').addEventListener('mousedown', e => {
+      const p = e.target.getAttribute && e.target.getAttribute('data-p');
+      if (p) { e.preventDefault(); pSort = p; pFly.sync(); }
+    });
+
+    /* ---------- global keys ---------- */
+    function step(list, at, d) { const i = list.indexOf(at); return list[Math.max(0, Math.min(list.length - 1, i + d))]; }
+    addEventListener('keydown', e => {
+      const t = e.target, typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+      if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+      const ids = Q.map(q => q.id);
+      const k = e.key;
+      if (k === '/') { e.preventDefault(); qFly.focus(); }
+      else if (k === 's') { e.preventDefault(); pFly.focus(); }
+      else if (k === 'g') { e.preventDefault(); $('grid').focus(); }
+      else if (k === 'u') { e.preventDefault(); select(cur.q, null, 'step'); }
+      else if (k === 'j') { e.preventDefault(); select(step(ids, cur.q, 1), cur.s, 'step'); }
+      else if (k === 'k') { e.preventDefault(); select(step(ids, cur.q, -1), cur.s, 'step'); }
+      else if (k === 'l') { e.preventDefault(); select(cur.q, step(STEPS, cur.s, 1), 'step'); }
+      else if (k === 'h') { e.preventDefault(); select(cur.q, step(STEPS, cur.s, -1), 'step'); }
+    });
+
+    /* ---------- the matrix ---------- */
+    const BANDS = {'1': 'Above the U.S.', '0': 'Within the margin of error', '-1': 'Below the U.S.'};
+    /* columns in runs, each run labelled: three groups on the selected
+       question (above the U.S. by more than the margin of error, within it,
+       below), highest first inside each, or the Census regions */
+    function columns() {
+      if (order === 'rank') {
+        const q = qById.get(cur.q), v = p => val(q, p.slug).value;
+        const cols = places.map(p => ({p, band: side(q, val(q, p.slug))})).sort((a, b) => b.band - a.band || v(b.p) - v(a.p));
+        return cols.map((c, i) => Object.assign(c, {first: i === 0 || c.band !== cols[i - 1].band, name: BANDS[c.band]}));
+      }
+      const out = [];
+      REGIONS.forEach(r => r.abbrs.forEach((a, i) => out.push({p: pByAbbr.get(a), first: i === 0, name: r.name})));
+      return out;
+    }
+    /* fill for one cell, and which ink reads on it */
+    function fillFor(q, v, st) {
+      if (shade === 'share') return SCALE[Math.max(0, Math.min(100, Math.round(v)))];
+      /* vs U.S.: a gap inside the state's margin of error stays grey */
+      if (st && side(q, st) === 0) return Object.assign({hatch: true}, DIV[SPAN * 2]);
+      const g = Math.max(-SPAN, Math.min(SPAN, gapOf(v, q.us.value)));
+      return DIV[Math.round((g + SPAN) * 2)];
+    }
+    /* the grid is drawn twice from one geometry: the whole matrix, and a strip
+       of column heads plus the selected row that pins under the bar once that
+       row scrolls out of view */
+    let geom = null;
+    function layoutGrid() {
+      const W = Math.max(900, $('grid').clientWidth), cols = columns();
+      const nGaps = cols.filter(c => c.first).length - 1;
+      /* the label column fits the longest row name, bold, at 13px */
+      const LAB = Math.max(150, Math.ceil(Math.max.apply(null, Q.map(q => q.label.length)) * 7.6 + 22)), GAP0 = 14, RG = 8, top = 40;
+      /* the U.S. column is a cell and a third wide; rows are taller than
+         cells are wide, with a gap between rows so each reads as a line */
+      const cw = (W - LAB - GAP0 - nGaps * RG) / (cols.length + 1.35), USW = cw * 1.35;
+      const rh = Math.max(32, Math.min(42, Math.round(cw * 0.95)));
+      const xs = [];
+      let x = LAB + USW + GAP0;
+      cols.forEach((c, i) => { if (c.first && i > 0) x += RG; xs.push(x); x += cw; });
+      return {W, cols, LAB, top, cw, USW, rh, xs, gx1: xs[xs.length - 1] + cw, padX: 1, padY: 3,
+        fs: cw >= 34 ? 13 : cw >= 27 ? 12 : cw >= 22 ? 11 : 10, showNum: cw >= 18,
+        selRow: Q.findIndex(q => q.id === cur.q), selCol: cur.s ? cols.findIndex(c => c.p.slug === cur.s) : -1};
+    }
+    /* each drawing carries its own stripe pattern, under its own id */
+    function svgOpen(G, H, hid) {
+      G.hid = hid;
+      return '<svg viewBox="0 0 ' + G.W + ' ' + H + '" width="' + G.W + '" height="' + H +
+        '" font-family=\'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif\' style="font-variant-numeric:tabular-nums">' +
+        '<defs><pattern id="' + hid + '" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">' +
+        '<rect width="6" height="6" style="fill:' + HATCH.mid + '"/><rect width="1.5" height="6" style="fill:' + HATCH.stripe + '"/></pattern></defs>';
+    }
+    /* column heads, baseline at hy. The selected column's head is a filled
+       tab, the U.S. included, as the selected row's label is filled */
+    function heads(G, hy) {
+      const o = [];
+      const head = (c, x, w, label, size, on) => {
+        o.push('<rect data-c="' + c + '" data-r="head" x="' + (x + 1) + '" y="' + (hy - 13) + '" width="' + (w - 2) + '" height="18" rx="4" style="fill:' +
+          (on ? 'var(--acc)' : 'transparent') + '"/>');
+        o.push('<text x="' + (x + w / 2) + '" y="' + hy + '" text-anchor="middle" font-size="' + size + '" font-weight="' + (on ? 750 : c === 'us' ? 650 : 500) +
+          '" pointer-events="none" style="fill:' + (on ? '#fff' : c === 'us' ? 'var(--ink)' : 'var(--ink2)') + '">' + label + '</text>');
+      };
+      head('us', G.LAB, G.USW, 'U.S.', 11.5, !cur.s);
+      G.cols.forEach((c, i) => head(i, G.xs[i], G.cw, c.p.abbr, G.cw >= 22 ? 11 : 10, i === G.selCol));
+      return o.join('');
+    }
+    /* one question's row, top edge at y */
+    function row(G, q, r, y) {
+      const o = [], on = r === G.selRow, h = G.rh - 2 * G.padY, ty = y + G.rh / 2 + G.fs * 0.36;
+      o.push('<rect data-c="label" data-r="' + r + '" x="0" y="' + (y + G.padY) + '" width="' + (G.LAB - 6) + '" height="' + h + '" rx="5" style="fill:' + (on ? 'var(--soft)' : 'transparent') + '"/>');
+      if (on) o.push('<rect x="0" y="' + (y + G.padY + 3) + '" width="3" height="' + (h - 6) + '" rx="1.5" style="fill:var(--acc)" pointer-events="none"/>');
+      o.push('<text x="10" y="' + (y + G.rh / 2 + 4.5) + '" font-size="13" font-weight="' + (on ? 700 : 500) + '" pointer-events="none" style="fill:' +
+        (on ? 'var(--ink)' : 'var(--ink2)') + '">' + esc(q.label) + '</text>');
+      /* the U.S. cell is the scale's midpoint in vs U.S. mode, its own share otherwise */
+      const fu = shade === 'share' ? fillFor(q, q.us.value) : DIV[SPAN * 2];
+      o.push('<rect data-c="us" data-r="' + r + '" x="' + (G.LAB + G.padX) + '" y="' + (y + G.padY) + '" width="' + (G.USW - 2 * G.padX) + '" height="' + h +
+        '" rx="3" style="fill:' + fu.fill + '"/>');
+      o.push('<text x="' + (G.LAB + G.USW / 2) + '" y="' + ty + '" text-anchor="middle" font-size="' + G.fs + '" font-weight="750" pointer-events="none" style="fill:' + fu.ink + '">' +
+        shown(q.us.value) + '</text>');
+      G.cols.forEach((c, i) => {
+        const st = val(q, c.p.slug), f = fillFor(q, st.value, st);
+        o.push('<rect data-c="' + i + '" data-r="' + r + '" x="' + (G.xs[i] + G.padX) + '" y="' + (y + G.padY) + '" width="' + (G.cw - 2 * G.padX) + '" height="' + h +
+          '" rx="3" style="fill:' + (f.hatch ? 'url(#' + G.hid + ')' : f.fill) + '"/>');
+        /* state numbers a shade lighter than the U.S. column's, so they don't add to the colour */
+        if (G.showNum) o.push('<text x="' + (G.xs[i] + G.cw / 2) + '" y="' + ty + '" text-anchor="middle" font-size="' + G.fs + '" pointer-events="none" opacity="0.78" style="fill:' +
+          f.ink + '">' + shown(st.value) + '</text>');
+      });
+      return o.join('');
+    }
+    /* outline of the selected column from y0 to y1, and of the selected cell */
+    function crosshair(G, y0, y1, rowY) {
+      const colX = G.selCol >= 0 ? G.xs[G.selCol] : G.LAB, colW = G.selCol >= 0 ? G.cw : G.USW;
+      return '<rect x="' + (colX + 0.5) + '" y="' + y0 + '" width="' + (colW - 1) + '" height="' + (y1 - y0) +
+        '" rx="4" fill="none" stroke-width="1.25" style="stroke:var(--ink2)" pointer-events="none"/>' +
+        '<rect x="' + (colX + 0.5) + '" y="' + (rowY + G.padY - 1.5) + '" width="' + (colW - 1) + '" height="' + (G.rh - 2 * G.padY + 3) +
+        '" rx="4" fill="none" stroke-width="2.5" style="stroke:var(--ink)" pointer-events="none"/>';
+    }
+    function drawGrid() {
+      const G = layoutGrid(), H = G.top + Q.length * G.rh + 4, hy = G.top - 8, o = [svgOpen(G, H, 'hatch-grid')];
+      /* a label over each run of columns, shortened to fit a narrow run */
+      const runs = [];
+      G.cols.forEach((c, i) => { if (c.first) runs.push({name: c.name, i0: i, n: 0}); runs[runs.length - 1].n++; });
+      runs.forEach(r => {
+        const x0 = G.xs[r.i0], x1 = G.xs[r.i0 + r.n - 1] + G.cw;
+        const arrow = /^Above/.test(r.name) ? '▲ ' : /^Below/.test(r.name) ? '▼ ' : '';
+        const tries = order === 'rank' ? [r.name + ' · ' + r.n, r.name.split(' ')[0] + ' · ' + r.n, arrow + r.n] : [r.name];
+        const label = tries.find(t => t.length * 7.4 <= x1 - x0) || tries[tries.length - 1];
+        o.push('<text x="' + x0 + '" y="12" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">' + esc(label.toUpperCase()) + '</text>');
+        o.push('<line x1="' + x0 + '" x2="' + x1 + '" y1="17" y2="17" stroke-width="1" style="stroke:var(--rule)"/>');
+      });
+      o.push(heads(G, hy));
+      Q.forEach((q, r) => o.push(row(G, q, r, G.top + r * G.rh)));
+      const selY = G.top + G.selRow * G.rh;
+      o.push('<rect x="0.5" y="' + (selY + G.padY - 1.5) + '" width="' + (G.gx1 - 1) + '" height="' + (G.rh - 2 * G.padY + 3) +
+        '" rx="5" fill="none" stroke-width="1.25" style="stroke:var(--ink2)" pointer-events="none"/>');
+      o.push(crosshair(G, hy - 15, G.top + Q.length * G.rh, selY));
+      o.push('</svg>');
+      $('grid').innerHTML = o.join('');
+      /* the pinned strip: heads, then the selected row */
+      const PH = 24 + G.rh;
+      $('pin').innerHTML = svgOpen(G, PH, 'hatch-pin') + heads(G, 16) + row(G, Q[G.selRow], G.selRow, 22) + crosshair(G, 2, PH, 22) + '</svg>';
+      geom = G;
+      placePin();
+    }
+    /* show the strip while the selected row sits under the bar */
+    function placePin() {
+      if (!geom) return;
+      const g = $('grid').getBoundingClientRect(), bar = document.querySelector('.xbar').getBoundingClientRect().bottom;
+      const rowBottom = g.top + geom.top + (geom.selRow + 1) * geom.rh - geom.padY;
+      const on = rowBottom < bar + 2;
+      $('pin').classList.toggle('on', on);
+      if (on) Object.assign($('pin').style, {top: bar + 'px', left: (g.left - 16) + 'px', width: (g.width + 32) + 'px'});
+    }
+    let pinTick = false;
+    addEventListener('scroll', () => { if (!pinTick) { pinTick = true; requestAnimationFrame(() => { pinTick = false; placePin(); }); } }, {passive: true});
+
+    /* grid events: hover tip, click to select, arrows to move */
+    const tip = $('tip');
+    function target(e) {
+      const t = e.target.closest && e.target.closest('[data-c]');
+      return t ? {c: t.getAttribute('data-c'), r: t.getAttribute('data-r')} : null;
+    }
+    const placeAt = c => c === 'us' ? null : geom.cols[+c].p.slug;
+    /* the pinned strip answers the mouse like the grid does */
+    ['grid', 'pin'].forEach(id => $(id).addEventListener('mousemove', e => {
+      const t = target(e);
+      if (!t || t.r === 'head' || t.c === 'label') { tip.style.display = 'none'; return; }
+      const q = Q[+t.r], slug = placeAt(t.c), s = slug ? val(q, slug) : null, g = s ? gapOf(s.value, q.us.value) : null;
+      const v = s ? s.value : q.us.value, n = s ? s.n : q.us.n;
+      tip.innerHTML = '<b>' + esc(s ? s.name : 'United States') + '</b> · ' + esc(q.label) + '<br>' +
+        '<b>' + pct(v) + '</b> <span class="t">' + K.pm(v, n) + '</span>' +
+        (s ? ' <span class="t">· U.S. ' + pct(q.us.value) + ', ' + signed(g) + ' pts' + (side(q, s) === 0 ? ', within the margin' : '') + '</span>' : '') +
+        '<br><span class="t">' + num(n) + K.star(n) + ' ' + BASE + ' answered' + (n < K.FEW ? ': interpret with caution' : '') + '</span>';
+      tip.style.display = 'block';
+      const w = tip.offsetWidth, h = tip.offsetHeight;
+      let x = e.clientX + 14, y = e.clientY + 16;
+      if (x + w > innerWidth - 8) x = e.clientX - w - 14;
+      if (y + h > innerHeight - 8) y = e.clientY - h - 14;
+      tip.style.left = x + 'px'; tip.style.top = y + 'px';
+    }));
+    ['grid', 'pin'].forEach(id => {
+      $(id).addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+      $(id).addEventListener('click', e => {
+        const t = target(e);
+        if (!t) return;
+        if (t.r === 'head') return select(cur.q, placeAt(t.c));
+        if (t.c === 'label') return select(Q[+t.r].id, cur.s);
+        select(Q[+t.r].id, placeAt(t.c));
+      });
+    });
+    $('grid').addEventListener('keydown', e => {
+      const k = e.key;
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(k) < 0) return;
+      e.preventDefault();
+      const cols = geom.cols, r = Q.findIndex(q => q.id === cur.q);
+      let c = cur.s ? cols.findIndex(x => x.p.slug === cur.s) : -1;   /* -1 = the U.S. column */
+      let nr = r;
+      if (k === 'ArrowUp') nr = Math.max(0, r - 1);
+      if (k === 'ArrowDown') nr = Math.min(Q.length - 1, r + 1);
+      if (k === 'ArrowLeft') c = Math.max(-1, c - 1);
+      if (k === 'ArrowRight') c = Math.min(cols.length - 1, c + 1);
+      select(Q[nr].id, c < 0 ? null : cols[c].p.slug, 'step');
+    });
+    let rw = 0;
+    addEventListener('resize', () => { const w = $('grid').clientWidth; if (w !== rw) { rw = w; drawGrid(); } else placePin(); });
+
+    /* legend */
+    function drawRamp() {
+      const r = $('ramp');
+      r.textContent = '';
+      r.className = 'scale';
+      if (shade === 'share') {
+        const bar = el('i', {'class': 'bar'});
+        bar.style.background = 'linear-gradient(90deg,' + SCALE.filter((x, v) => v % 5 === 0).map((x, i) => x.fill + ' ' + i * 5 + '%').join(',') + ')';
+        r.appendChild(bar);
+        ['0', '25', '50', '75', '100%'].forEach((t, i) => r.appendChild(el('span', {style: 'left:' + i * 25 + '%'}, t)));
+        return;
+      }
+      const bar = el('i', {'class': 'bar'});
+      bar.style.background = 'linear-gradient(90deg,' + DIV[0].fill + ',' + DIV[SPAN * 2].fill + ',' + DIV[SPAN * 4].fill + ')';
+      r.appendChild(bar);
+      [['−' + SPAN + ' pts', 0], ['U.S.', 50], ['+' + SPAN + ' pts', 100]].forEach(([t, x]) => r.appendChild(el('span', {style: 'left:' + x + '%'}, t)));
+    }
+    document.querySelectorAll('[data-shade]').forEach(b => b.onclick = () => { shade = b.getAttribute('data-shade'); pressAll(); drawRamp(); noise(); render(); });
+    document.querySelectorAll('[data-order]').forEach(b => b.onclick = () => { order = b.getAttribute('data-order'); pressAll(); render(); });
+    $('gridCsv').onclick = () => {
+      const cols = columns();
+      const rows = [['question', 'column', 'United States'].concat(cols.map(c => c.p.name))].concat(
+        Q.map(q => [q.label, q.column, q.us.value].concat(cols.map(c => val(q, c.p.slug).value))),
+        [['unweighted_n', '', Q[0].us.n].concat(cols.map(c => c.p.n))]);
+      K.csv({csv: rows}, 'chip50-' + index.set + '-grid.csv');
+    };
+
+    /* ---------- detail panels, each with its own outputs ---------- */
+    function panel(root, v) {
+      const title = el('p', {'class': 'ct'}), sub = el('p', {'class': 'cs'}), chart = el('div', {'class': 'chart-el'});
+      root.appendChild(title); root.appendChild(sub); root.appendChild(chart);
+      const out = el('div', {'class': 'out'});
+      out.appendChild(el('span', {'class': 'lab'}, 'Use'));
+      const bEmb = el('button', {'class': 'btn sm', type: 'button', 'aria-expanded': 'false'}, 'Embed');
+      const bPng = el('button', {'class': 'btn sm', type: 'button'}, 'PNG');
+      const bSvg = el('button', {'class': 'btn sm', type: 'button'}, 'SVG');
+      const bCsv = el('button', {'class': 'btn sm', type: 'button'}, 'CSV');
+      const prev = el('a', {'class': 'btn sm', target: '_blank', rel: 'noopener'}, 'Preview ↗');
+      [bEmb, bPng, bSvg, bCsv, prev].forEach(b => out.appendChild(b));
+      root.appendChild(out);
+      const emb = el('div', {'class': 'emb'}), pre = el('pre', {'class': 'mono'}), copy = el('button', {'class': 'btn sm', type: 'button'}, 'Copy');
+      emb.appendChild(pre); emb.appendChild(copy); root.appendChild(emb);
+      if (params.get('embed') === 'open') emb.classList.add('on');
+      bEmb.onclick = () => { const on = emb.classList.toggle('on'); bEmb.setAttribute('aria-expanded', String(on)); };
+      copy.onclick = () => navigator.clipboard.writeText(pre.textContent).then(() => {
+        copy.textContent = 'Copied'; setTimeout(() => { copy.textContent = 'Copy'; }, 1400);
+      });
+      let m = null, spec = null;
+      return {set(s) {
+        spec = s;
+        title.textContent = s.title; sub.textContent = s.subtitle;
+        if (!m) m = K.mount(chart, s, {bare: true, themed: true, animate: false}); else m.set(s);
+        const chartId = v === 'questions' ? index.set : s.question;
+        const attrs = 'data-chip50-chart="' + chartId + '" data-view="' + v + '"' + (s.state ? ' data-state="' + s.state + '"' : '');
+        pre.textContent = '<div ' + attrs + '></div>\n<script async src="' + new URL('embed.js', location.href).href + '"></scr' + 'ipt>';
+        prev.href = 'embed.html?q=' + encodeURIComponent(chartId) + '&view=' + v + (s.state ? '&state=' + s.state : '');
+        bPng.onclick = () => K.png(spec, 1200, v === 'by' ? 675 : null, spec.stem + '.png', 2);
+        bSvg.onclick = () => K.svg(spec, spec.stem + '.svg');
+        bCsv.onclick = () => K.csv(spec, spec.stem + '.csv');
+      }};
+    }
+    const pBy = panel($('pBy'), 'by'), pAcross = panel($('pAcross'), 'questions'), pStates = panel($('pStates'), 'states');
+    $('pAcross').addEventListener('click', e => {
+      const k = e.target.getAttribute && e.target.getAttribute('data-key');
+      if (k && qById.has(k)) select(k, cur.s);
+    });
+    $('pStates').addEventListener('click', e => {
+      const k = e.target.getAttribute && e.target.getAttribute('data-key');
+      if (k && pBySlug.has(k)) select(cur.q, k === cur.s ? null : k);
+    });
+
+    function notes(q, st) {
+      const root = $('pNotes');
+      root.textContent = '';
+      root.appendChild(el('p', {'class': 'ct'}, 'About these numbers'));
+      root.appendChild(el('p', {'class': 'cs'}, q.question));
+      const dl = el('dl', {'class': 'notes'});
+      const add = (k, v) => { dl.appendChild(el('dt', {}, k)); const d = el('dd'); if (v instanceof Node) d.appendChild(v); else d.textContent = v; dl.appendChild(d); };
+      add('Wording', q.wording);
+      add('Base', st ? num(st.n) + ' ' + BASE + ' in ' + st.name + '; n per group on the chart and in each CSV'
+        : num(q.us.n) + ' U.S. ' + BASE + '; n per group on the chart and in each CSV');
+      add('Fielded', q.fielded + ' (' + q.wave + ')');
+      add('Weight', st ? q.weight.state + '; U.S. figures use ' + q.weight.us : q.weight.us);
+      add('Small groups', q.suppression);
+      add('Margin of error', (st ? K.pm(st.value, st.n) + ' points for ' + st.name : K.pm(q.us.value, q.us.n) + ' points nationally') + '. ' + q.moe);
+      const pv = el('span');
+      q.provenance.forEach((c, i) => { if (i) pv.appendChild(el('br')); pv.appendChild(el('code', {}, c)); });
+      pv.appendChild(document.createTextNode(' on the CHIP50 MCP, ' + q.pulled));
+      add('Pulled with', pv);
+      root.appendChild(dl);
+    }
+    /* radio copy and the range across states: short, so on a big screen it
+       sits beside the by-age chart under the grid */
+    function radio(q, st) {
+      const root = $('pRadio');
+      root.textContent = '';
+      const ranked = q.states.slice().sort((a, b) => a.value - b.value), lo = ranked[0], hi = ranked[ranked.length - 1];
+      root.appendChild(el('p', {'class': 'ct'}, 'Radio copy'));
+      const rc = el('div', {'class': 'radio'}, K.view(q, 'by', st ? st.slug : null).radio);
+      root.appendChild(rc);
+      const b = el('button', {'class': 'btn sm', type: 'button'}, 'Copy radio copy');
+      b.onclick = () => navigator.clipboard.writeText(rc.textContent).then(() => { b.textContent = 'Copied'; setTimeout(() => { b.textContent = 'Copy radio copy'; }, 1400); });
+      root.appendChild(b);
+      root.appendChild(el('p', {'class': 'cs', style: 'margin:12px 0 0'}, 'Across states, ' + q.label + ' runs from ' + pct(lo.value) + ' (' + lo.name + ') to ' +
+        pct(hi.value) + ' (' + hi.name + '). ' + q.moe));
+      root.appendChild(el('p', {'class': 'pos'}, 'Demo only. These numbers have not been through PI review for publication.'));
+    }
+
+    /* ---------- render everything for the current pair ---------- */
+    function render() {
+      const q = qById.get(cur.q), st = cur.s ? val(q, cur.s) : null;
+      qFly.sync(); pFly.sync();
+      const g = st ? gapOf(st.value, q.us.value) : null;
+      $('gsub').textContent = (TX.subtitle || 'Share of adults') + ', ' + q.wave + ', ' + q.fielded +
+        '. Click a cell for both; a row name or column head for one.';
+      $('rankBtn').textContent = 'Rank on ' + q.label;
+      drawGrid();
+      $('dh').textContent = q.label + ' · ' + (st ? st.name : 'United States');
+      /* the numbers for the pair, now that the bar carries only the two pickers */
+      const where = st ? (side(q, st) === 0 ? 'within the margin of error' : g > 0 ? 'above the U.S.' : 'below the U.S.') : '';
+      $('dp').textContent = pct(st ? st.value : q.us.value) + ' ' + K.pm(st ? st.value : q.us.value, st ? st.n : q.us.n) +
+        (st ? ' · U.S. ' + pct(q.us.value) + ' · ' + signed(g) + ' pts, ' + where : '') +
+        ' · ' + (st ? num(st.n) + ' ' + BASE + ' in ' + st.name : num(q.us.n) + ' U.S. ' + BASE) + ' answered';
+      pBy.set(K.view(q, 'by', cur.s));
+      pAcross.set(K.across(Q, cur.s, index));
+      pStates.set(K.view(q, 'states', cur.s));
+      notes(q, st);
+      radio(q, st);
+      document.title = q.label + ' · ' + (st ? st.name : 'U.S.') + ' — CHIP50 matrix explorer';
+    }
+    $('gh').textContent = TX.title || 'Every ' + item + ' in every state';
+    const noise = () => {
+      const sw = 'display:inline-block;width:22px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:6px;' +
+        'background:repeating-linear-gradient(45deg,' + HATCH.stripe + ' 0 1.5px,' + HATCH.mid + ' 1.5px 6px)';
+      $('noise').innerHTML = (shade === 'gap' ? '<span style="white-space:nowrap"><i style="' + sw + '"></i>Striped: the gap is inside that state\u2019s 95% margin of error.</span> ' : '') +
+        'Margins as in the Work report\u2019s Table 8 (unweighted n; weighting widens them). ' + nLo + ' to ' + nHi + ' ' + esc(BASE) + ' per state.';
+    };
+    noise();
+    /* the share colours are computed per theme, so a theme change redraws */
+    const retheme = () => { buildScale(); drawRamp(); noise(); drawGrid(); };
+    new MutationObserver(retheme).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme);
+    drawRamp();
     render();
+    rw = $('grid').clientWidth;
+    /* ?open=question|place opens that picker on load; ?focus=grid focuses the grid */
+    if (params.get('open') === 'question') qFly.focus();
+    if (params.get('open') === 'place') pFly.focus();
+    if (params.get('focus') === 'grid') $('grid').focus();
+  }).catch(err => {
+    document.querySelector('main').insertAdjacentHTML('afterbegin', '<p class="panel">Could not load this topic: ' + esc(err.message) + '</p>');
   });
 })();
 </script>
+<script src="concepts.js"></script>
 </body>
 </html>
