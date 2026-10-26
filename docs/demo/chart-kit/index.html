@@ -162,7 +162,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       <div class="fh" id="ph"></div>
       <div class="cols pc" id="pcols"></div>
       <div class="fl" id="pl" role="listbox" aria-label="Places"></div>
-      <div class="ff"><span><kbd>↑</kbd> <kbd>↓</kbd> move</span><span><kbd>Enter</kbd> choose</span><span><kbd>Esc</kbd> close</span><span><kbd>h</kbd> <kbd>l</kbd> step A to Z without opening</span><span><kbd>u</kbd> United States</span></div>
+      <div class="ff"><span><kbd>↑</kbd> <kbd>↓</kbd> move</span><span><kbd>Enter</kbd> choose</span><span><kbd>Esc</kbd> close</span><span><kbd>h</kbd> <kbd>l</kbd> step along the columns without opening</span><span><kbd>u</kbd> United States</span></div>
     </div>
   </div>
   <div class="tools">
@@ -288,7 +288,8 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     const sIndex = new Map(places.map((p, i) => [p.slug, i]));
     const pBySlug = new Map(places.map(p => [p.slug, p])), pByAbbr = new Map(places.map(p => [p.abbr, p]));
     const val = (q, slug) => slug ? q.states[sIndex.get(slug)] : null;
-    const STEPS = [null].concat(places.map(p => p.slug));   /* h/l order: U.S., then A to Z */
+    /* h/l order: the U.S., then the columns as the grid shows them (ranked or by region) */
+    const steps = () => [null].concat(geom ? geom.cols.map(c => c.p.slug) : places.map(p => p.slug));
     const ns = places.map(p => p.n), nLo = num(Math.min.apply(null, ns)), nHi = num(Math.max.apply(null, ns));
 
     /* a set may name the question to open on (W39's midterm issues open on immigration) */
@@ -432,8 +433,8 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       else if (k === 'u') { e.preventDefault(); select(cur.q, null, 'step'); }
       else if (k === 'j') { e.preventDefault(); select(step(ids, cur.q, 1), cur.s, 'step'); }
       else if (k === 'k') { e.preventDefault(); select(step(ids, cur.q, -1), cur.s, 'step'); }
-      else if (k === 'l') { e.preventDefault(); select(cur.q, step(STEPS, cur.s, 1), 'step'); }
-      else if (k === 'h') { e.preventDefault(); select(cur.q, step(STEPS, cur.s, -1), 'step'); }
+      else if (k === 'l') { e.preventDefault(); select(cur.q, step(steps(), cur.s, 1), 'step'); }
+      else if (k === 'h') { e.preventDefault(); select(cur.q, step(steps(), cur.s, -1), 'step'); }
     });
 
     /* ---------- the matrix ---------- */
