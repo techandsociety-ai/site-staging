@@ -306,7 +306,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
        stripes a step darker (lighter in dark mode), so "can't tell" never
        reads as "same as the U.S.", which is plain grey */
     const ink = toLab(mode === 'dark' ? '#f4f3ee' : '#14140f');
-    HATCH = {mid: DIV[SPAN * 2].fill, stripe: toHex(mid.map((c, k) => c + (ink[k] - c) * 0.16))};
+    HATCH = {mid: DIV[SPAN * 2].fill, stripe: toHex(mid.map((c, k) => c + (ink[k] - c) * 0.085))};
   }
   buildScale();
   const el = (tag, attrs, text) => {
@@ -545,7 +545,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       return '<svg viewBox="0 0 ' + G.W + ' ' + H + '" width="' + G.W + '" height="' + H +
         '" font-family=\'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif\' style="font-variant-numeric:tabular-nums">' +
         '<defs><pattern id="' + hid + '" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">' +
-        '<rect width="6" height="6" style="fill:' + HATCH.mid + '"/><rect width="1.75" height="6" style="fill:' + HATCH.stripe + '"/></pattern></defs>';
+        '<rect width="6" height="6" style="fill:' + HATCH.mid + '"/><rect width="1.5" height="6" style="fill:' + HATCH.stripe + '"/></pattern></defs>';
     }
     /* column heads, baseline at hy. The selected column's head is a filled
        tab, the U.S. included, as the selected row's label is filled */
@@ -814,7 +814,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     $('gh').textContent = TX.title || 'Every question in every state';
     const noise = () => {
       const sw = 'display:inline-block;width:22px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:6px;' +
-        'background:repeating-linear-gradient(45deg,' + HATCH.stripe + ' 0 1.75px,' + HATCH.mid + ' 1.75px 6px)';
+        'background:repeating-linear-gradient(45deg,' + HATCH.stripe + ' 0 1.5px,' + HATCH.mid + ' 1.5px 6px)';
       $('noise').innerHTML = (shade === 'gap' ? '<span style="white-space:nowrap"><i style="' + sw + '"></i>Striped: the gap is inside that state\u2019s 95% margin of error.</span> ' : '') +
         'Margins as in the Work report\u2019s Table 8 (unweighted n; weighting widens them). ' + nLo + ' to ' + nHi + ' ' + esc(BASE) + ' per state.';
     };
