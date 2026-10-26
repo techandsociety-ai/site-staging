@@ -240,7 +240,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     ['West', 'CA WA AZ CO OR UT NV NM ID HI MT AK WY']
   ].map(([name, s]) => ({name, abbrs: s.split(' ')}));
   const SPAN = K.SPAN;   /* vs U.S.: full colour at this many points either side */
-  const SETS = [['platforms-w38', 'Social media platforms'], ['insurance-w38', 'Health insurance']];
+  const SETS = [['platforms-w38', 'Social media platforms'], ['trust-w38', 'Trust in institutions'], ['insurance-w38', 'Health insurance']];
   const setName = SETS.some(x => x[0] === params.get('set')) ? params.get('set') : K.DEFAULT_SET;
 
   /* the share and points scales come from the kit (K.scales), so the matrix,
@@ -466,7 +466,8 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     function layoutGrid() {
       const W = Math.max(900, $('grid').clientWidth), cols = columns();
       const nGaps = cols.filter(c => c.first).length - 1;
-      const LAB = 150, GAP0 = 14, RG = 8, top = 40;
+      /* the label column fits the longest row name, bold, at 13px */
+      const LAB = Math.max(150, Math.ceil(Math.max.apply(null, Q.map(q => q.label.length)) * 7.6 + 22)), GAP0 = 14, RG = 8, top = 40;
       /* the U.S. column is a cell and a third wide; rows are taller than
          cells are wide, with a gap between rows so each reads as a line */
       const cw = (W - LAB - GAP0 - nGaps * RG) / (cols.length + 1.35), USW = cw * 1.35;

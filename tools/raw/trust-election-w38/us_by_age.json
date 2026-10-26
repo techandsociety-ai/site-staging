@@ -1,0 +1,65 @@
+{
+ "recoded_variables_used": {
+  "trust_some_election__3b14ded41b9f": {
+   "source_column": "pol_trust_election",
+   "binary": true,
+   "groups": {
+    "0": [
+     "1 Not at all",
+     "2 Not too much"
+    ],
+    "1": [
+     "3 Some",
+     "4 A lot"
+    ]
+   }
+  }
+ },
+ "platform": "trust_some_election__3b14ded41b9f",
+ "demographic": "age_cat_4",
+ "wave_filter": "all",
+ "weight_used": "weight_vote",
+ "weight_note": "trust_some_election__3b14ded41b9f is a political item, so the rule picks weight_vote (demographics plus presidential vote and turnout).",
+ "suppression_note": "Cells with n<10 suppressed for privacy",
+ "note": "All rates/means/pct are WEIGHTED (population-representative). unweighted_n is raw headcount for reliability checks only \u2014 never use it to compute percentages.",
+ "interpretation_note": "unweighted_n = raw respondent headcount \u2014 for reliability checks only, NOT a population estimate. user_rate_pct = WEIGHTED share coded 1 (selected this option / flag set) \u2014 population-representative. When presenting a table, label the N column as 'Unweighted N' and the rate column as '% (weighted)'.",
+ "data": [
+  {
+   "demographic_value": "18 to 24",
+   "unweighted_n": 3371,
+   "weighted_n": 3831.0,
+   "weighted_users": 1287.1,
+   "weighted_non_users": 2543.9,
+   "user_rate_pct": 33.6,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "25 to 44",
+   "unweighted_n": 13621,
+   "weighted_n": 11065.4,
+   "weighted_users": 4988.1,
+   "weighted_non_users": 6077.3,
+   "user_rate_pct": 45.08,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "45 to 64",
+   "unweighted_n": 10459,
+   "weighted_n": 10380.0,
+   "weighted_users": 5279.9,
+   "weighted_non_users": 5100.1,
+   "user_rate_pct": 50.87,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "65 and over",
+   "unweighted_n": 4290,
+   "weighted_n": 6499.1,
+   "weighted_users": 4128.8,
+   "weighted_non_users": 2370.4,
+   "user_rate_pct": 63.53,
+   "suppressed": false
+  }
+ ],
+ "data_source": "w38"
+}

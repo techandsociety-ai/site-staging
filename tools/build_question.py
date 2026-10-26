@@ -51,6 +51,22 @@ def rows(path):
     return d["data"] if isinstance(d, dict) else d
 
 
+WEIGHT_TEXT = {
+    "weight": "weight: the survey team's demographic weight",
+    "weight_vote": "weight_vote: demographics plus presidential vote and turnout",
+    "weight_state": "weight_state: demographics, calibrated within each state",
+    "weight_vote_state": "weight_vote_state: demographics plus vote and turnout, calibrated within each state",
+}
+
+
+def meta(path, key):
+    """A top-level field of a saved MCP result (weight_used, platform, ...), if it has one."""
+    d = json.loads((TOOLS / path).read_text())
+    if isinstance(d, dict) and isinstance(d.get("result"), str):
+        d = json.loads(d["result"])
+    return d.get(key) if isinstance(d, dict) else None
+
+
 def cell(r):
     """One group: the weighted rate, or None when the MCP withheld it."""
     return None if r.get("suppressed") else r["user_rate_pct"], r["unweighted_n"]
@@ -112,6 +128,14 @@ def build_one(cfg, state_n=None):
 
     out = {k: cfg[k] for k in ("id", "site", "question", "dek", "wording", "wave", "fielded",
                                "weight", "suppression", "moe", "provenance", "pulled", "text")}
+    # the weights as the MCP reports them, so a political item in a set says so
+    us_w, st_w = meta(raw["us_by"], "weight_used"), meta(raw["states_by"], "weight_used")
+    if us_w in WEIGHT_TEXT and st_w in WEIGHT_TEXT:
+        out["weight"] = {"us": WEIGHT_TEXT[us_w], "state": WEIGHT_TEXT[st_w]}
+    # a recoded column: the MCP calls name the recode's id, not the source column
+    measured = meta(raw["us_by"], "platform")
+    if measured and measured != cfg.get("column"):
+        out["recode"] = measured
     out.update(label=cfg.get("label", cfg["question"]), phrase=cfg.get("phrase"), topic=cfg.get("topic"), column=cfg.get("column"),
                byName=cfg["by"]["name"], us={"value": us_value, "n": us_n}, by=groups(us_by), states=states)
     fill_auto(out)
@@ -133,7 +157,7 @@ def fill_auto(q):
     ranked = sorted((s for s in q["states"] if s["value"] is not None), key=lambda s: s["value"])
     ns = [s["n"] for s in q["states"]]
     q["phrase"] = q.get("phrase") or q["label"]
-    tokens = {"label": q["label"], "phrase": q["phrase"], "column": q.get("column") or "",
+    tokens = {"label": q["label"], "phrase": q["phrase"], "column": q.get("column") or "", "recode": q.get("recode") or "",
               "lo": pct(ranked[0]["value"]), "loState": ranked[0]["label"],
               "hi": pct(ranked[-1]["value"]), "hiState": ranked[-1]["label"], "usPct": pct(q["us"]["value"]),
               "nLo": f"{min(ns):,}", "nHi": f"{max(ns):,}", "cellMin": f"{min(g['n'] for s in q['states'] for g in s['by']):,}"}
@@ -191,11 +215,14 @@ def build_set(cfg):
         one.update(q)
         one.setdefault("raw", {"us_by": f"raw/{q['id']}/us_by_age.json", "states_by": f"raw/{q['id']}/states_by_age.json"})
         built = build_one(one, state_n)
+        # every row should rest on the same people in each state; a few skips
+        # per item are fine, a different base population is not
         heads = {s["name"]: s["n"] for s in built["states"]}
         base = base or heads
-        if heads != base:
-            odd = sorted(k for k in heads if heads[k] != base[k])[:3]
-            sys.exit(f"{built['id']}: respondents per state differ from the set's first question ({', '.join(odd)}...)")
+        off = max(abs(heads[k] - base[k]) / base[k] for k in heads)
+        if off > 0.05:
+            odd = sorted(k for k in heads if abs(heads[k] - base[k]) / base[k] > 0.05)[:3]
+            sys.exit(f"{built['id']}: respondents per state differ by more than 5% from the set's first question ({', '.join(odd)}...)")
         index.append({"id": built["id"], "label": built["label"], "topic": built["topic"],
                       "question": built["question"], "us": built["us"]["value"]})
     dest = OUT / f"set-{cfg['set']}.json"
