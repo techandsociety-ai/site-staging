@@ -248,7 +248,9 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute
     return (d === 0 ? '±' : d > 0 ? '+' : '−') + (Math.abs(d) % 1 ? Math.abs(d).toFixed(1) : Math.abs(d));
   }
   function cls(d) { return d == null || d === 0 ? '' : d > 0 ? 'up' : 'dn'; }
-  function ordinal(n) { var s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
+  /* where a state sits against the U.S., by Table 8's 95% margin of error,
+     instead of an exact rank among 51 */
+  function band(d, s) { return Math.abs(d) <= K.moe(s.value, s.n) ? 'within the margin' : d > 0 ? 'above the U.S.' : 'below the U.S.'; }
   /* rank among the 51 places: 1 + how many are higher */
   function rankOf(question, slug) {
     var v = question.bySlug[slug].value;
@@ -326,8 +328,8 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute
       $('pMeta').textContent = K.num(s ? s.n : x.us.n) + ' ' + BASE;
       document.title = x.label + (s ? ' · ' + s.name : '') + ' — CHIP50 Explorer';
       $('chip').innerHTML = s
-        ? '<span class="big">' + K.pct(s.value) + '</span><span class="l1">' + esc(s.name) + ' · ' + esc(x.label) + '</span>' +
-          '<span class="l2">U.S. ' + K.pct(x.us.value) + ' · <b class="' + cls(d) + '">' + gapTxt(d) + ' pts</b> · ' + ordinal(rankOf(x, n.place)) + ' of 51</span>'
+        ? '<span class="big">' + K.pct(s.value) + '</span><span class="l1">' + esc(s.name) + ' · ' + esc(x.label) + ' · ' + K.pm(s.value, s.n) + '</span>' +
+          '<span class="l2">U.S. ' + K.pct(x.us.value) + ' · <b class="' + cls(d) + '">' + gapTxt(d) + ' pts</b> · ' + band(d, s) + '</span>'
         : '<span class="big">' + K.pct(x.us.value) + '</span><span class="l1">United States · ' + esc(x.label) + '</span>' +
           '<span class="l2">states ' + rangeOf(x) + ' · ' + K.num(x.us.n) + ' ' + BASE + '</span>';
       $('h1').innerHTML = esc(x.question) + (s ? ' <span>· ' + esc(s.name) + '</span>' : '');

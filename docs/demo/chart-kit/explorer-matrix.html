@@ -318,6 +318,9 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
   const gapOf = (v, us) => Math.round((shown(v) - shown(us)) * 10) / 10;
   const signed = g => (g > 0 ? '+' : g < 0 ? '−' : '±') + (Number.isInteger(g) ? Math.abs(g) : Math.abs(g).toFixed(1));
   const cls = g => g > 0 ? 'up' : g < 0 ? 'down' : '';
+  /* Table 8's test, per cell: 1 if the state is above the U.S. by more than
+     its 95% margin of error, -1 if below by more, 0 if the gap is inside it */
+  const side = (q, st) => { const g = gapOf(st.value, q.us.value); return Math.abs(g) <= K.moe(st.value, st.n) ? 0 : g > 0 ? 1 : -1; };
   /* a mini bar on a 0–dom scale, with a tick at the U.S. share */
   function mini(v, ref, dom, soft) {
     const x = t => Math.max(0, Math.min(100, t / dom * 100));
@@ -490,18 +493,25 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     });
 
     /* ---------- the matrix ---------- */
+    const BANDS = {'1': 'Above the U.S.', '0': 'Within the margin of error', '-1': 'Below the U.S.'};
+    /* columns in runs, each run labelled: three groups on the selected
+       question (above the U.S. by more than the margin of error, within it,
+       below), highest first inside each, or the Census regions */
     function columns() {
       if (order === 'rank') {
-        const q = qById.get(cur.q);
-        return places.slice().sort((a, b) => val(q, b.slug).value - val(q, a.slug).value).map((p, i) => ({p, first: i === 0}));
+        const q = qById.get(cur.q), v = p => val(q, p.slug).value;
+        const cols = places.map(p => ({p, band: side(q, val(q, p.slug))})).sort((a, b) => b.band - a.band || v(b.p) - v(a.p));
+        return cols.map((c, i) => Object.assign(c, {first: i === 0 || c.band !== cols[i - 1].band, name: BANDS[c.band]}));
       }
       const out = [];
-      REGIONS.forEach(r => r.abbrs.forEach((a, i) => out.push({p: pByAbbr.get(a), first: i === 0})));
+      REGIONS.forEach(r => r.abbrs.forEach((a, i) => out.push({p: pByAbbr.get(a), first: i === 0, name: r.name})));
       return out;
     }
     /* fill for one cell, and which ink reads on it */
-    function fillFor(q, v) {
+    function fillFor(q, v, st) {
       if (shade === 'share') return SCALE[Math.max(0, Math.min(100, Math.round(v)))];
+      /* vs U.S.: a gap inside the state's margin of error stays grey */
+      if (st && side(q, st) === 0) return DIV[SPAN * 2];
       const g = Math.max(-SPAN, Math.min(SPAN, gapOf(v, q.us.value)));
       return DIV[Math.round((g + SPAN) * 2)];
     }
@@ -511,7 +521,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     let geom = null;
     function layoutGrid() {
       const W = Math.max(900, $('grid').clientWidth), cols = columns();
-      const nGaps = order === 'region' ? REGIONS.length - 1 : 0;
+      const nGaps = cols.filter(c => c.first).length - 1;
       const LAB = 150, GAP0 = 14, RG = 8, top = 40;
       /* the U.S. column is a cell and a third wide; rows are taller than
          cells are wide, with a gap between rows so each reads as a line */
@@ -519,7 +529,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       const rh = Math.max(32, Math.min(42, Math.round(cw * 0.95)));
       const xs = [];
       let x = LAB + USW + GAP0;
-      cols.forEach((c, i) => { if (c.first && i > 0 && order === 'region') x += RG; xs.push(x); x += cw; });
+      cols.forEach((c, i) => { if (c.first && i > 0) x += RG; xs.push(x); x += cw; });
       return {W, cols, LAB, top, cw, USW, rh, xs, gx1: xs[xs.length - 1] + cw, padX: 1, padY: 3,
         fs: cw >= 34 ? 13 : cw >= 27 ? 12 : cw >= 22 ? 11 : 10, showNum: cw >= 18,
         selRow: Q.findIndex(q => q.id === cur.q), selCol: cur.s ? cols.findIndex(c => c.p.slug === cur.s) : -1};
@@ -556,7 +566,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       o.push('<text x="' + (G.LAB + G.USW / 2) + '" y="' + ty + '" text-anchor="middle" font-size="' + G.fs + '" font-weight="750" pointer-events="none" style="fill:' + fu.ink + '">' +
         shown(q.us.value) + '</text>');
       G.cols.forEach((c, i) => {
-        const st = val(q, c.p.slug), f = fillFor(q, st.value);
+        const st = val(q, c.p.slug), f = fillFor(q, st.value, st);
         o.push('<rect data-c="' + i + '" data-r="' + r + '" x="' + (G.xs[i] + G.padX) + '" y="' + (y + G.padY) + '" width="' + (G.cw - 2 * G.padX) + '" height="' + h +
           '" rx="3" style="fill:' + f.fill + '"/>');
         if (G.showNum) o.push('<text x="' + (G.xs[i] + G.cw / 2) + '" y="' + ty + '" text-anchor="middle" font-size="' + G.fs + '" pointer-events="none" style="fill:' +
@@ -574,19 +584,16 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     }
     function drawGrid() {
       const G = layoutGrid(), H = G.top + Q.length * G.rh + 4, hy = G.top - 8, o = [svgOpen(G, H)];
-      if (order === 'region') {
-        let i = 0;
-        REGIONS.forEach(r => {
-          const x0 = G.xs[i], x1 = G.xs[i + r.abbrs.length - 1] + G.cw;
-          o.push('<text x="' + x0 + '" y="12" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">' + r.name.toUpperCase() + '</text>');
-          o.push('<line x1="' + x0 + '" x2="' + x1 + '" y1="17" y2="17" stroke-width="1" style="stroke:var(--rule)"/>');
-          i += r.abbrs.length;
-        });
-      } else {
-        o.push('<text x="' + G.xs[0] + '" y="12" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">RANKED ON ' +
-          esc(qById.get(cur.q).label.toUpperCase()) + ', HIGHEST FIRST →</text>');
-        o.push('<line x1="' + G.xs[0] + '" x2="' + G.gx1 + '" y1="17" y2="17" stroke-width="1" style="stroke:var(--rule)"/>');
-      }
+      /* a label over each run of columns, shortened to fit a narrow run */
+      const runs = [];
+      G.cols.forEach((c, i) => { if (c.first) runs.push({name: c.name, i0: i, n: 0}); runs[runs.length - 1].n++; });
+      runs.forEach(r => {
+        const x0 = G.xs[r.i0], x1 = G.xs[r.i0 + r.n - 1] + G.cw;
+        const tries = order === 'rank' ? [r.name + ' · ' + r.n, r.name.split(' ')[0] + ' · ' + r.n, String(r.n)] : [r.name];
+        const label = tries.find(t => t.length * 7.4 <= x1 - x0) || tries[tries.length - 1];
+        o.push('<text x="' + x0 + '" y="12" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">' + esc(label.toUpperCase()) + '</text>');
+        o.push('<line x1="' + x0 + '" x2="' + x1 + '" y1="17" y2="17" stroke-width="1" style="stroke:var(--rule)"/>');
+      });
       o.push(heads(G, hy));
       Q.forEach((q, r) => o.push(row(G, q, r, G.top + r * G.rh)));
       const selY = G.top + G.selRow * G.rh;
@@ -625,9 +632,11 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       const t = target(e);
       if (!t || t.r === 'head' || t.c === 'label') { tip.style.display = 'none'; return; }
       const q = Q[+t.r], slug = placeAt(t.c), s = slug ? val(q, slug) : null, g = s ? gapOf(s.value, q.us.value) : null;
+      const v = s ? s.value : q.us.value, n = s ? s.n : q.us.n;
       tip.innerHTML = '<b>' + esc(s ? s.name : 'United States') + '</b> · ' + esc(q.label) + '<br>' +
-        '<b>' + pct(s ? s.value : q.us.value) + '</b>' + (s ? ' <span class="t">U.S. ' + pct(q.us.value) + ', ' + signed(g) + ' pts</span>' : '') +
-        '<br><span class="t">' + num(s ? s.n : q.us.n) + ' ' + BASE + ' answered</span>';
+        '<b>' + pct(v) + '</b> <span class="t">' + K.pm(v, n) + '</span>' +
+        (s ? ' <span class="t">· U.S. ' + pct(q.us.value) + ', ' + signed(g) + ' pts' + (side(q, s) === 0 ? ', within the margin' : '') + '</span>' : '') +
+        '<br><span class="t">' + num(n) + K.star(n) + ' ' + BASE + ' answered' + (n < K.FEW ? ': interpret with caution' : '') + '</span>';
       tip.style.display = 'block';
       const w = tip.offsetWidth, h = tip.offsetHeight;
       let x = e.clientX + 14, y = e.clientY + 16;
@@ -678,7 +687,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       r.appendChild(bar);
       [['−' + SPAN + ' pts', 0], ['U.S.', 50], ['+' + SPAN + ' pts', 100]].forEach(([t, x]) => r.appendChild(el('span', {style: 'left:' + x + '%'}, t)));
     }
-    document.querySelectorAll('[data-shade]').forEach(b => b.onclick = () => { shade = b.getAttribute('data-shade'); pressAll(); drawRamp(); render(); });
+    document.querySelectorAll('[data-shade]').forEach(b => b.onclick = () => { shade = b.getAttribute('data-shade'); pressAll(); drawRamp(); noise(); render(); });
     document.querySelectorAll('[data-order]').forEach(b => b.onclick = () => { order = b.getAttribute('data-order'); pressAll(); render(); });
     $('gridCsv').onclick = () => {
       const cols = columns();
@@ -745,7 +754,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       add('Fielded', q.fielded + ' (' + q.wave + ')');
       add('Weight', st ? q.weight.state + '; U.S. figures use ' + q.weight.us : q.weight.us);
       add('Small groups', q.suppression);
-      add('Margin of error', q.moe);
+      add('Margin of error', (st ? K.pm(st.value, st.n) + ' points for ' + st.name : K.pm(q.us.value, q.us.n) + ' points nationally') + '. ' + q.moe);
       const pv = el('span');
       q.provenance.forEach((c, i) => { if (i) pv.appendChild(el('br')); pv.appendChild(el('code', {}, c)); });
       pv.appendChild(document.createTextNode(' on the CHIP50 MCP, ' + q.pulled));
@@ -776,6 +785,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       const g = st ? gapOf(st.value, q.us.value) : null;
       $('answer').innerHTML = '<span class="where">' + esc((st ? st.name : 'United States') + ' · ' + q.label) + '</span>' +
         '<span class="nums"><span class="big">' + pct(st ? st.value : q.us.value) + '</span>' +
+        '<span class="n" title="95% margin of error">' + K.pm(st ? st.value : q.us.value, st ? st.n : q.us.n) + '</span>' +
         (st ? '<span class="us">U.S. ' + pct(q.us.value) + '</span><span class="gap ' + cls(g) + '">' + signed(g) + ' pts</span>' : '') +
         '<span class="n">' + num(st ? st.n : q.us.n) + ' ' + BASE + '</span></span>';
       $('gsub').textContent = (TX.subtitle || 'Share of adults') + ', ' + q.wave + ', ' + q.fielded +
@@ -792,7 +802,11 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       document.title = q.label + ' · ' + (st ? st.name : 'U.S.') + ' — CHIP50 matrix explorer';
     }
     $('gh').textContent = TX.title || 'Every question in every state';
-    $('noise').textContent = 'No margins of error yet (#273): ' + nLo + ' to ' + nHi + ' ' + BASE + ' per state, so gaps of a few points may be noise.';
+    const noise = () => {
+      $('noise').textContent = (shade === 'gap' ? 'Grey: the gap is within that state\u2019s 95% margin of error. ' : '') +
+        'Margins as in the Work report\u2019s Table 8 (unweighted n; weighting widens them). ' + nLo + ' to ' + nHi + ' ' + BASE + ' per state.';
+    };
+    noise();
     /* the share colours are computed per theme, so a theme change redraws */
     const retheme = () => { buildScale(); drawRamp(); drawGrid(); };
     new MutationObserver(retheme).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});

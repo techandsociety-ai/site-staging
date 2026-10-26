@@ -408,7 +408,7 @@ dl.notes code{white-space:normal;font-size:12px}
         var s = r.s;
         var b = el('button', {'class': 'row' + (s.slug === state.place ? ' on' : '') + (i === state.pAct ? ' act' : ''),
           role: 'option', 'aria-selected': String(s.slug === state.place), 'data-slug': s.slug,
-          title: s.name + ': ' + K.pct(s.value) + ' of ' + K.num(s.n) + ' ' + BASE + ' (rank ' + r.rank + ' of 51)'});
+          title: s.name + ': ' + K.pct(s.value) + ' of ' + K.num(s.n) + ' ' + BASE + ' (' + K.pm(s.value, s.n) + ')'});
         b.appendChild(el('span', {'class': 'rk'}, String(r.rank)));
         b.appendChild(el('span', {'class': 'nm'}, s.label));
         b.appendChild(dot(s.value, true));
@@ -445,13 +445,13 @@ dl.notes code{white-space:normal;font-size:12px}
         stats.appendChild(d); return nn;
       }
       if (s) {
-        stat(name, K.pct(s.value), says(q), ' main');
+        stat(name, K.pct(s.value), says(q) + ' · ' + K.pm(s.value, s.n), ' main');
         stat('United States', K.pct(q.us.value), 'all ' + K.num(q.us.n) + ' ' + BASE);
         var g = gap(s.value, q.us.value), gn = stat('Gap', gapTxt(g) + ' pts', name + ' minus U.S.');
         gn.className = 'n ' + ({p: 'p', n: 'neg', z: ''})[gapCls(g)];
         stat('Respondents', K.num(s.n), BASE + ' in ' + name);
-        $('caveat').textContent = 'Margins of error aren’t served by the MCP yet (#273). With ' + K.num(s.n) +
-          ' respondents in ' + name + ', a gap of a few points may be noise.';
+        $('caveat').textContent = 'The 95% margin of error for ' + name + ' is ' + K.pm(s.value, s.n) + ' points (the Work report’s Table 8 formula, ' +
+          'unweighted n; weighting widens it), so this gap is ' + (Math.abs(g.d) <= K.moe(s.value, s.n) ? 'within it.' : 'bigger than it.');
       } else {
         var r = ranked(q);
         stat('United States', K.pct(q.us.value), says(q), ' main');

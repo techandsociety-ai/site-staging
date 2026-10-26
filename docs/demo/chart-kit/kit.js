@@ -37,6 +37,16 @@
   function num(n) { return n.toLocaleString('en-US'); }
   /* for radio copy: the same precision as pct, spelled for the ear */
   function words(v) { return pct(v).replace('%', ' percent'); }
+  /* 95% margin of error in points, the way the Work report's Table 8 does it:
+     1.96 * sqrt(p(1 - p) / n) on the unweighted n. It leaves out the effect
+     of weighting, so the true margin is somewhat wider. At 0% or 100% the
+     formula gives zero, which would claim certainty, so it gives nothing. */
+  function moe(v, n) { var q = v / 100; return v == null || !n || v <= 0 || v >= 100 ? null : 196 * Math.sqrt(q * (1 - q) / n); }
+  function pm(v, n) { var m = moe(v, n); return m == null ? '' : '±' + m.toFixed(1); }
+  /* Table 8 stars groups under 100 respondents: interpret with caution */
+  var FEW = 100;
+  function star(n) { return n < FEW ? '*' : ''; }
+  var CAUTION = '* Fewer than ' + FEW + ' respondents: interpret with caution.';
   function fill(t, o) { return t.replace(/\{(\w+)\}/g, function (m, k) { return o[k] != null ? o[k] : m; }); }
 
   /* view(q, 'by' | 'states', slug) → a chart spec. 'by' is the U.S. by group,
@@ -48,7 +58,7 @@
       wave: q.wave, fielded: q.fielded};
     if (st) { o.state = st.label; o.value = pct(st.value); o.words = words(st.value); o.n = num(st.n); }
     var t = v === 'states' ? T.states : T.age[st ? 'state' : 'us'];
-    var spec = {question: q.id, view: v, state: st ? st.slug : null, site: q.site,
+    var spec = {question: q.id, view: v, state: st ? st.slug : null, site: q.site, moe: true,
       title: fill(t.title, o), subtitle: fill(t.subtitle, o), source: fill(t.source, o),
       radio: fill(T.radio[st ? 'state' : 'us'], o)};
     if (v === 'states') {
@@ -58,7 +68,7 @@
         return {label: s.label, abbr: s.abbr, key: s.slug, value: s.value, n: s.n, hi: !!st && s === st};
       });
       if (st) spec.callout = st.label + ' ' + pct(st.value);
-      spec.csv = [['state', 'pct_weighted', 'unweighted_n']].concat(q.states.map(function (s) { return [s.name, s.value, s.n]; }));
+      spec.csv = [['state', 'pct_weighted', 'unweighted_n', 'moe_95']].concat(q.states.map(function (s) { return [s.name, s.value, s.n, r1(moe(s.value, s.n))]; }));
       spec.stem = 'chip50-' + q.id + '-states' + (st ? '-' + st.slug : '');
     } else {
       spec.kind = 'bars';
@@ -67,9 +77,9 @@
         return {label: g.label, value: g.value, n: g.n, ref: st ? q.by[i].value : null};
       });
       spec.csv = st
-        ? [[q.byName, st.name + ' pct_weighted', 'unweighted_n', 'us_pct_weighted']].concat(
-          st.by.map(function (g, i) { return [g.label, g.value, g.n, q.by[i].value]; }))
-        : [[q.byName, 'pct_weighted', 'unweighted_n']].concat(q.by.map(function (g) { return [g.label, g.value, g.n]; }));
+        ? [[q.byName, st.name + ' pct_weighted', 'unweighted_n', 'moe_95', 'us_pct_weighted']].concat(
+          st.by.map(function (g, i) { return [g.label, g.value, g.n, r1(moe(g.value, g.n)), q.by[i].value]; }))
+        : [[q.byName, 'pct_weighted', 'unweighted_n', 'moe_95']].concat(q.by.map(function (g) { return [g.label, g.value, g.n, r1(moe(g.value, g.n))]; }));
       spec.stem = 'chip50-' + q.id + '-' + q.byName + (st ? '-' + st.slug : '');
     }
     return spec;
@@ -87,14 +97,14 @@
       return {label: q.label, key: q.id, value: s ? s.value : q.us.value, n: s ? s.n : q.us.n, ref: s ? q.us.value : null};
     });
     var q0 = qs[0], where = st ? st.label : 'U.S.', o = {place: where, count: qs.length};
-    return {kind: 'bars', question: meta.set, view: 'questions', state: st ? st.slug : null, site: q0.site, rows: rows,
+    return {kind: 'bars', question: meta.set, view: 'questions', state: st ? st.slug : null, site: q0.site, rows: rows, moe: true,
       title: st ? fill(A.state_title || '{place} across {count} platforms', o) : (A.us_title || 'Which platforms U.S. adults use'),
       subtitle: fill(A.subtitle || 'Share of {place} adults who say they ever use each, spring 2026', o) +
         (st ? '. Ticks mark the U.S.' : ''),
       source: 'CHIP50 survey, ' + q0.wave + ', ' + q0.fielded + '. ' + num(st ? st.n : q0.us.n) + ' ' + base +
         (st ? ' in ' + st.label + ', weighted within the state' : ', weighted to the adult population') + '.',
-      radio: '', csv: [['question', where + ' pct_weighted', 'unweighted_n'].concat(st ? ['us_pct_weighted'] : [])].concat(
-        rows.map(function (r) { return [r.label, r.value, r.n].concat(st ? [r.ref] : []); })),
+      radio: '', csv: [['question', where + ' pct_weighted', 'unweighted_n', 'moe_95'].concat(st ? ['us_pct_weighted'] : [])].concat(
+        rows.map(function (r) { return [r.label, r.value, r.n, r1(moe(r.value, r.n))].concat(st ? [r.ref] : []); })),
       stem: 'chip50-' + meta.set + (st ? '-' + st.slug : '')};
   }
 
@@ -128,7 +138,9 @@
     }
 
     /* the footer is measured first so a fixed card can pin it to the bottom */
-    var foot = opt.bare ? [] : wrap('Source: ' + spec.source, S.foot, 400, inner);
+    var few = spec.moe && spec.rows.some(function (r) { return r.n < FEW; });
+    var src = spec.source + (spec.moe ? ' Lines show 95% margins of error.' : '') + (few ? ' ' + CAUTION : '');
+    var foot = opt.bare ? [] : wrap('Source: ' + src, S.foot, 400, inner);
     var footH = opt.bare ? 0 : 14 * k + foot.length * S.foot * 1.45 + S.foot * 1.7;
     var g = {ops: ops, text: text, k: k, S: S, p: p, fixed: fixed, x: pad, y: y, w: inner};
     if (wide) { g.x = pad + colW + 32 * k; g.w = inner - colW - 32 * k; g.y = pad; }
@@ -152,31 +164,46 @@
     if (g.fixed) { rh = Math.min(g.region / n, 72 * k); y0 = g.y + (g.region - rh * n) / 2; }
     var refs = rows.some(function (r) { return r.ref != null; });
     /* 0–100 on a grey track, unless every share is small: then 0 to the next ten, no track */
-    var top = Math.max.apply(null, rows.map(function (r) { return Math.max(r.value || 0, r.ref || 0); }));
+    var top = Math.max.apply(null, rows.map(function (r) { return Math.max((r.value || 0) + (spec.moe && moe(r.value, r.n) || 0), r.ref || 0); }));
     var dom = top >= 50 ? 100 : Math.max(10, Math.ceil(top / 10) * 10);
     var labW = Math.max.apply(null, rows.map(function (r) { return measure(r.label, S.lab, 400); })) + 14 * k;
     /* spec.showN adds a column of respondent counts at the right, so small groups show as small */
-    var nW = spec.showN ? Math.max.apply(null, rows.map(function (r) { return measure('n=' + num(r.n), S.lab * 0.8, 400); })) + 12 * k : 0;
+    var nText = function (r) { return pm(r.value, r.n) + '  n=' + num(r.n) + star(r.n); };
+    var nW = spec.showN ? Math.max.apply(null, rows.map(function (r) { return measure(nText(r), S.lab * 0.8, 400); })) + 12 * k : 0;
     var barMax = g.w - labW - measure('100%', S.val, 700) - 10 * k - nW;
     var bh = Math.min(rh * 0.6, 22 * k * (g.fixed ? 1.7 : 1)), x0 = g.x + labW;
+    /* each row starts a little after the one above; the stagger shrinks with
+       the row count so the last bar still reaches full length at the end */
+    var lag = Math.min(0.08, 0.6 / Math.max(1, n - 1));
     rows.forEach(function (r, i) {
-      var cy = y0 + rh * i + rh / 2, e = ease(g.p * 1.6 - i * 0.08);
+      var cy = y0 + rh * i + rh / 2, e = ease(g.p * 1.6 - i * lag);
       var bw = r.value == null ? 0 : barMax * r.value / dom * e;
       g.text(r.label, x0 - 14 * k, cy + S.lab * 0.35, S.lab, 400, 'ink2', 'end');
       if (dom === 100) g.ops.push({t: 'rect', x: x0, y: cy - bh / 2, w: barMax, h: bh, c: 'track'});
-      g.ops.push({t: 'rect', x: x0, y: cy - bh / 2, w: bw, h: bh, c: 'acc', title: r.label + ': ' + pct(r.value)});
+      g.ops.push({t: 'rect', x: x0, y: cy - bh / 2, w: bw, h: bh, c: 'acc', title: r.label + ': ' + pct(r.value) + ' ' + pm(r.value, r.n)});
+      whisker(g, spec, r, x0, barMax / dom, dom, cy, bh * 0.9, e);
       if (r.ref != null) {
         var tx = x0 + barMax * r.ref / dom;
         g.ops.push({t: 'line', x1: tx, y1: cy - bh / 2 - 5 * k, x2: tx, y2: cy + bh / 2 + 5 * k, c: 'ink', sw: 2.5 * k});
       }
       var a = ease((e - 0.6) / 0.4);
-      if (spec.showN) g.text('n=' + num(r.n), g.x + g.w, cy + S.val * 0.35, S.lab * 0.8, 400, 'muted', 'end');
+      if (spec.showN) g.text(nText(r), g.x + g.w, cy + S.val * 0.35, S.lab * 0.8, 400, 'muted', 'end');
       if (refs) g.text(pct(r.value), g.x + g.w - nW, cy + S.val * 0.35, S.val, 700, 'ink', 'end', a);
       else g.text(pct(r.value), x0 + bw + 8 * k, cy + S.val * 0.35, S.val, 700, 'ink', 'start', a);
       /* rows with a key (a question, in the across view) are clickable */
       if (r.key) g.ops.push({t: 'rect', x: g.x, y: cy - rh / 2, w: g.w, h: rh, c: 'hit', r: 0, key: r.key, title: r.label + ': ' + pct(r.value)});
     });
     return y0 + rh * n;
+  }
+
+  /* a margin-of-error line through the end of a bar, capped at both ends */
+  function whisker(g, spec, r, x0, perPt, dom, cy, h, e) {
+    var m = spec.moe ? moe(r.value, r.n) : null;
+    if (m == null || e < 1) return;
+    var a = Math.max(0, r.value - m), b = Math.min(dom, r.value + m), k = g.k;
+    [[a, b, cy, cy], [a, a, cy - h / 4, cy + h / 4], [b, b, cy - h / 4, cy + h / 4]].forEach(function (l) {
+      g.ops.push({t: 'line', x1: x0 + l[0] * perPt, x2: x0 + l[1] * perPt, y1: l[2], y2: l[3], c: 'ink', sw: 1.25 * k, a: 0.55});
+    });
   }
 
   /* every state, highest first, on a shared zero-based scale, U.S. line;
@@ -186,18 +213,19 @@
     var n = rows.length, top = 22 * k, rh = 19 * k;
     if (g.fixed) rh = Math.min((g.region - top) / n, 40 * k);
     var ls = Math.min(g.S.lab, rh * 0.74), y0 = g.y + top;
-    var max = Math.ceil(Math.max.apply(null, rows.map(function (r) { return r.value; })) / 10) * 10;
+    var max = Math.min(100, Math.ceil(Math.max.apply(null, rows.map(function (r) { return r.value + (spec.moe && moe(r.value, r.n) || 0); })) / 10) * 10);
     var labW = Math.max.apply(null, rows.map(function (r) { return measure(r.label, ls, 700); })) + 12 * k;
     var barMax = g.w - labW - measure('100%', ls, 700) - 16 * k, x0 = g.x + labW, any = rows.some(function (r) { return r.hi; });
     var hits = [];
     rows.forEach(function (r, i) {
-      var cy = y0 + rh * i + rh / 2, e = ease(g.p * 1.6 - i * 0.012), bh = rh * 0.62;
+      var cy = y0 + rh * i + rh / 2, e = ease(g.p * 1.6 - i * Math.min(0.012, 0.6 / Math.max(1, n - 1))), bh = rh * 0.62;
       var bw = barMax * r.value / max * e;
-      g.text(r.label, x0 - 12 * k, cy + ls * 0.35, ls, r.hi ? 700 : 400, r.hi ? 'ink' : 'ink2', 'end');
+      g.text(r.label + star(r.n), x0 - 12 * k, cy + ls * 0.35, ls, r.hi ? 700 : 400, r.hi ? 'ink' : 'ink2', 'end');
       g.ops.push({t: 'rect', x: x0, y: cy - bh / 2, w: bw, h: bh, c: any && !r.hi ? 'soft' : 'acc', r: 2 * k});
+      whisker(g, spec, r, x0, barMax / max, max, cy, bh, e);
       g.text(pct(r.value), g.x + g.w, cy + ls * 0.35, ls, r.hi ? 700 : 400, r.hi ? 'ink' : 'ink2', 'end', ease((e - 0.6) / 0.4));
       /* an invisible row on top, so a click anywhere on the row picks the state */
-      hits.push({t: 'rect', x: g.x, y: cy - rh / 2, w: g.w, h: rh, c: 'hit', r: 0, key: r.key, title: r.label + ': ' + pct(r.value)});
+      hits.push({t: 'rect', x: g.x, y: cy - rh / 2, w: g.w, h: rh, c: 'hit', r: 0, key: r.key, title: r.label + ': ' + pct(r.value) + ' ' + pm(r.value, r.n)});
     });
     var rx = x0 + barMax * spec.ref.value / max;
     g.ops.push({t: 'line', x1: rx, y1: y0 - 6 * k, x2: rx, y2: y0 + rh * n, c: 'ink', sw: 1.5 * k});
@@ -223,10 +251,10 @@
     var x0 = g.x + (g.w - gw) / 2, y0 = g.y + (g.region - gh) / 2;
     spec.rows.forEach(function (r) {
       var at = GRID[r.abbr], x = x0 + at[1] * (s + gap), y = y0 + at[0] * (s + gap);
-      var t = 0.1 + 0.9 * (r.value - lo) / (hi - lo), a = ease(g.p * 1.8 - (at[0] + at[1]) * 0.05);
+      var t = 0.1 + 0.9 * (r.value - lo) / (hi - lo), a = ease(g.p * 1.8 - (at[0] + at[1]) * 0.045);
       var c = t > 0.55 ? 'onacc' : 'ink';
       g.ops.push({t: 'rect', x: x, y: y, w: s, h: s, mix: t, r: s * 0.12, a: a, key: r.key,
-        stroke: r.hi ? 'ink' : null, sw: 3.5 * k, title: r.label + ': ' + pct(r.value)});
+        stroke: r.hi ? 'ink' : null, sw: 3.5 * k, title: r.label + ': ' + pct(r.value) + ' ' + pm(r.value, r.n)});
       g.text(r.abbr, x + s / 2, y + s * 0.45, s * 0.28, 700, c, 'middle', a);
       g.text(pct(r.value), x + s / 2, y + s * 0.78, s * 0.24, 400, c, 'middle', a);
     });
@@ -266,7 +294,7 @@
           (o.title ? '<title>' + esc(o.title) + '</title>' : '') + '</rect>');
       } else if (o.t === 'line') {
         out.push('<line x1="' + r1(o.x1) + '" y1="' + r1(o.y1) + '" x2="' + r1(o.x2) + '" y2="' + r1(o.y2) +
-          '" stroke-width="' + r1(o.sw) + '"' + paint('stroke', pal[o.c]) + '/>');
+          '" stroke-width="' + r1(o.sw) + '"' + paint('stroke', pal[o.c]) + a + '/>');
       } else {
         out.push('<text x="' + r1(o.x) + '" y="' + r1(o.y) + '" font-size="' + r1(o.size) + '" font-weight="' + o.weight +
           '" text-anchor="' + o.anchor + '" pointer-events="none"' + a + paint('fill', pal[o.c]) + '>' + esc(o.text) + '</text>');
@@ -419,6 +447,6 @@
     before.parentNode.insertBefore(p, before);
   }
 
-  window.CHIP50Kit = {view: view, across: across, loadSet: loadSet, flag: flag, DEFAULT_SET: DEFAULT_SET, GRID: GRID, LIGHT: LIGHT, THEMED: THEMED, layout: layout, toSVG: toSVG, draw: draw, canvas: canvas, mount: mount, load: load,
+  window.CHIP50Kit = {view: view, across: across, loadSet: loadSet, flag: flag, DEFAULT_SET: DEFAULT_SET, moe: moe, pm: pm, star: star, FEW: FEW, CAUTION: CAUTION, GRID: GRID, LIGHT: LIGHT, THEMED: THEMED, layout: layout, toSVG: toSVG, draw: draw, canvas: canvas, mount: mount, load: load,
     png: png, svg: svg, csv: csv, clip: clip, save: save, pct: pct, num: num};
 })();

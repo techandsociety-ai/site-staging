@@ -19,7 +19,7 @@
     "state": "weight_state: demographics, calibrated within each state"
   },
   "suppression": "Groups under 10 respondents are withheld; none were",
-  "moe": "Not yet served by the MCP (#273). States rest on 390 to 1,879 respondents each, and an age group within a state on as few as 26, so gaps of a few points may be noise.",
+  "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 × √(p(1 − p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on {nLo} to {nHi} respondents each, an age group within a state on as few as {cellMin}. Groups under 100 are starred: interpret with caution.",
   "pulled": "Oct 25, 2026",
   "set_text": {
     "title": "Every platform in every state",
@@ -52,7 +52,7 @@
         "state": {
           "title": "{value} of {state} adults use {label}",
           "subtitle": "Share who say they ever use {label}, by age, spring 2026. Ticks mark the U.S.",
-          "source": "CHIP50 survey, {wave}, {fielded}. {n} adults in {state}, weighted within the state; U.S. ticks from all {usN}. No margins of error yet."
+          "source": "CHIP50 survey, {wave}, {fielded}. {n} adults in {state}, weighted within the state; U.S. ticks from all {usN}."
         }
       },
       "states": {

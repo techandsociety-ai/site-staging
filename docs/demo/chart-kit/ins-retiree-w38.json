@@ -11,7 +11,7 @@
   "state": "weight_state: demographics, calibrated within each state"
  },
  "suppression": "Groups under 10 respondents are withheld; none were",
- "moe": "Not yet served by the MCP (#273). States rest on 288 to 1,527 insured respondents each, and an age group within a state on as few as 24, so gaps of a few points may be noise.",
+ "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 \u00d7 \u221a(p(1 \u2212 p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on 288 to 1,527 insured respondents each, an age group within a state on as few as 24. Groups under 100 are starred: interpret with caution.",
  "provenance": [
   "generate_crosstab(platform=\"insurance_type_3\", demographic=\"age_cat_4\", data_source=\"w38\")",
   "generate_crosstab_multi(variable=\"insurance_type_3\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w38\"); U.S. and state totals summed from these cells"
@@ -27,7 +27,7 @@
    "state": {
     "title": "{value} of insured {state} adults have retiree health benefits",
     "subtitle": "Share of insured adults who say they have retiree health benefits, by age, spring 2026. Ticks mark the U.S.",
-    "source": "CHIP50 survey, {wave}, {fielded}. {n} insured adults in {state}, weighted within the state; U.S. ticks from all {usN}. No margins of error yet."
+    "source": "CHIP50 survey, {wave}, {fielded}. {n} insured adults in {state}, weighted within the state; U.S. ticks from all {usN}."
    }
   },
   "states": {
