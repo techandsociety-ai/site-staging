@@ -106,8 +106,12 @@ def build_one(cfg, state_n=None):
             continue
         rate, n = partition(got.values())
         if name in totals:
-            # the cells partition the state under the same weight, so they must add up to the served total
-            if totals[name][0] is not None and abs(rate - totals[name][0]) > 0.05:
+            # the cells partition the state under the same weight, so they must add up to the served
+            # total, give or take the MCP's rounding of each cell's weighted counts to 0.1, which in a
+            # small state (W39's Alaska: 159 people) moves the summed rate by a few tenths
+            wn = sum(c["weighted_n"] for c in got.values())
+            tol = 0.05 + 100 * 0.1 * len(got) / max(wn, 1)
+            if totals[name][0] is not None and abs(rate - totals[name][0]) > tol:
                 sys.exit(f"{cfg['id']}: {name}: cells give {rate:.2f}%, the states result says {totals[name][0]}%")
         else:
             if state_n and state_n[name] != n:
@@ -160,7 +164,7 @@ def fill_auto(q):
     tokens = {"label": q["label"], "phrase": q["phrase"], "column": q.get("column") or "", "recode": q.get("recode") or "",
               "lo": pct(ranked[0]["value"]), "loState": ranked[0]["label"],
               "hi": pct(ranked[-1]["value"]), "hiState": ranked[-1]["label"], "usPct": pct(q["us"]["value"]),
-              "nLo": f"{min(ns):,}", "nHi": f"{max(ns):,}", "cellMin": f"{min(g['n'] for s in q['states'] for g in s['by']):,}"}
+              "nLo": f"{min(ns):,}", "nHi": f"{max(ns):,}", "cellMin": f"{min(g['n'] for s in q['states'] for g in s['by'] if g['n'] is not None):,}"}
     def sub(v):
         for k, x in tokens.items():
             v = v.replace("{%s}" % k, x)
@@ -186,7 +190,7 @@ def facts(q, order):
     ranked = sorted((s for s in states if s["value"] is not None), key=lambda s: s["value"])
     lo, hi = ranked[0], ranked[-1]
     near = sum(abs(s["value"] - us_value) <= 5 for s in ranked)
-    small = min((g["n"], s["name"], g["label"]) for s in states for g in s["by"])
+    small = min((g["n"], s["name"], g["label"]) for s in states for g in s["by"] if g["n"] is not None)
     falling = [s["name"] for s in states
                if all(a["value"] is not None and b["value"] is not None and a["value"] > b["value"]
                       for a, b in zip(s["by"], s["by"][1:]))]

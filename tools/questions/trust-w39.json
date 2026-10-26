@@ -1,0 +1,339 @@
+{
+  "set": "trust-w39",
+  "site": "techandsociety.ai",
+  "by": {
+    "column": "age_cat_4",
+    "name": "age",
+    "order": [
+      "18 to 24",
+      "25 to 44",
+      "45 to 64",
+      "65 and over"
+    ]
+  },
+  "wave": "Wave 39",
+  "fielded": "Oct 1 to 26, 2026 (preliminary release)",
+  "weight": {
+    "us": "weight: the survey team's demographic weight",
+    "state": "weight_state: demographics, calibrated within each state"
+  },
+  "suppression": "Groups under 10 respondents are withheld; none were",
+  "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 × √(p(1 − p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on {nLo} to {nHi} respondents each, an age group within a state on as few as {cellMin}. Groups under 100 are starred: interpret with caution.",
+  "pulled": "Oct 26, 2026",
+  "set_text": {
+    "title": "Trust in every institution, in every state",
+    "subtitle": "Share of adults who trust each to do what is right some or a lot (of not at all, not too much, some, a lot)",
+    "answer": "trust {phrase} some or a lot",
+    "noun": "institutions",
+    "base": "adults",
+    "across": {
+      "us_title": "Whom U.S. adults trust to do what is right",
+      "state_title": "{place} across {count} institutions",
+      "subtitle": "Share of {place} adults who trust each some or a lot, fall 2026"
+    },
+    "note": "Preliminary Wave 39 release: fielding ran to Oct. 26 and the survey team's final file may differ. Not for publication until it lands.",
+    "note_label": "Preliminary"
+  },
+  "template": {
+    "topic": "Trust",
+    "question": "Do you trust {phrase} to do what is right?",
+    "dek": "{usPct} of U.S. adults trust {phrase} some or a lot.",
+    "wording": "How much do you trust the following people and organizations to do what is right? — {option} (Not at all, Not too much, Some, A lot; shown here: Some or A lot)",
+    "provenance": [
+      "create_recoded_variable(name=\"trust_some_…\", source_column=\"{column}\", mapping={\"1\": \"0\", \"2\": \"0\", \"3\": \"1\", \"4\": \"1\"}, binary=true) → {recode}",
+      "generate_crosstab(platform=\"{recode}\", demographic=\"age_cat_4\", data_source=\"w39\")",
+      "generate_crosstab_multi(variable=\"{recode}\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. and state totals summed from these cells"
+    ],
+    "text": {
+      "age": {
+        "us": {
+          "title": "Who trusts {phrase}, by age",
+          "subtitle": "Share of U.S. adults who trust {phrase} some or a lot, by age, fall 2026",
+          "source": "CHIP50 survey, {wave}, {fielded}. {usN} U.S. adults, weighted to the adult population."
+        },
+        "state": {
+          "title": "{value} of {state} adults trust {phrase} some or a lot",
+          "subtitle": "Share who trust {phrase} some or a lot, by age, fall 2026. Ticks mark the U.S.",
+          "source": "CHIP50 survey, {wave}, {fielded}. {n} adults in {state}, weighted within the state; U.S. ticks from all {usN}."
+        }
+      },
+      "states": {
+        "title": "Trust in {phrase}: {lo} to {hi} across states",
+        "subtitle": "Share of adults who trust {phrase} some or a lot, by state, fall 2026. U.S.: {us}",
+        "source": "CHIP50 survey, {wave}, {fielded}. {usN} adults, {nLo} to {nHi} per state, weighted within each state."
+      },
+      "radio": {
+        "us": "{usWords} of American adults say they trust {phrase} at least some to do what is right, according to a CHIP50 survey this fall.",
+        "state": "In {state}, {words} of adults say they trust {phrase} at least some to do what is right, compared with {usWords} nationally. That's from the CHIP50 survey, which reached {n} adults in {state} this fall."
+      }
+    }
+  },
+  "questions": [
+    {
+      "id": "trust-doctors-w39",
+      "column": "pol_trust_doctors",
+      "label": "Hospitals and doctors",
+      "phrase": "hospitals and doctors",
+      "option": "Hospitals and doctors",
+      "raw": {
+        "us_by": "raw/trust-doctors-w39/us_by_age.json",
+        "states_by": "raw/trust-doctors-w39/states_by_age.json",
+        "states": "raw/trust-doctors-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-science-w39",
+      "column": "pol_trust_science",
+      "label": "Scientists",
+      "phrase": "scientists and researchers",
+      "option": "Scientists and researchers",
+      "raw": {
+        "us_by": "raw/trust-science-w39/us_by_age.json",
+        "states_by": "raw/trust-science-w39/states_by_age.json",
+        "states": "raw/trust-science-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-military-w39",
+      "column": "pol_trust_military",
+      "label": "The military",
+      "phrase": "the military",
+      "option": "The military",
+      "raw": {
+        "us_by": "raw/trust-military-w39/us_by_age.json",
+        "states_by": "raw/trust-military-w39/states_by_age.json",
+        "states": "raw/trust-military-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-education-w39",
+      "column": "pol_trust_education",
+      "label": "Colleges",
+      "phrase": "colleges and universities",
+      "option": "Colleges and universities",
+      "raw": {
+        "us_by": "raw/trust-education-w39/us_by_age.json",
+        "states_by": "raw/trust-education-w39/states_by_age.json",
+        "states": "raw/trust-education-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-banks-w39",
+      "column": "pol_trust_banks",
+      "label": "Banks",
+      "phrase": "banks",
+      "option": "Banks",
+      "raw": {
+        "us_by": "raw/trust-banks-w39/us_by_age.json",
+        "states_by": "raw/trust-banks-w39/states_by_age.json",
+        "states": "raw/trust-banks-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-police-w39",
+      "column": "pol_trust_police",
+      "label": "The police",
+      "phrase": "the police",
+      "option": "The police",
+      "raw": {
+        "us_by": "raw/trust-police-w39/us_by_age.json",
+        "states_by": "raw/trust-police-w39/states_by_age.json",
+        "states": "raw/trust-police-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-fda-w39",
+      "column": "pol_trust_fda",
+      "label": "The FDA",
+      "phrase": "the FDA",
+      "option": "The FDA (Food and Drug Administration)",
+      "raw": {
+        "us_by": "raw/trust-fda-w39/us_by_age.json",
+        "states_by": "raw/trust-fda-w39/states_by_age.json",
+        "states": "raw/trust-fda-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-cdc-w39",
+      "column": "pol_trust_cdc",
+      "label": "The CDC",
+      "phrase": "the CDC",
+      "option": "The CDC (Centers for Disease Control and Prevention)",
+      "raw": {
+        "us_by": "raw/trust-cdc-w39/us_by_age.json",
+        "states_by": "raw/trust-cdc-w39/states_by_age.json",
+        "states": "raw/trust-cdc-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-fbi-w39",
+      "column": "pol_trust_fbi",
+      "label": "The FBI",
+      "phrase": "the FBI",
+      "option": "The FBI (Federal Bureau of Investigation)",
+      "raw": {
+        "us_by": "raw/trust-fbi-w39/us_by_age.json",
+        "states_by": "raw/trust-fbi-w39/states_by_age.json",
+        "states": "raw/trust-fbi-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-city-w39",
+      "column": "pol_trust_city",
+      "label": "City government",
+      "phrase": "their city government",
+      "option": "Your city government",
+      "raw": {
+        "us_by": "raw/trust-city-w39/us_by_age.json",
+        "states_by": "raw/trust-city-w39/states_by_age.json",
+        "states": "raw/trust-city-w39/states.json"
+      },
+      "question": "Do you trust your city government to do what is right?"
+    },
+    {
+      "id": "trust-pharma-w39",
+      "column": "pol_trust_pharma",
+      "label": "Drug companies",
+      "phrase": "pharmaceutical companies",
+      "option": "Pharmaceutical companies",
+      "raw": {
+        "us_by": "raw/trust-pharma-w39/us_by_age.json",
+        "states_by": "raw/trust-pharma-w39/states_by_age.json",
+        "states": "raw/trust-pharma-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-justice-w39",
+      "column": "pol_trust_justice",
+      "label": "Criminal justice",
+      "phrase": "the criminal justice system",
+      "option": "The criminal justice system",
+      "raw": {
+        "us_by": "raw/trust-justice-w39/us_by_age.json",
+        "states_by": "raw/trust-justice-w39/states_by_age.json",
+        "states": "raw/trust-justice-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-religion-w39",
+      "column": "pol_trust_religion",
+      "label": "Organized religion",
+      "phrase": "organized religion",
+      "option": "Organized religion",
+      "raw": {
+        "us_by": "raw/trust-religion-w39/us_by_age.json",
+        "states_by": "raw/trust-religion-w39/states_by_age.json",
+        "states": "raw/trust-religion-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-election-w39",
+      "column": "pol_trust_election",
+      "label": "Election system",
+      "phrase": "the U.S. election system",
+      "option": "The US Election System",
+      "raw": {
+        "us_by": "raw/trust-election-w39/us_by_age.json",
+        "states_by": "raw/trust-election-w39/states_by_age.json",
+        "states": "raw/trust-election-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-state-w39",
+      "column": "pol_trust_state",
+      "label": "State government",
+      "phrase": "their state government",
+      "option": "Your state government",
+      "raw": {
+        "us_by": "raw/trust-state-w39/us_by_age.json",
+        "states_by": "raw/trust-state-w39/states_by_age.json",
+        "states": "raw/trust-state-w39/states.json"
+      },
+      "question": "Do you trust your state government to do what is right?"
+    },
+    {
+      "id": "trust-court-w39",
+      "column": "pol_trust_court",
+      "label": "Supreme Court",
+      "phrase": "the Supreme Court",
+      "option": "The US Supreme Court",
+      "raw": {
+        "us_by": "raw/trust-court-w39/us_by_age.json",
+        "states_by": "raw/trust-court-w39/states_by_age.json",
+        "states": "raw/trust-court-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-media-w39",
+      "column": "pol_trust_media",
+      "label": "The news media",
+      "phrase": "the news media",
+      "option": "The news media",
+      "raw": {
+        "us_by": "raw/trust-media-w39/us_by_age.json",
+        "states_by": "raw/trust-media-w39/states_by_age.json",
+        "states": "raw/trust-media-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-ai-w39",
+      "column": "pol_trust_ai",
+      "label": "AI companies",
+      "phrase": "AI companies",
+      "option": "AI (Artificial Intelligence) companies",
+      "raw": {
+        "us_by": "raw/trust-ai-w39/us_by_age.json",
+        "states_by": "raw/trust-ai-w39/states_by_age.json",
+        "states": "raw/trust-ai-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-social-w39",
+      "column": "pol_trust_social",
+      "label": "Social media companies",
+      "phrase": "social media companies",
+      "option": "Social media companies",
+      "raw": {
+        "us_by": "raw/trust-social-w39/us_by_age.json",
+        "states_by": "raw/trust-social-w39/states_by_age.json",
+        "states": "raw/trust-social-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-white-house-w39",
+      "column": "pol_trust_white_house",
+      "label": "The White House",
+      "phrase": "the White House",
+      "option": "The White House",
+      "raw": {
+        "us_by": "raw/trust-white-house-w39/us_by_age.json",
+        "states_by": "raw/trust-white-house-w39/states_by_age.json",
+        "states": "raw/trust-white-house-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-congress-w39",
+      "column": "pol_trust_congress",
+      "label": "Congress",
+      "phrase": "Congress",
+      "option": "Congress",
+      "raw": {
+        "us_by": "raw/trust-congress-w39/us_by_age.json",
+        "states_by": "raw/trust-congress-w39/states_by_age.json",
+        "states": "raw/trust-congress-w39/states.json"
+      }
+    },
+    {
+      "id": "trust-trump-w39",
+      "column": "pol_trust_trump",
+      "label": "Donald Trump",
+      "phrase": "Donald Trump",
+      "option": "Donald Trump",
+      "raw": {
+        "us_by": "raw/trust-trump-w39/us_by_age.json",
+        "states_by": "raw/trust-trump-w39/states_by_age.json",
+        "states": "raw/trust-trump-w39/states.json"
+      }
+    }
+  ]
+}

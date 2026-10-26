@@ -318,12 +318,13 @@ dl.notes code{white-space:normal;font-size:12px}
     QS.forEach(function (q) { byId[q.id] = q; });
     var places = QS[0].states.map(function (s) { return {slug: s.slug, name: s.name, label: s.label, abbr: s.abbr}; });
     var slugs = places.map(function (p) { return p.slug; });
-    var state = {q: QS[0].id, place: null, sort: 'set', qFilter: '', pFilter: '', qAct: -1, pAct: -1};
+    var FIRST = byId[TX.default_q] ? TX.default_q : QS[0].id;   /* a set may name the question to open on */
+    var state = {q: FIRST, place: null, sort: 'set', qFilter: '', pFilter: '', qAct: -1, pAct: -1};
 
     /* the URL is the state: no ?q means the set's first question, no ?state the U.S. */
     function readURL() {
       var u = new URLSearchParams(location.search);
-      state.q = byId[u.get('q')] ? u.get('q') : QS[0].id;
+      state.q = byId[u.get('q')] ? u.get('q') : FIRST;
       state.place = slugs.indexOf(u.get('state')) >= 0 ? u.get('state') : null;
     }
     function writeURL() {

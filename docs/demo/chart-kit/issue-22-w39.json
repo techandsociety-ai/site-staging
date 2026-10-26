@@ -1,0 +1,1608 @@
+{
+ "id": "issue-22-w39",
+ "site": "techandsociety.ai",
+ "question": "How important is gun control to your 2026 midterm vote?",
+ "dek": "46% of U.S. adults rate gun control 8 to 10 for their 2026 midterm vote.",
+ "wording": "How important are the following issues for your decision on how to vote in the 2026 midterm election? Please rate their importance on a scale from 1 to 10, where 1 is \u201cNot important at all\u201d and 10 is \u201cExtremely important\u201d. \u2014 Gun control (shown here: 8 to 10)",
+ "wave": "Wave 39",
+ "fielded": "Oct 1 to 26, 2026 (preliminary release)",
+ "weight": {
+  "us": "weight_vote: demographics plus presidential vote and turnout",
+  "state": "weight_vote_state: demographics plus vote and turnout, calibrated within each state"
+ },
+ "suppression": "Groups under 10 respondents are withheld",
+ "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 \u00d7 \u221a(p(1 \u2212 p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on 147 to 1,211 respondents each, an age group within a state on as few as 11. Groups under 100 are starred: interpret with caution.",
+ "provenance": [
+  "create_recoded_variable(name=\"issue_high_\u2026\", source_column=\"vote_issues_22\", mapping 1\u20137 \u2192 0, 8\u201310 \u2192 1, binary=true) \u2192 issue_high_22__fd1a4981e784",
+  "generate_crosstab(platform=\"issue_high_22__fd1a4981e784\", demographic=\"age_cat_4\", data_source=\"w39\")",
+  "generate_crosstab_multi(variable=\"issue_high_22__fd1a4981e784\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. and state totals summed from these cells"
+ ],
+ "pulled": "Oct 26, 2026",
+ "text": {
+  "age": {
+   "us": {
+    "title": "Who rates gun control 8 to 10, by age",
+    "subtitle": "Share of U.S. adults who rate gun control 8 to 10 for their 2026 midterm vote, by age, fall 2026",
+    "source": "CHIP50 survey, {wave}, {fielded}. {usN} U.S. adults, weighted to the adult population."
+   },
+   "state": {
+    "title": "{value} of {state} adults rate gun control 8 to 10",
+    "subtitle": "Share who rate gun control 8 to 10 for their 2026 midterm vote, by age, fall 2026. Ticks mark the U.S.",
+    "source": "CHIP50 survey, {wave}, {fielded}. {n} adults in {state}, weighted within the state; U.S. ticks from all {usN}."
+   }
+  },
+  "states": {
+   "title": "Gun control: 26% to 61% rate it 8 to 10 across states",
+   "subtitle": "Share of adults who rate gun control 8 to 10 for their 2026 midterm vote, by state, fall 2026. U.S.: {us}",
+   "source": "CHIP50 survey, {wave}, {fielded}. {usN} adults, 147 to 1,211 per state, weighted within each state."
+  },
+  "radio": {
+   "us": "{usWords} of American adults say gun control is very important to how they'll vote in the midterms \u2014 8 or higher on a 10-point scale \u2014 according to a CHIP50 survey this fall.",
+   "state": "In {state}, {words} of adults rate gun control 8 or higher for importance to their midterm vote, compared with {usWords} nationally. That's from the CHIP50 survey, which reached {n} adults in {state} this fall."
+  }
+ },
+ "recode": "issue_high_22__fd1a4981e784",
+ "label": "Gun control",
+ "phrase": "gun control",
+ "topic": "The 2026 midterms",
+ "column": "vote_issues_22",
+ "byName": "age",
+ "us": {
+  "value": 46.4,
+  "n": 22977
+ },
+ "by": [
+  {
+   "label": "18 to 24",
+   "value": 47.41,
+   "n": 1877
+  },
+  {
+   "label": "25 to 44",
+   "value": 45.2,
+   "n": 9145
+  },
+  {
+   "label": "45 to 64",
+   "value": 45.37,
+   "n": 7917
+  },
+  {
+   "label": "65 and over",
+   "value": 49.43,
+   "n": 4038
+  }
+ ],
+ "states": [
+  {
+   "name": "Alabama",
+   "label": "Alabama",
+   "abbr": "AL",
+   "slug": "alabama",
+   "value": 39.77,
+   "n": 468,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 26.36,
+     "n": 35
+    },
+    {
+     "label": "25 to 44",
+     "value": 45.42,
+     "n": 190
+    },
+    {
+     "label": "45 to 64",
+     "value": 36.83,
+     "n": 176
+    },
+    {
+     "label": "65 and over",
+     "value": 43.98,
+     "n": 67
+    }
+   ]
+  },
+  {
+   "name": "Alaska",
+   "label": "Alaska",
+   "abbr": "AK",
+   "slug": "alaska",
+   "value": 36.92,
+   "n": 147,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 16.88,
+     "n": 13
+    },
+    {
+     "label": "25 to 44",
+     "value": 47.7,
+     "n": 62
+    },
+    {
+     "label": "45 to 64",
+     "value": 26.67,
+     "n": 60
+    },
+    {
+     "label": "65 and over",
+     "value": 45.12,
+     "n": 12
+    }
+   ]
+  },
+  {
+   "name": "Arizona",
+   "label": "Arizona",
+   "abbr": "AZ",
+   "slug": "arizona",
+   "value": 42.48,
+   "n": 548,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 44.25,
+     "n": 39
+    },
+    {
+     "label": "25 to 44",
+     "value": 47.27,
+     "n": 210
+    },
+    {
+     "label": "45 to 64",
+     "value": 39.78,
+     "n": 183
+    },
+    {
+     "label": "65 and over",
+     "value": 38.66,
+     "n": 116
+    }
+   ]
+  },
+  {
+   "name": "Arkansas",
+   "label": "Arkansas",
+   "abbr": "AR",
+   "slug": "arkansas",
+   "value": 44.68,
+   "n": 399,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 55.39,
+     "n": 37
+    },
+    {
+     "label": "25 to 44",
+     "value": 43.31,
+     "n": 146
+    },
+    {
+     "label": "45 to 64",
+     "value": 44.71,
+     "n": 143
+    },
+    {
+     "label": "65 and over",
+     "value": 40.94,
+     "n": 73
+    }
+   ]
+  },
+  {
+   "name": "California",
+   "label": "California",
+   "abbr": "CA",
+   "slug": "california",
+   "value": 48.78,
+   "n": 914,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 46.63,
+     "n": 99
+    },
+    {
+     "label": "25 to 44",
+     "value": 48.38,
+     "n": 435
+    },
+    {
+     "label": "45 to 64",
+     "value": 47.17,
+     "n": 255
+    },
+    {
+     "label": "65 and over",
+     "value": 53.7,
+     "n": 125
+    }
+   ]
+  },
+  {
+   "name": "Colorado",
+   "label": "Colorado",
+   "abbr": "CO",
+   "slug": "colorado",
+   "value": 44.95,
+   "n": 374,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 35.62,
+     "n": 23
+    },
+    {
+     "label": "25 to 44",
+     "value": 48.92,
+     "n": 150
+    },
+    {
+     "label": "45 to 64",
+     "value": 43.79,
+     "n": 141
+    },
+    {
+     "label": "65 and over",
+     "value": 44.9,
+     "n": 60
+    }
+   ]
+  },
+  {
+   "name": "Connecticut",
+   "label": "Connecticut",
+   "abbr": "CT",
+   "slug": "connecticut",
+   "value": 49.35,
+   "n": 420,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 49.02,
+     "n": 41
+    },
+    {
+     "label": "25 to 44",
+     "value": 42.35,
+     "n": 147
+    },
+    {
+     "label": "45 to 64",
+     "value": 49.62,
+     "n": 143
+    },
+    {
+     "label": "65 and over",
+     "value": 58.95,
+     "n": 89
+    }
+   ]
+  },
+  {
+   "name": "Delaware",
+   "label": "Delaware",
+   "abbr": "DE",
+   "slug": "delaware",
+   "value": 56.47,
+   "n": 277,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 72.85,
+     "n": 19
+    },
+    {
+     "label": "25 to 44",
+     "value": 46.46,
+     "n": 123
+    },
+    {
+     "label": "45 to 64",
+     "value": 63.73,
+     "n": 88
+    },
+    {
+     "label": "65 and over",
+     "value": 53.15,
+     "n": 47
+    }
+   ]
+  },
+  {
+   "name": "District of Columbia",
+   "label": "D.C.",
+   "abbr": "DC",
+   "slug": "district-of-columbia",
+   "value": 60.54,
+   "n": 225,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 43.51,
+     "n": 28
+    },
+    {
+     "label": "25 to 44",
+     "value": 60.62,
+     "n": 108
+    },
+    {
+     "label": "45 to 64",
+     "value": 68.0,
+     "n": 78
+    },
+    {
+     "label": "65 and over",
+     "value": 61.04,
+     "n": 11
+    }
+   ]
+  },
+  {
+   "name": "Florida",
+   "label": "Florida",
+   "abbr": "FL",
+   "slug": "florida",
+   "value": 48.31,
+   "n": 967,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 54.36,
+     "n": 82
+    },
+    {
+     "label": "25 to 44",
+     "value": 44.86,
+     "n": 396
+    },
+    {
+     "label": "45 to 64",
+     "value": 47.45,
+     "n": 279
+    },
+    {
+     "label": "65 and over",
+     "value": 51.17,
+     "n": 210
+    }
+   ]
+  },
+  {
+   "name": "Georgia",
+   "label": "Georgia",
+   "abbr": "GA",
+   "slug": "georgia",
+   "value": 50.81,
+   "n": 698,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 57.55,
+     "n": 70
+    },
+    {
+     "label": "25 to 44",
+     "value": 47.79,
+     "n": 272
+    },
+    {
+     "label": "45 to 64",
+     "value": 49.09,
+     "n": 258
+    },
+    {
+     "label": "65 and over",
+     "value": 54.99,
+     "n": 98
+    }
+   ]
+  },
+  {
+   "name": "Hawaii",
+   "label": "Hawaii",
+   "abbr": "HI",
+   "slug": "hawaii",
+   "value": 48.08,
+   "n": 165,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": null,
+     "n": null
+    },
+    {
+     "label": "25 to 44",
+     "value": 45.13,
+     "n": 59
+    },
+    {
+     "label": "45 to 64",
+     "value": 55.08,
+     "n": 63
+    },
+    {
+     "label": "65 and over",
+     "value": 42.65,
+     "n": 35
+    }
+   ]
+  },
+  {
+   "name": "Idaho",
+   "label": "Idaho",
+   "abbr": "ID",
+   "slug": "idaho",
+   "value": 42.47,
+   "n": 287,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 45.81,
+     "n": 26
+    },
+    {
+     "label": "25 to 44",
+     "value": 30.24,
+     "n": 122
+    },
+    {
+     "label": "45 to 64",
+     "value": 40.87,
+     "n": 104
+    },
+    {
+     "label": "65 and over",
+     "value": 61.15,
+     "n": 35
+    }
+   ]
+  },
+  {
+   "name": "Illinois",
+   "label": "Illinois",
+   "abbr": "IL",
+   "slug": "illinois",
+   "value": 44.63,
+   "n": 598,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 51.46,
+     "n": 62
+    },
+    {
+     "label": "25 to 44",
+     "value": 45.04,
+     "n": 235
+    },
+    {
+     "label": "45 to 64",
+     "value": 38.61,
+     "n": 191
+    },
+    {
+     "label": "65 and over",
+     "value": 49.14,
+     "n": 110
+    }
+   ]
+  },
+  {
+   "name": "Indiana",
+   "label": "Indiana",
+   "abbr": "IN",
+   "slug": "indiana",
+   "value": 40.53,
+   "n": 456,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 37.59,
+     "n": 34
+    },
+    {
+     "label": "25 to 44",
+     "value": 39.88,
+     "n": 176
+    },
+    {
+     "label": "45 to 64",
+     "value": 41.73,
+     "n": 166
+    },
+    {
+     "label": "65 and over",
+     "value": 41.21,
+     "n": 80
+    }
+   ]
+  },
+  {
+   "name": "Iowa",
+   "label": "Iowa",
+   "abbr": "IA",
+   "slug": "iowa",
+   "value": 37.73,
+   "n": 427,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 41.91,
+     "n": 22
+    },
+    {
+     "label": "25 to 44",
+     "value": 32.89,
+     "n": 156
+    },
+    {
+     "label": "45 to 64",
+     "value": 40.52,
+     "n": 168
+    },
+    {
+     "label": "65 and over",
+     "value": 38.26,
+     "n": 81
+    }
+   ]
+  },
+  {
+   "name": "Kansas",
+   "label": "Kansas",
+   "abbr": "KS",
+   "slug": "kansas",
+   "value": 45.34,
+   "n": 365,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 49.46,
+     "n": 31
+    },
+    {
+     "label": "25 to 44",
+     "value": 42.74,
+     "n": 138
+    },
+    {
+     "label": "45 to 64",
+     "value": 52.02,
+     "n": 129
+    },
+    {
+     "label": "65 and over",
+     "value": 37.32,
+     "n": 67
+    }
+   ]
+  },
+  {
+   "name": "Kentucky",
+   "label": "Kentucky",
+   "abbr": "KY",
+   "slug": "kentucky",
+   "value": 42.07,
+   "n": 457,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 45.33,
+     "n": 32
+    },
+    {
+     "label": "25 to 44",
+     "value": 41.16,
+     "n": 183
+    },
+    {
+     "label": "45 to 64",
+     "value": 39.97,
+     "n": 154
+    },
+    {
+     "label": "65 and over",
+     "value": 44.85,
+     "n": 88
+    }
+   ]
+  },
+  {
+   "name": "Louisiana",
+   "label": "Louisiana",
+   "abbr": "LA",
+   "slug": "louisiana",
+   "value": 45.78,
+   "n": 472,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 50.28,
+     "n": 44
+    },
+    {
+     "label": "25 to 44",
+     "value": 47.38,
+     "n": 206
+    },
+    {
+     "label": "45 to 64",
+     "value": 44.63,
+     "n": 172
+    },
+    {
+     "label": "65 and over",
+     "value": 42.21,
+     "n": 50
+    }
+   ]
+  },
+  {
+   "name": "Maine",
+   "label": "Maine",
+   "abbr": "ME",
+   "slug": "maine",
+   "value": 39.46,
+   "n": 352,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 57.6,
+     "n": 22
+    },
+    {
+     "label": "25 to 44",
+     "value": 30.73,
+     "n": 133
+    },
+    {
+     "label": "45 to 64",
+     "value": 32.25,
+     "n": 126
+    },
+    {
+     "label": "65 and over",
+     "value": 51.57,
+     "n": 71
+    }
+   ]
+  },
+  {
+   "name": "Maryland",
+   "label": "Maryland",
+   "abbr": "MD",
+   "slug": "maryland",
+   "value": 50.78,
+   "n": 493,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 53.85,
+     "n": 37
+    },
+    {
+     "label": "25 to 44",
+     "value": 48.15,
+     "n": 214
+    },
+    {
+     "label": "45 to 64",
+     "value": 50.3,
+     "n": 155
+    },
+    {
+     "label": "65 and over",
+     "value": 54.16,
+     "n": 87
+    }
+   ]
+  },
+  {
+   "name": "Massachusetts",
+   "label": "Massachusetts",
+   "abbr": "MA",
+   "slug": "massachusetts",
+   "value": 55.01,
+   "n": 425,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 52.89,
+     "n": 26
+    },
+    {
+     "label": "25 to 44",
+     "value": 47.75,
+     "n": 157
+    },
+    {
+     "label": "45 to 64",
+     "value": 53.65,
+     "n": 150
+    },
+    {
+     "label": "65 and over",
+     "value": 69.46,
+     "n": 92
+    }
+   ]
+  },
+  {
+   "name": "Michigan",
+   "label": "Michigan",
+   "abbr": "MI",
+   "slug": "michigan",
+   "value": 44.02,
+   "n": 740,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 65.64,
+     "n": 55
+    },
+    {
+     "label": "25 to 44",
+     "value": 35.73,
+     "n": 281
+    },
+    {
+     "label": "45 to 64",
+     "value": 38.88,
+     "n": 259
+    },
+    {
+     "label": "65 and over",
+     "value": 50.88,
+     "n": 145
+    }
+   ]
+  },
+  {
+   "name": "Minnesota",
+   "label": "Minnesota",
+   "abbr": "MN",
+   "slug": "minnesota",
+   "value": 42.14,
+   "n": 386,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 33.12,
+     "n": 20
+    },
+    {
+     "label": "25 to 44",
+     "value": 41.71,
+     "n": 148
+    },
+    {
+     "label": "45 to 64",
+     "value": 48.67,
+     "n": 132
+    },
+    {
+     "label": "65 and over",
+     "value": 37.46,
+     "n": 86
+    }
+   ]
+  },
+  {
+   "name": "Mississippi",
+   "label": "Mississippi",
+   "abbr": "MS",
+   "slug": "mississippi",
+   "value": 47.52,
+   "n": 494,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 40.93,
+     "n": 40
+    },
+    {
+     "label": "25 to 44",
+     "value": 49.77,
+     "n": 209
+    },
+    {
+     "label": "45 to 64",
+     "value": 47.0,
+     "n": 187
+    },
+    {
+     "label": "65 and over",
+     "value": 48.63,
+     "n": 58
+    }
+   ]
+  },
+  {
+   "name": "Missouri",
+   "label": "Missouri",
+   "abbr": "MO",
+   "slug": "missouri",
+   "value": 37.68,
+   "n": 517,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 25.87,
+     "n": 37
+    },
+    {
+     "label": "25 to 44",
+     "value": 35.94,
+     "n": 179
+    },
+    {
+     "label": "45 to 64",
+     "value": 38.65,
+     "n": 178
+    },
+    {
+     "label": "65 and over",
+     "value": 44.64,
+     "n": 123
+    }
+   ]
+  },
+  {
+   "name": "Montana",
+   "label": "Montana",
+   "abbr": "MT",
+   "slug": "montana",
+   "value": 40.2,
+   "n": 228,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 64.14,
+     "n": 20
+    },
+    {
+     "label": "25 to 44",
+     "value": 32.42,
+     "n": 98
+    },
+    {
+     "label": "45 to 64",
+     "value": 33.9,
+     "n": 75
+    },
+    {
+     "label": "65 and over",
+     "value": 46.79,
+     "n": 35
+    }
+   ]
+  },
+  {
+   "name": "Nebraska",
+   "label": "Nebraska",
+   "abbr": "NE",
+   "slug": "nebraska",
+   "value": 37.63,
+   "n": 377,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 41.74,
+     "n": 18
+    },
+    {
+     "label": "25 to 44",
+     "value": 36.34,
+     "n": 162
+    },
+    {
+     "label": "45 to 64",
+     "value": 31.54,
+     "n": 130
+    },
+    {
+     "label": "65 and over",
+     "value": 45.55,
+     "n": 67
+    }
+   ]
+  },
+  {
+   "name": "Nevada",
+   "label": "Nevada",
+   "abbr": "NV",
+   "slug": "nevada",
+   "value": 41.37,
+   "n": 413,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 36.37,
+     "n": 29
+    },
+    {
+     "label": "25 to 44",
+     "value": 39.9,
+     "n": 158
+    },
+    {
+     "label": "45 to 64",
+     "value": 49.39,
+     "n": 143
+    },
+    {
+     "label": "65 and over",
+     "value": 33.59,
+     "n": 83
+    }
+   ]
+  },
+  {
+   "name": "New Hampshire",
+   "label": "New Hampshire",
+   "abbr": "NH",
+   "slug": "new-hampshire",
+   "value": 37.75,
+   "n": 243,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 40.72,
+     "n": 15
+    },
+    {
+     "label": "25 to 44",
+     "value": 35.01,
+     "n": 80
+    },
+    {
+     "label": "45 to 64",
+     "value": 31.92,
+     "n": 94
+    },
+    {
+     "label": "65 and over",
+     "value": 48.47,
+     "n": 54
+    }
+   ]
+  },
+  {
+   "name": "New Jersey",
+   "label": "New Jersey",
+   "abbr": "NJ",
+   "slug": "new-jersey",
+   "value": 56.09,
+   "n": 359,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 47.73,
+     "n": 20
+    },
+    {
+     "label": "25 to 44",
+     "value": 52.97,
+     "n": 124
+    },
+    {
+     "label": "45 to 64",
+     "value": 65.66,
+     "n": 114
+    },
+    {
+     "label": "65 and over",
+     "value": 48.67,
+     "n": 101
+    }
+   ]
+  },
+  {
+   "name": "New Mexico",
+   "label": "New Mexico",
+   "abbr": "NM",
+   "slug": "new-mexico",
+   "value": 44.85,
+   "n": 366,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 40.08,
+     "n": 22
+    },
+    {
+     "label": "25 to 44",
+     "value": 42.4,
+     "n": 145
+    },
+    {
+     "label": "45 to 64",
+     "value": 46.94,
+     "n": 134
+    },
+    {
+     "label": "65 and over",
+     "value": 47.96,
+     "n": 65
+    }
+   ]
+  },
+  {
+   "name": "New York",
+   "label": "New York",
+   "abbr": "NY",
+   "slug": "new-york",
+   "value": 51.21,
+   "n": 855,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 48.41,
+     "n": 84
+    },
+    {
+     "label": "25 to 44",
+     "value": 51.28,
+     "n": 418
+    },
+    {
+     "label": "45 to 64",
+     "value": 56.02,
+     "n": 232
+    },
+    {
+     "label": "65 and over",
+     "value": 45.39,
+     "n": 121
+    }
+   ]
+  },
+  {
+   "name": "North Carolina",
+   "label": "North Carolina",
+   "abbr": "NC",
+   "slug": "north-carolina",
+   "value": 44.26,
+   "n": 651,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 48.85,
+     "n": 75
+    },
+    {
+     "label": "25 to 44",
+     "value": 36.55,
+     "n": 236
+    },
+    {
+     "label": "45 to 64",
+     "value": 44.92,
+     "n": 228
+    },
+    {
+     "label": "65 and over",
+     "value": 51.91,
+     "n": 112
+    }
+   ]
+  },
+  {
+   "name": "North Dakota",
+   "label": "North Dakota",
+   "abbr": "ND",
+   "slug": "north-dakota",
+   "value": 44.26,
+   "n": 193,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 59.6,
+     "n": 12
+    },
+    {
+     "label": "25 to 44",
+     "value": 30.95,
+     "n": 88
+    },
+    {
+     "label": "45 to 64",
+     "value": 51.4,
+     "n": 75
+    },
+    {
+     "label": "65 and over",
+     "value": 48.59,
+     "n": 18
+    }
+   ]
+  },
+  {
+   "name": "Ohio",
+   "label": "Ohio",
+   "abbr": "OH",
+   "slug": "ohio",
+   "value": 42.93,
+   "n": 736,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 38.89,
+     "n": 54
+    },
+    {
+     "label": "25 to 44",
+     "value": 43.9,
+     "n": 263
+    },
+    {
+     "label": "45 to 64",
+     "value": 42.92,
+     "n": 283
+    },
+    {
+     "label": "65 and over",
+     "value": 43.45,
+     "n": 136
+    }
+   ]
+  },
+  {
+   "name": "Oklahoma",
+   "label": "Oklahoma",
+   "abbr": "OK",
+   "slug": "oklahoma",
+   "value": 46.26,
+   "n": 375,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 35.57,
+     "n": 28
+    },
+    {
+     "label": "25 to 44",
+     "value": 44.42,
+     "n": 139
+    },
+    {
+     "label": "45 to 64",
+     "value": 43.75,
+     "n": 139
+    },
+    {
+     "label": "65 and over",
+     "value": 58.37,
+     "n": 69
+    }
+   ]
+  },
+  {
+   "name": "Oregon",
+   "label": "Oregon",
+   "abbr": "OR",
+   "slug": "oregon",
+   "value": 37.5,
+   "n": 387,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 31.71,
+     "n": 27
+    },
+    {
+     "label": "25 to 44",
+     "value": 35.28,
+     "n": 162
+    },
+    {
+     "label": "45 to 64",
+     "value": 36.12,
+     "n": 126
+    },
+    {
+     "label": "65 and over",
+     "value": 45.65,
+     "n": 72
+    }
+   ]
+  },
+  {
+   "name": "Pennsylvania",
+   "label": "Pennsylvania",
+   "abbr": "PA",
+   "slug": "pennsylvania",
+   "value": 42.78,
+   "n": 651,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 48.85,
+     "n": 51
+    },
+    {
+     "label": "25 to 44",
+     "value": 37.85,
+     "n": 207
+    },
+    {
+     "label": "45 to 64",
+     "value": 41.82,
+     "n": 237
+    },
+    {
+     "label": "65 and over",
+     "value": 47.83,
+     "n": 156
+    }
+   ]
+  },
+  {
+   "name": "Rhode Island",
+   "label": "Rhode Island",
+   "abbr": "RI",
+   "slug": "rhode-island",
+   "value": 53.75,
+   "n": 251,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 46.33,
+     "n": 11
+    },
+    {
+     "label": "25 to 44",
+     "value": 61.04,
+     "n": 106
+    },
+    {
+     "label": "45 to 64",
+     "value": 49.8,
+     "n": 88
+    },
+    {
+     "label": "65 and over",
+     "value": 52.33,
+     "n": 46
+    }
+   ]
+  },
+  {
+   "name": "South Carolina",
+   "label": "South Carolina",
+   "abbr": "SC",
+   "slug": "south-carolina",
+   "value": 48.56,
+   "n": 463,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 59.17,
+     "n": 40
+    },
+    {
+     "label": "25 to 44",
+     "value": 49.84,
+     "n": 168
+    },
+    {
+     "label": "45 to 64",
+     "value": 47.91,
+     "n": 154
+    },
+    {
+     "label": "65 and over",
+     "value": 42.34,
+     "n": 101
+    }
+   ]
+  },
+  {
+   "name": "South Dakota",
+   "label": "South Dakota",
+   "abbr": "SD",
+   "slug": "south-dakota",
+   "value": 36.7,
+   "n": 234,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 49.0,
+     "n": 21
+    },
+    {
+     "label": "25 to 44",
+     "value": 27.17,
+     "n": 106
+    },
+    {
+     "label": "45 to 64",
+     "value": 33.65,
+     "n": 70
+    },
+    {
+     "label": "65 and over",
+     "value": 47.17,
+     "n": 37
+    }
+   ]
+  },
+  {
+   "name": "Tennessee",
+   "label": "Tennessee",
+   "abbr": "TN",
+   "slug": "tennessee",
+   "value": 44.72,
+   "n": 490,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 46.55,
+     "n": 45
+    },
+    {
+     "label": "25 to 44",
+     "value": 37.07,
+     "n": 178
+    },
+    {
+     "label": "45 to 64",
+     "value": 48.22,
+     "n": 184
+    },
+    {
+     "label": "65 and over",
+     "value": 49.99,
+     "n": 83
+    }
+   ]
+  },
+  {
+   "name": "Texas",
+   "label": "Texas",
+   "abbr": "TX",
+   "slug": "texas",
+   "value": 47.61,
+   "n": 1211,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 59.35,
+     "n": 138
+    },
+    {
+     "label": "25 to 44",
+     "value": 46.43,
+     "n": 479
+    },
+    {
+     "label": "45 to 64",
+     "value": 44.11,
+     "n": 439
+    },
+    {
+     "label": "65 and over",
+     "value": 47.61,
+     "n": 155
+    }
+   ]
+  },
+  {
+   "name": "Utah",
+   "label": "Utah",
+   "abbr": "UT",
+   "slug": "utah",
+   "value": 31.35,
+   "n": 318,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 31.31,
+     "n": 25
+    },
+    {
+     "label": "25 to 44",
+     "value": 29.62,
+     "n": 156
+    },
+    {
+     "label": "45 to 64",
+     "value": 29.04,
+     "n": 103
+    },
+    {
+     "label": "65 and over",
+     "value": 39.94,
+     "n": 34
+    }
+   ]
+  },
+  {
+   "name": "Vermont",
+   "label": "Vermont",
+   "abbr": "VT",
+   "slug": "vermont",
+   "value": 36.85,
+   "n": 198,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": null,
+     "n": null
+    },
+    {
+     "label": "25 to 44",
+     "value": 36.74,
+     "n": 91
+    },
+    {
+     "label": "45 to 64",
+     "value": 35.43,
+     "n": 58
+    },
+    {
+     "label": "65 and over",
+     "value": 50.24,
+     "n": 41
+    }
+   ]
+  },
+  {
+   "name": "Virginia",
+   "label": "Virginia",
+   "abbr": "VA",
+   "slug": "virginia",
+   "value": 50.09,
+   "n": 466,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 53.18,
+     "n": 49
+    },
+    {
+     "label": "25 to 44",
+     "value": 51.19,
+     "n": 168
+    },
+    {
+     "label": "45 to 64",
+     "value": 47.94,
+     "n": 162
+    },
+    {
+     "label": "65 and over",
+     "value": 49.82,
+     "n": 87
+    }
+   ]
+  },
+  {
+   "name": "Washington",
+   "label": "Washington",
+   "abbr": "WA",
+   "slug": "washington",
+   "value": 47.65,
+   "n": 507,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 69.95,
+     "n": 34
+    },
+    {
+     "label": "25 to 44",
+     "value": 43.64,
+     "n": 239
+    },
+    {
+     "label": "45 to 64",
+     "value": 40.34,
+     "n": 149
+    },
+    {
+     "label": "65 and over",
+     "value": 54.6,
+     "n": 85
+    }
+   ]
+  },
+  {
+   "name": "West Virginia",
+   "label": "West Virginia",
+   "abbr": "WV",
+   "slug": "west-virginia",
+   "value": 31.05,
+   "n": 385,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 16.52,
+     "n": 22
+    },
+    {
+     "label": "25 to 44",
+     "value": 31.78,
+     "n": 144
+    },
+    {
+     "label": "45 to 64",
+     "value": 22.67,
+     "n": 169
+    },
+    {
+     "label": "65 and over",
+     "value": 47.07,
+     "n": 50
+    }
+   ]
+  },
+  {
+   "name": "Wisconsin",
+   "label": "Wisconsin",
+   "abbr": "WI",
+   "slug": "wisconsin",
+   "value": 33.43,
+   "n": 359,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 23.58,
+     "n": 34
+    },
+    {
+     "label": "25 to 44",
+     "value": 29.6,
+     "n": 106
+    },
+    {
+     "label": "45 to 64",
+     "value": 31.39,
+     "n": 126
+    },
+    {
+     "label": "65 and over",
+     "value": 46.75,
+     "n": 93
+    }
+   ]
+  },
+  {
+   "name": "Wyoming",
+   "label": "Wyoming",
+   "abbr": "WY",
+   "slug": "wyoming",
+   "value": 25.95,
+   "n": 190,
+   "by": [
+    {
+     "label": "18 to 24",
+     "value": 25.02,
+     "n": 13
+    },
+    {
+     "label": "25 to 44",
+     "value": 39.96,
+     "n": 89
+    },
+    {
+     "label": "45 to 64",
+     "value": 15.41,
+     "n": 67
+    },
+    {
+     "label": "65 and over",
+     "value": 19.14,
+     "n": 21
+    }
+   ]
+  }
+ ]
+}

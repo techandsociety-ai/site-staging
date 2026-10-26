@@ -305,7 +305,7 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute
     /* ---- state, URL, render ---- */
     function fromURL() {
       var u = new URLSearchParams(location.search), id = u.get('q'), s = u.get('state');
-      cur.q = Q[id] ? id : qs[0].id;
+      cur.q = Q[id] ? id : (Q[ix.text && ix.text.default_q] ? ix.text.default_q : qs[0].id);   /* a set may name the question to open on */
       cur.place = PLACES.some(function (p) { return p.slug && p.slug === s; }) ? s : null;
     }
     function go(next) {

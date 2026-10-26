@@ -117,7 +117,7 @@
   function pm(v, n) { var m = moe(v, n); return m == null ? '' : '±' + m.toFixed(1); }
   /* Table 8 stars groups under 100 respondents: interpret with caution */
   var FEW = 100;
-  function star(n) { return n < FEW ? '*' : ''; }
+  function star(n) { return n != null && n < FEW ? '*' : ''; }
   var CAUTION = '* Fewer than ' + FEW + ' respondents: interpret with caution.';
   function fill(t, o) { return t.replace(/\{(\w+)\}/g, function (m, k) { return o[k] != null ? o[k] : m; }); }
 
@@ -240,7 +240,8 @@
     var dom = top >= 50 ? 100 : Math.max(10, Math.ceil(top / 10) * 10);
     var labW = Math.max.apply(null, rows.map(function (r) { return measure(r.label, S.lab, 400); })) + 14 * k;
     /* spec.showN adds a column of respondent counts at the right, so small groups show as small */
-    var nText = function (r) { return pm(r.value, r.n) + '  n=' + num(r.n) + star(r.n); };
+    /* a withheld cell (n under 10) has no value and no n to show */
+    var nText = function (r) { return r.n == null ? 'withheld (n<10)' : pm(r.value, r.n) + '  n=' + num(r.n) + star(r.n); };
     var nW = spec.showN ? Math.max.apply(null, rows.map(function (r) { return measure(nText(r), S.lab * 0.8, 400); })) + 12 * k : 0;
     var barMax = g.w - labW - measure('100%', S.val, 700) - 10 * k - nW;
     var bh = Math.min(rh * 0.6, 22 * k * (g.fixed ? 1.7 : 1)), x0 = g.x + labW;
@@ -534,8 +535,8 @@
   }
 
   /* every question a set's index (set-<name>.json) lists, in its order;
-     pages pass ?set=, and the platforms set is the default */
-  var DEFAULT_SET = 'platforms-w38';
+     pages pass ?set=, and W39's midterm issues are the default */
+  var DEFAULT_SET = 'issues-w39';
   function loadSet(name) {
     name = name || DEFAULT_SET;
     if (!/^[a-z0-9-]+$/.test(name)) return Promise.reject(new Error('bad set name'));
@@ -554,7 +555,7 @@
     p.style.cssText = 'display:flex;gap:10px;align-items:baseline;margin:0 0 14px;padding:10px 14px;border-radius:10px;' +
       'background:color-mix(in srgb,#fab219 14%,var(--surface));border:1px solid color-mix(in srgb,#fab219 55%,var(--rule));' +
       'font:400 13px/1.45 var(--sans);color:var(--ink)';
-    b.style.whiteSpace = 'nowrap'; b.textContent = '⚠ Test data';
+    b.style.whiteSpace = 'nowrap'; b.textContent = '⚠ ' + (ix.text.note_label || 'Test data');
     p.appendChild(b); p.appendChild(document.createTextNode(t));
     before.parentNode.insertBefore(p, before);
   }
