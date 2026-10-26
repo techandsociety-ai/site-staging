@@ -10,14 +10,13 @@
 <link rel="stylesheet" href="../../assets/report.css"/>
 <style>
 /* An app page, not a report: full width, sans, dense, tabular figures.
-   Cells are coloured by share on one 0-100% blue scale for every row (drawn
-   in the script, per theme). The "vs U.S." option uses orange (below) and
-   purple (above): a colourblind-safe diverging pair that doesn't read as
-   red/blue partisanship. */
-:root{--below:#d95f02;--above:#6a51a3;--below-ink:#a84800;--above-ink:#55408f;--on-below:#14140f;--on-above:#ffffff}
-@media (prefers-color-scheme:dark){:root:where(:not([data-theme=light])){
-  --below:#f08a3c;--above:#a28ee0;--below-ink:#f5a465;--above-ink:#bcaef0;--on-below:#14140f;--on-above:#14140f}}
-:root[data-theme=dark]{--below:#f08a3c;--above:#a28ee0;--below-ink:#f5a465;--above-ink:#bcaef0;--on-below:#14140f;--on-above:#14140f}
+   Cells are coloured by points from the U.S. (the default) or by share,
+   both drawn in the script per theme. Points use orange (below the U.S.)
+   and blue (above) through a grey midpoint: a colourblind-safe pair that
+   doesn't read as red/blue partisanship, kept light enough for dark ink. */
+:root{--below-ink:#a84800;--above-ink:#1c5cab}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme=light])){--below-ink:#f5a465;--above-ink:#86b6ef}}
+:root[data-theme=dark]{--below-ink:#f5a465;--above-ink:#86b6ef}
 body{font:400 14px/1.45 var(--sans);font-variant-numeric:tabular-nums}
 .mono{font:500 12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .up{color:var(--above-ink)} .down{color:var(--below-ink)}
@@ -100,14 +99,19 @@ main.app{max-width:none;padding:16px 24px 80px}
 #grid svg{display:block;width:100%;height:auto;user-select:none}
 #grid [data-c]{cursor:pointer}
 .legend{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;margin-top:9px;font:400 12px/1.4 var(--sans);color:var(--muted)}
-.ramp{display:flex;align-items:center;gap:5px}
-.ramp i{display:block;width:16px;height:11px;border-radius:2px}
 .scale{position:relative;width:300px;height:27px;font:400 11px/1 var(--sans);color:var(--muted)}
 .scale .bar{position:absolute;left:0;right:0;top:0;height:11px;border-radius:3px}
-.scale span{position:absolute;top:15px;transform:translateX(-50%)}
+.scale span{position:absolute;top:15px;transform:translateX(-50%);white-space:nowrap}
 .scale span:first-of-type{transform:none}
 .scale span:last-of-type{transform:translateX(-100%)}
 
+/* the selected row, pinned under the bar once it scrolls out of view */
+.pin{position:fixed;top:64px;z-index:65;display:none;box-sizing:border-box;padding:6px 16px 8px;
+  background:color-mix(in srgb,var(--surface) 95%,transparent);backdrop-filter:blur(8px);
+  border:1px solid var(--rule);border-top:0;border-radius:0 0 12px 12px;box-shadow:0 10px 24px rgba(0,0,0,.10)}
+.pin.on{display:block}
+.pin svg{display:block;width:100%;height:auto;user-select:none}
+.pin [data-c]{cursor:pointer}
 #tip{position:fixed;z-index:130;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:8px;padding:8px 10px;
   font:400 12.5px/1.45 var(--sans);box-shadow:0 8px 24px rgba(0,0,0,.25);display:none;max-width:300px}
 #tip b{font-weight:650}
@@ -188,19 +192,20 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       </div>
       <div class="ctl">Colour
         <div class="seg" role="group" aria-label="Colour cells by">
-          <button type="button" data-shade="share" aria-pressed="true" title="Share of the base, 0 to 100% on every row">Share</button>
-          <button type="button" data-shade="gap" aria-pressed="false" title="Points above or below the U.S., full colour at ±10 on every row">vs U.S.</button>
+          <button type="button" data-shade="gap" aria-pressed="true" title="Points above or below the U.S., full colour at 15 points on every row">vs U.S.</button>
+          <button type="button" data-shade="share" aria-pressed="false" title="Share of the base, 0 to 100% on every row">Share</button>
         </div>
       </div>
       <div class="ctl">Columns
         <div class="seg" role="group" aria-label="Order columns by">
-          <button type="button" data-order="region" aria-pressed="true">Region</button>
-          <button type="button" data-order="rank" aria-pressed="false" id="rankBtn">Rank</button>
+          <button type="button" data-order="rank" aria-pressed="true" id="rankBtn">Rank</button>
+          <button type="button" data-order="region" aria-pressed="false" title="Census regions, most populous state first">Region</button>
         </div>
       </div>
       <button class="btn sm" type="button" id="gridCsv">CSV</button>
     </div>
     <div id="grid" tabindex="0" role="application" aria-label="Question by place grid. Arrow keys move the selection; g focuses it."></div>
+    <div class="pin" id="pin" aria-hidden="true"></div>
     <div class="legend">
       <div id="ramp"></div>
       <span id="noise"></span>
@@ -235,13 +240,14 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
   /* screenshot hook: ?theme=dark|light */
   if (/^(dark|light)$/.test(params.get('theme') || '')) document.documentElement.setAttribute('data-theme', params.get('theme'));
 
+  /* Census regions, each in order of 2020 Census population */
   const REGIONS = [
-    ['Northeast', 'CT ME MA NH RI VT NJ NY PA'],
-    ['Midwest', 'IL IN MI OH WI IA KS MN MO NE ND SD'],
-    ['South', 'DE DC FL GA MD NC SC VA WV AL KY MS TN AR LA OK TX'],
-    ['West', 'AZ CO ID MT NV NM UT WY AK CA HI OR WA']
+    ['Northeast', 'NY PA NJ MA CT NH ME RI VT'],
+    ['Midwest', 'IL OH MI IN MO WI MN IA KS NE SD ND'],
+    ['South', 'TX FL GA NC VA TN MD SC AL LA KY OK AR MS WV DE DC'],
+    ['West', 'CA WA AZ CO OR UT NV NM ID HI MT AK WY']
   ].map(([name, s]) => ({name, abbrs: s.split(' ')}));
-  const FIXED = 10;   /* the vs U.S. option saturates at 10 points */
+  const SPAN = 15;   /* vs U.S.: full colour at 15 points either side */
   const SETS = [['platforms-w38', 'Social media platforms'], ['insurance-w38', 'Health insurance']];
   const setName = SETS.some(x => x[0] === params.get('set')) ? params.get('set') : K.DEFAULT_SET;
 
@@ -272,15 +278,29 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
   }
   const lum = hex => { const [r, g, b] = rgbOf(hex).map(lin); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
   const contrast = (x, y) => { const a = lum(x), b = lum(y); return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05); };
-  let SCALE = [];
+  /* the points scale: below, the U.S. (a neutral grey), above. Both arms
+     end at the same OKLab lightness (0.74 light, 0.53 dark), so neither side
+     shouts louder than the other */
+  const DIVERGE = {light: ['#f18d68', '#f0efec', '#85aee3'], dark: ['#a45132', '#383835', '#3d6da8']};
+  const inkOn = fill => contrast(fill, '#ffffff') > contrast(fill, '#14140f') ? '#ffffff' : '#14140f';
+  let SCALE = [], DIV = [];
   function buildScale() {
     const surf = getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() || '#ffffff';
-    const stops = RAMP[/^#[0-9a-f]{6}$/i.test(surf) && lum(surf) < 0.2 ? 'dark' : 'light'].map(toLab), seg = 100 / (stops.length - 1);
+    const mode = /^#[0-9a-f]{6}$/i.test(surf) && lum(surf) < 0.2 ? 'dark' : 'light';
+    const stops = RAMP[mode].map(toLab), seg = 100 / (stops.length - 1);
     SCALE = [];
     for (let v = 0; v <= 100; v++) {
       const i = Math.min(stops.length - 2, Math.floor(v / seg)), t = (v - i * seg) / seg;
       const fill = toHex(stops[i].map((c, k) => c + (stops[i + 1][k] - c) * t));
-      SCALE.push({fill, ink: contrast(fill, '#ffffff') > contrast(fill, '#14140f') ? '#ffffff' : '#14140f'});
+      SCALE.push({fill, ink: inkOn(fill)});
+    }
+    /* DIV[i] is the fill at (i / 2 - SPAN) points, half-point steps */
+    const [lo, mid, hi] = DIVERGE[mode].map(toLab);
+    DIV = [];
+    for (let i = 0; i <= SPAN * 4; i++) {
+      const g = i / 2 - SPAN, end = g < 0 ? lo : hi, t = Math.abs(g) / SPAN;
+      const fill = toHex(mid.map((c, k) => c + (end[k] - c) * t));
+      DIV.push({fill, ink: inkOn(fill)});
     }
   }
   buildScale();
@@ -333,9 +353,9 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       cur.s = pBySlug.has(u.get('state')) ? u.get('state') : null;
     }
     fromURL();
-    /* view modes can be linked too: ?shade=gap, ?order=rank */
-    let shade = params.get('shade') === 'gap' ? 'gap' : 'share';
-    let order = params.get('order') === 'rank' ? 'rank' : 'region';
+    /* view modes can be linked too: ?shade=share, ?order=region */
+    let shade = params.get('shade') === 'share' ? 'share' : 'gap';
+    let order = params.get('order') === 'region' ? 'region' : 'rank';
     const pressAll = () => {
       document.querySelectorAll('[data-shade]').forEach(x => x.setAttribute('aria-pressed', String(x.getAttribute('data-shade') === shade)));
       document.querySelectorAll('[data-order]').forEach(x => x.setAttribute('aria-pressed', String(x.getAttribute('data-order') === order)));
@@ -482,80 +502,116 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     /* fill for one cell, and which ink reads on it */
     function fillFor(q, v) {
       if (shade === 'share') return SCALE[Math.max(0, Math.min(100, Math.round(v)))];
-      const g = v - q.us.value, t = Math.min(1, Math.abs(g) / FIXED), m = Math.round(4 + t * 82), up = g >= 0;
-      return {fill: 'color-mix(in srgb,var(' + (up ? '--above' : '--below') + ') ' + m + '%,var(--surface))',
-        ink: t > 0.62 ? 'var(' + (up ? '--on-above' : '--on-below') + ')' : 'var(--ink)'};
+      const g = Math.max(-SPAN, Math.min(SPAN, gapOf(v, q.us.value)));
+      return DIV[Math.round((g + SPAN) * 2)];
     }
+    /* the grid is drawn twice from one geometry: the whole matrix, and a strip
+       of column heads plus the selected row that pins under the bar once that
+       row scrolls out of view */
     let geom = null;
-    function drawGrid() {
-      const box = $('grid'), W = Math.max(900, box.clientWidth), cols = columns();
+    function layoutGrid() {
+      const W = Math.max(900, $('grid').clientWidth), cols = columns();
       const nGaps = order === 'region' ? REGIONS.length - 1 : 0;
       const LAB = 150, GAP0 = 14, RG = 8, top = 40;
-      /* the U.S. column is a cell and a third wide; rows grow with the cells */
+      /* the U.S. column is a cell and a third wide; rows are taller than
+         cells are wide, with a gap between rows so each reads as a line */
       const cw = (W - LAB - GAP0 - nGaps * RG) / (cols.length + 1.35), USW = cw * 1.35;
-      const rh = Math.max(24, Math.min(34, Math.round(cw * 0.72))), H = top + Q.length * rh + 4;
+      const rh = Math.max(32, Math.min(42, Math.round(cw * 0.95)));
       const xs = [];
       let x = LAB + USW + GAP0;
       cols.forEach((c, i) => { if (c.first && i > 0 && order === 'region') x += RG; xs.push(x); x += cw; });
-      const gx1 = xs[xs.length - 1] + cw;
-      const fs = cw >= 34 ? 13 : cw >= 27 ? 12 : cw >= 22 ? 11 : 10, showNum = cw >= 18, pad = 1;
-      const selRow = Q.findIndex(q => q.id === cur.q), selCol = cur.s ? cols.findIndex(c => c.p.slug === cur.s) : -1;
-      const o = ['<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" font-family=\'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif\' style="font-variant-numeric:tabular-nums">'];
+      return {W, cols, LAB, top, cw, USW, rh, xs, gx1: xs[xs.length - 1] + cw, padX: 1, padY: 3,
+        fs: cw >= 34 ? 13 : cw >= 27 ? 12 : cw >= 22 ? 11 : 10, showNum: cw >= 18,
+        selRow: Q.findIndex(q => q.id === cur.q), selCol: cur.s ? cols.findIndex(c => c.p.slug === cur.s) : -1};
+    }
+    function svgOpen(G, H) {
+      return '<svg viewBox="0 0 ' + G.W + ' ' + H + '" width="' + G.W + '" height="' + H +
+        '" font-family=\'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif\' style="font-variant-numeric:tabular-nums">';
+    }
+    /* column heads, baseline at hy */
+    function heads(G, hy) {
+      const o = [];
+      o.push('<rect data-c="us" data-r="head" x="' + G.LAB + '" y="' + (hy - 13) + '" width="' + G.USW + '" height="18" fill="transparent"/>');
+      o.push('<text x="' + (G.LAB + G.USW / 2) + '" y="' + hy + '" text-anchor="middle" font-size="11.5" font-weight="' + (cur.s ? 600 : 800) +
+        '" pointer-events="none" style="fill:' + (cur.s ? 'var(--ink2)' : 'var(--acct)') + '">U.S.</text>');
+      G.cols.forEach((c, i) => {
+        const on = i === G.selCol;
+        o.push('<rect data-c="' + i + '" data-r="head" x="' + G.xs[i] + '" y="' + (hy - 13) + '" width="' + G.cw + '" height="18" fill="transparent"/>');
+        o.push('<text x="' + (G.xs[i] + G.cw / 2) + '" y="' + hy + '" text-anchor="middle" font-size="' + (G.cw >= 22 ? 11 : 10) + '" font-weight="' + (on ? 800 : 500) +
+          '" pointer-events="none" style="fill:' + (on ? 'var(--acct)' : 'var(--ink2)') + '">' + c.p.abbr + '</text>');
+      });
+      return o.join('');
+    }
+    /* one question's row, top edge at y */
+    function row(G, q, r, y) {
+      const o = [], on = r === G.selRow, h = G.rh - 2 * G.padY, ty = y + G.rh / 2 + G.fs * 0.36;
+      o.push('<rect data-c="label" data-r="' + r + '" x="0" y="' + (y + G.padY) + '" width="' + (G.LAB - 6) + '" height="' + h + '" rx="5" style="fill:' + (on ? 'var(--soft)' : 'transparent') + '"/>');
+      if (on) o.push('<rect x="0" y="' + (y + G.padY + 3) + '" width="3" height="' + (h - 6) + '" rx="1.5" style="fill:var(--acc)" pointer-events="none"/>');
+      o.push('<text x="10" y="' + (y + G.rh / 2 + 4.5) + '" font-size="13" font-weight="' + (on ? 700 : 500) + '" pointer-events="none" style="fill:' +
+        (on ? 'var(--ink)' : 'var(--ink2)') + '">' + esc(q.label) + '</text>');
+      /* the U.S. cell is the scale's midpoint in vs U.S. mode, its own share otherwise */
+      const fu = shade === 'share' ? fillFor(q, q.us.value) : DIV[SPAN * 2];
+      o.push('<rect data-c="us" data-r="' + r + '" x="' + (G.LAB + G.padX) + '" y="' + (y + G.padY) + '" width="' + (G.USW - 2 * G.padX) + '" height="' + h +
+        '" rx="3" style="fill:' + fu.fill + '"/>');
+      o.push('<text x="' + (G.LAB + G.USW / 2) + '" y="' + ty + '" text-anchor="middle" font-size="' + G.fs + '" font-weight="750" pointer-events="none" style="fill:' + fu.ink + '">' +
+        shown(q.us.value) + '</text>');
+      G.cols.forEach((c, i) => {
+        const st = val(q, c.p.slug), f = fillFor(q, st.value);
+        o.push('<rect data-c="' + i + '" data-r="' + r + '" x="' + (G.xs[i] + G.padX) + '" y="' + (y + G.padY) + '" width="' + (G.cw - 2 * G.padX) + '" height="' + h +
+          '" rx="3" style="fill:' + f.fill + '"/>');
+        if (G.showNum) o.push('<text x="' + (G.xs[i] + G.cw / 2) + '" y="' + ty + '" text-anchor="middle" font-size="' + G.fs + '" pointer-events="none" style="fill:' +
+          f.ink + '">' + shown(st.value) + '</text>');
+      });
+      return o.join('');
+    }
+    /* outline of the selected column from y0 to y1, and of the selected cell */
+    function crosshair(G, y0, y1, rowY) {
+      const colX = G.selCol >= 0 ? G.xs[G.selCol] : G.LAB, colW = G.selCol >= 0 ? G.cw : G.USW;
+      return '<rect x="' + (colX + 0.5) + '" y="' + y0 + '" width="' + (colW - 1) + '" height="' + (y1 - y0) +
+        '" rx="4" fill="none" stroke-width="1.25" style="stroke:var(--ink2)" pointer-events="none"/>' +
+        '<rect x="' + (colX + 0.5) + '" y="' + (rowY + G.padY - 1.5) + '" width="' + (colW - 1) + '" height="' + (G.rh - 2 * G.padY + 3) +
+        '" rx="4" fill="none" stroke-width="2.5" style="stroke:var(--ink)" pointer-events="none"/>';
+    }
+    function drawGrid() {
+      const G = layoutGrid(), H = G.top + Q.length * G.rh + 4, hy = G.top - 8, o = [svgOpen(G, H)];
       if (order === 'region') {
         let i = 0;
         REGIONS.forEach(r => {
-          const x0 = xs[i], x1 = xs[i + r.abbrs.length - 1] + cw;
+          const x0 = G.xs[i], x1 = G.xs[i + r.abbrs.length - 1] + G.cw;
           o.push('<text x="' + x0 + '" y="12" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">' + r.name.toUpperCase() + '</text>');
           o.push('<line x1="' + x0 + '" x2="' + x1 + '" y1="17" y2="17" stroke-width="1" style="stroke:var(--rule)"/>');
           i += r.abbrs.length;
         });
       } else {
-        o.push('<text x="' + xs[0] + '" y="12" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">RANKED ON ' +
+        o.push('<text x="' + G.xs[0] + '" y="12" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">RANKED ON ' +
           esc(qById.get(cur.q).label.toUpperCase()) + ', HIGHEST FIRST →</text>');
-        o.push('<line x1="' + xs[0] + '" x2="' + gx1 + '" y1="17" y2="17" stroke-width="1" style="stroke:var(--rule)"/>');
+        o.push('<line x1="' + G.xs[0] + '" x2="' + G.gx1 + '" y1="17" y2="17" stroke-width="1" style="stroke:var(--rule)"/>');
       }
-      const hy = top - 8;
-      o.push('<rect data-c="us" data-r="head" x="' + LAB + '" y="' + (hy - 13) + '" width="' + USW + '" height="18" fill="transparent"/>');
-      o.push('<text x="' + (LAB + USW / 2) + '" y="' + hy + '" text-anchor="middle" font-size="11.5" font-weight="' + (cur.s ? 600 : 800) +
-        '" pointer-events="none" style="fill:' + (cur.s ? 'var(--ink2)' : 'var(--acct)') + '">U.S.</text>');
-      cols.forEach((c, i) => {
-        const on = i === selCol;
-        o.push('<rect data-c="' + i + '" data-r="head" x="' + xs[i] + '" y="' + (hy - 13) + '" width="' + cw + '" height="18" fill="transparent"/>');
-        o.push('<text x="' + (xs[i] + cw / 2) + '" y="' + hy + '" text-anchor="middle" font-size="' + (cw >= 22 ? 11 : 10) + '" font-weight="' + (on ? 800 : 500) +
-          '" pointer-events="none" style="fill:' + (on ? 'var(--acct)' : 'var(--ink2)') + '">' + c.p.abbr + '</text>');
-      });
-      Q.forEach((q, r) => {
-        const y = top + r * rh, on = r === selRow;
-        o.push('<rect data-c="label" data-r="' + r + '" x="0" y="' + y + '" width="' + (LAB - 6) + '" height="' + rh + '" rx="5" style="fill:' + (on ? 'var(--soft)' : 'transparent') + '"/>');
-        if (on) o.push('<rect x="0" y="' + (y + 3) + '" width="3" height="' + (rh - 6) + '" rx="1.5" style="fill:var(--acc)" pointer-events="none"/>');
-        o.push('<text x="10" y="' + (y + rh / 2 + 4.5) + '" font-size="13" font-weight="' + (on ? 700 : 500) + '" pointer-events="none" style="fill:' +
-          (on ? 'var(--ink)' : 'var(--ink2)') + '">' + esc(q.label) + '</text>');
-        /* the U.S. cell wears the share colour too; in vs U.S. mode it is the zero */
-        const fu = shade === 'share' ? fillFor(q, q.us.value) : {fill: 'var(--rule2)', ink: 'var(--ink)'};
-        o.push('<rect data-c="us" data-r="' + r + '" x="' + (LAB + pad) + '" y="' + (y + pad) + '" width="' + (USW - 2 * pad) + '" height="' + (rh - 2 * pad) + '" rx="3" style="fill:' + fu.fill + '"/>');
-        o.push('<text x="' + (LAB + USW / 2) + '" y="' + (y + rh / 2 + 4) + '" text-anchor="middle" font-size="' + fs + '" font-weight="750" pointer-events="none" style="fill:' + fu.ink + '">' +
-          shown(q.us.value) + '</text>');
-        cols.forEach((c, i) => {
-          const s = val(q, c.p.slug), f = fillFor(q, s.value);
-          o.push('<rect data-c="' + i + '" data-r="' + r + '" x="' + (xs[i] + pad) + '" y="' + (y + pad) + '" width="' + (cw - 2 * pad) + '" height="' + (rh - 2 * pad) +
-            '" rx="3" style="fill:' + f.fill + '"/>');
-          if (showNum) o.push('<text x="' + (xs[i] + cw / 2) + '" y="' + (y + rh / 2 + 4) + '" text-anchor="middle" font-size="' + fs + '" pointer-events="none" style="fill:' +
-            f.ink + '">' + shown(s.value) + '</text>');
-        });
-      });
-      /* crosshair: the selected row and column outlined, their meeting cell heavier */
-      const gx0 = LAB, gy0 = top, gy1 = top + Q.length * rh;
-      if (selRow >= 0) o.push('<rect x="' + (gx0 + 0.5) + '" y="' + (gy0 + selRow * rh + 0.5) + '" width="' + (gx1 - gx0 - 1) + '" height="' + (rh - 1) +
-        '" rx="4" fill="none" stroke-width="1.25" style="stroke:var(--ink2)" pointer-events="none"/>');
-      const colX = selCol >= 0 ? xs[selCol] : LAB, colW = selCol >= 0 ? cw : USW;
-      o.push('<rect x="' + (colX + 0.5) + '" y="' + (hy - 15) + '" width="' + (colW - 1) + '" height="' + (gy1 - hy + 15.5) +
-        '" rx="4" fill="none" stroke-width="1.25" style="stroke:var(--ink2)" pointer-events="none"/>');
-      o.push('<rect x="' + (colX + 0.5) + '" y="' + (gy0 + selRow * rh + 0.5) + '" width="' + (colW - 1) + '" height="' + (rh - 1) +
-        '" rx="4" fill="none" stroke-width="2.5" style="stroke:var(--ink)" pointer-events="none"/>');
+      o.push(heads(G, hy));
+      Q.forEach((q, r) => o.push(row(G, q, r, G.top + r * G.rh)));
+      const selY = G.top + G.selRow * G.rh;
+      o.push('<rect x="0.5" y="' + (selY + G.padY - 1.5) + '" width="' + (G.gx1 - 1) + '" height="' + (G.rh - 2 * G.padY + 3) +
+        '" rx="5" fill="none" stroke-width="1.25" style="stroke:var(--ink2)" pointer-events="none"/>');
+      o.push(crosshair(G, hy - 15, G.top + Q.length * G.rh, selY));
       o.push('</svg>');
-      box.innerHTML = o.join('');
-      geom = {cols};
+      $('grid').innerHTML = o.join('');
+      /* the pinned strip: heads, then the selected row */
+      const PH = 24 + G.rh;
+      $('pin').innerHTML = svgOpen(G, PH) + heads(G, 16) + row(G, Q[G.selRow], G.selRow, 22) + crosshair(G, 2, PH, 22) + '</svg>';
+      geom = G;
+      placePin();
     }
+    /* show the strip while the selected row sits under the bar */
+    function placePin() {
+      if (!geom) return;
+      const g = $('grid').getBoundingClientRect(), bar = document.querySelector('.xbar').getBoundingClientRect().bottom;
+      const rowBottom = g.top + geom.top + (geom.selRow + 1) * geom.rh - geom.padY;
+      const on = rowBottom < bar + 2;
+      $('pin').classList.toggle('on', on);
+      if (on) Object.assign($('pin').style, {top: bar + 'px', left: (g.left - 16) + 'px', width: (g.width + 32) + 'px'});
+    }
+    let pinTick = false;
+    addEventListener('scroll', () => { if (!pinTick) { pinTick = true; requestAnimationFrame(() => { pinTick = false; placePin(); }); } }, {passive: true});
 
     /* grid events: hover tip, click to select, arrows to move */
     const tip = $('tip');
@@ -564,7 +620,8 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       return t ? {c: t.getAttribute('data-c'), r: t.getAttribute('data-r')} : null;
     }
     const placeAt = c => c === 'us' ? null : geom.cols[+c].p.slug;
-    $('grid').addEventListener('mousemove', e => {
+    /* the pinned strip answers the mouse like the grid does */
+    ['grid', 'pin'].forEach(id => $(id).addEventListener('mousemove', e => {
       const t = target(e);
       if (!t || t.r === 'head' || t.c === 'label') { tip.style.display = 'none'; return; }
       const q = Q[+t.r], slug = placeAt(t.c), s = slug ? val(q, slug) : null, g = s ? gapOf(s.value, q.us.value) : null;
@@ -577,14 +634,16 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       if (x + w > innerWidth - 8) x = e.clientX - w - 14;
       if (y + h > innerHeight - 8) y = e.clientY - h - 14;
       tip.style.left = x + 'px'; tip.style.top = y + 'px';
-    });
-    $('grid').addEventListener('mouseleave', () => { tip.style.display = 'none'; });
-    $('grid').addEventListener('click', e => {
-      const t = target(e);
-      if (!t) return;
-      if (t.r === 'head') return select(cur.q, placeAt(t.c));
-      if (t.c === 'label') return select(Q[+t.r].id, cur.s);
-      select(Q[+t.r].id, placeAt(t.c));
+    }));
+    ['grid', 'pin'].forEach(id => {
+      $(id).addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+      $(id).addEventListener('click', e => {
+        const t = target(e);
+        if (!t) return;
+        if (t.r === 'head') return select(cur.q, placeAt(t.c));
+        if (t.c === 'label') return select(Q[+t.r].id, cur.s);
+        select(Q[+t.r].id, placeAt(t.c));
+      });
     });
     $('grid').addEventListener('keydown', e => {
       const k = e.key;
@@ -600,13 +659,13 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       select(Q[nr].id, c < 0 ? null : cols[c].p.slug, 'step');
     });
     let rw = 0;
-    addEventListener('resize', () => { const w = $('grid').clientWidth; if (w !== rw) { rw = w; drawGrid(); } });
+    addEventListener('resize', () => { const w = $('grid').clientWidth; if (w !== rw) { rw = w; drawGrid(); } else placePin(); });
 
     /* legend */
     function drawRamp() {
       const r = $('ramp');
       r.textContent = '';
-      r.className = shade === 'share' ? 'scale' : 'ramp';
+      r.className = 'scale';
       if (shade === 'share') {
         const bar = el('i', {'class': 'bar'});
         bar.style.background = 'linear-gradient(90deg,' + SCALE.filter((x, v) => v % 5 === 0).map((x, i) => x.fill + ' ' + i * 5 + '%').join(',') + ')';
@@ -614,12 +673,10 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
         ['0', '25', '50', '75', '100%'].forEach((t, i) => r.appendChild(el('span', {style: 'left:' + i * 25 + '%'}, t)));
         return;
       }
-      const sw = (c, m) => { const i = el('i'); i.style.background = 'color-mix(in srgb,var(' + c + ') ' + m + '%,var(--surface))'; return i; };
-      r.appendChild(el('span', {}, 'Below U.S.'));
-      [1, .6, .3].forEach(t => r.appendChild(sw('--below', Math.round(4 + t * 82))));
-      const z = sw('--below', 0); z.style.boxShadow = 'inset 0 0 0 1px var(--rule)'; r.appendChild(z);
-      [.3, .6, 1].forEach(t => r.appendChild(sw('--above', Math.round(4 + t * 82))));
-      r.appendChild(el('span', {}, 'Above U.S. · full colour at ±10 points on every row'));
+      const bar = el('i', {'class': 'bar'});
+      bar.style.background = 'linear-gradient(90deg,' + DIV[0].fill + ',' + DIV[SPAN * 2].fill + ',' + DIV[SPAN * 4].fill + ')';
+      r.appendChild(bar);
+      [['−' + SPAN + ' pts', 0], ['U.S.', 50], ['+' + SPAN + ' pts', 100]].forEach(([t, x]) => r.appendChild(el('span', {style: 'left:' + x + '%'}, t)));
     }
     document.querySelectorAll('[data-shade]').forEach(b => b.onclick = () => { shade = b.getAttribute('data-shade'); pressAll(); drawRamp(); render(); });
     document.querySelectorAll('[data-order]').forEach(b => b.onclick = () => { order = b.getAttribute('data-order'); pressAll(); render(); });
