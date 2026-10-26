@@ -98,6 +98,11 @@ main.app{max-width:none;padding:16px 24px 80px}
 #grid:focus{box-shadow:0 0 0 2px var(--acc),0 0 0 6px color-mix(in srgb,var(--acc) 20%,transparent)}
 #grid svg{display:block;width:100%;height:auto;user-select:none}
 #grid [data-c]{cursor:pointer}
+/* cell numbers sit back so the colour carries the grid; the selected row and
+   column, and the row and column under the pointer, come forward */
+#grid text.v,#pin text.v{opacity:.36;transition:opacity .12s ease}
+#grid text.v.on,#pin text.v.on{opacity:1}
+@media (prefers-reduced-motion:reduce){#grid text.v,#pin text.v{transition:none}}
 .legend{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;margin-top:9px;font:400 12px/1.4 var(--sans);color:var(--muted)}
 .scale{position:relative;width:300px;height:27px;font:400 11px/1 var(--sans);color:var(--muted)}
 .scale .bar{position:absolute;left:0;right:0;top:0;height:11px;border-radius:3px}
@@ -229,6 +234,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
   </div>
 </main>
 <div id="tip" role="tooltip"></div>
+<style id="hov"></style>
 
 <script src="../../assets/report.js"></script>
 <script src="kit.js"></script>
@@ -578,7 +584,8 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
         const st = val(q, c.p.slug), f = fillFor(q, st.value, st);
         o.push('<rect data-c="' + i + '" data-r="' + r + '" x="' + (G.xs[i] + G.padX) + '" y="' + (y + G.padY) + '" width="' + (G.cw - 2 * G.padX) + '" height="' + h +
           '" rx="3" style="fill:' + (f.hatch ? 'url(#' + G.hid + ')' : f.fill) + '"/>');
-        if (G.showNum) o.push('<text x="' + (G.xs[i] + G.cw / 2) + '" y="' + ty + '" text-anchor="middle" font-size="' + G.fs + '" pointer-events="none" style="fill:' +
+        if (G.showNum) o.push('<text class="v' + (r === G.selRow || i === G.selCol ? ' on' : '') + '" data-r="' + r + '" data-c="' + i +
+          '" x="' + (G.xs[i] + G.cw / 2) + '" y="' + ty + '" text-anchor="middle" font-size="' + G.fs + '" pointer-events="none" style="fill:' +
           f.ink + '">' + shown(st.value) + '</text>');
       });
       return o.join('');
@@ -636,9 +643,16 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       return t ? {c: t.getAttribute('data-c'), r: t.getAttribute('data-r')} : null;
     }
     const placeAt = c => c === 'us' ? null : geom.cols[+c].p.slug;
+    /* bring forward the numbers in the hovered row and column */
+    function hover(t) {
+      const sel = !t ? [] : t.r === 'head' ? ['[data-c="' + t.c + '"]'] : t.c === 'label' || t.c === 'us' ? ['[data-r="' + t.r + '"]']
+        : ['[data-r="' + t.r + '"]', '[data-c="' + t.c + '"]'];
+      $('hov').textContent = sel.length ? sel.map(x => '#grid text.v' + x + ',#pin text.v' + x).join(',') + '{opacity:1}' : '';
+    }
     /* the pinned strip answers the mouse like the grid does */
     ['grid', 'pin'].forEach(id => $(id).addEventListener('mousemove', e => {
       const t = target(e);
+      hover(t);
       if (!t || t.r === 'head' || t.c === 'label') { tip.style.display = 'none'; return; }
       const q = Q[+t.r], slug = placeAt(t.c), s = slug ? val(q, slug) : null, g = s ? gapOf(s.value, q.us.value) : null;
       const v = s ? s.value : q.us.value, n = s ? s.n : q.us.n;
@@ -654,7 +668,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       tip.style.left = x + 'px'; tip.style.top = y + 'px';
     }));
     ['grid', 'pin'].forEach(id => {
-      $(id).addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+      $(id).addEventListener('mouseleave', () => { tip.style.display = 'none'; hover(null); });
       $(id).addEventListener('click', e => {
         const t = target(e);
         if (!t) return;
