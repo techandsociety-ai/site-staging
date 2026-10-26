@@ -528,18 +528,18 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       return '<svg viewBox="0 0 ' + G.W + ' ' + H + '" width="' + G.W + '" height="' + H +
         '" font-family=\'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif\' style="font-variant-numeric:tabular-nums">';
     }
-    /* column heads, baseline at hy */
+    /* column heads, baseline at hy. The selected column's head is a filled
+       tab, the U.S. included, as the selected row's label is filled */
     function heads(G, hy) {
       const o = [];
-      o.push('<rect data-c="us" data-r="head" x="' + G.LAB + '" y="' + (hy - 13) + '" width="' + G.USW + '" height="18" fill="transparent"/>');
-      o.push('<text x="' + (G.LAB + G.USW / 2) + '" y="' + hy + '" text-anchor="middle" font-size="11.5" font-weight="' + (cur.s ? 600 : 800) +
-        '" pointer-events="none" style="fill:' + (cur.s ? 'var(--ink2)' : 'var(--acct)') + '">U.S.</text>');
-      G.cols.forEach((c, i) => {
-        const on = i === G.selCol;
-        o.push('<rect data-c="' + i + '" data-r="head" x="' + G.xs[i] + '" y="' + (hy - 13) + '" width="' + G.cw + '" height="18" fill="transparent"/>');
-        o.push('<text x="' + (G.xs[i] + G.cw / 2) + '" y="' + hy + '" text-anchor="middle" font-size="' + (G.cw >= 22 ? 11 : 10) + '" font-weight="' + (on ? 800 : 500) +
-          '" pointer-events="none" style="fill:' + (on ? 'var(--acct)' : 'var(--ink2)') + '">' + c.p.abbr + '</text>');
-      });
+      const head = (c, x, w, label, size, on) => {
+        o.push('<rect data-c="' + c + '" data-r="head" x="' + (x + 1) + '" y="' + (hy - 13) + '" width="' + (w - 2) + '" height="18" rx="4" style="fill:' +
+          (on ? 'var(--acc)' : 'transparent') + '"/>');
+        o.push('<text x="' + (x + w / 2) + '" y="' + hy + '" text-anchor="middle" font-size="' + size + '" font-weight="' + (on ? 750 : c === 'us' ? 650 : 500) +
+          '" pointer-events="none" style="fill:' + (on ? '#fff' : c === 'us' ? 'var(--ink)' : 'var(--ink2)') + '">' + label + '</text>');
+      };
+      head('us', G.LAB, G.USW, 'U.S.', 11.5, !cur.s);
+      G.cols.forEach((c, i) => head(i, G.xs[i], G.cw, c.p.abbr, G.cw >= 22 ? 11 : 10, i === G.selCol));
       return o.join('');
     }
     /* one question's row, top edge at y */
