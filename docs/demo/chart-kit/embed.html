@@ -19,8 +19,8 @@ function show(spec) {
     parent.postMessage({chip50: 'height', chart: id, height: h}, '*');
   }});
 }
-/* view=questions charts one place across every question in the set */
-if (qs.get('view') === 'questions') CHIP50Kit.loadSet().then(function (s) { show(CHIP50Kit.across(s.questions, slug, s.index)); });
+/* view=questions charts one place across every question in the set q names */
+if (qs.get('view') === 'questions') CHIP50Kit.loadSet(qs.get('q')).then(function (s) { show(CHIP50Kit.across(s.questions, slug, s.index)); });
 else CHIP50Kit.load(id).then(function (q) { show(CHIP50Kit.view(q, v, slug)); });
 </script>
 </body>

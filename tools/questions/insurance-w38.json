@@ -1,0 +1,120 @@
+{
+  "set": "insurance-w38",
+  "site": "techandsociety.ai",
+  "by": {
+    "column": "age_cat_4",
+    "name": "age",
+    "order": [
+      "18 to 24",
+      "25 to 44",
+      "45 to 64",
+      "65 and over"
+    ]
+  },
+  "wave": "Wave 38",
+  "fielded": "May 14 to July 5, 2026",
+  "weight": {
+    "us": "weight: the survey team's demographic weight",
+    "state": "weight_state: demographics, calibrated within each state"
+  },
+  "suppression": "Groups under 10 respondents are withheld; none were",
+  "moe": "Not yet served by the MCP (#273). States rest on {nLo} to {nHi} insured respondents each, and an age group within a state on as few as {cellMin}, so gaps of a few points may be noise.",
+  "pulled": "Oct 25, 2026",
+  "set_text": {
+    "title": "Every kind of health insurance in every state",
+    "subtitle": "Share of insured adults who say they have each kind of coverage (they could pick more than one)",
+    "answer": "say they have {phrase}",
+    "noun": "kinds of coverage",
+    "base": "insured adults",
+    "note": "Test set for the matrix, not for publication. These shares don't square with Census counts: Medicare reads 15% among insured 18-to-44-year-olds, which suggests respondents mixing up Medicare and Medicaid. Check with the survey team before using any of it.",
+    "across": {
+      "us_title": "What health insurance insured U.S. adults have",
+      "state_title": "{place} across {count} kinds of coverage",
+      "subtitle": "Share of insured {place} adults who say they have each, spring 2026"
+    }
+  },
+  "template": {
+    "topic": "Health insurance",
+    "question": "Do you have {phrase}?",
+    "dek": "{usPct} of insured U.S. adults say they have {phrase}.",
+    "wording": "Which of the following types of health insurance do you currently have? (Please select all that apply) — {option} [Asked only of respondents with health insurance]",
+    "provenance": [
+      "generate_crosstab(platform=\"{column}\", demographic=\"age_cat_4\", data_source=\"w38\")",
+      "generate_crosstab_multi(variable=\"{column}\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w38\"); U.S. and state totals summed from these cells"
+    ],
+    "text": {
+      "age": {
+        "us": {
+          "title": "Who has {phrase}, by age",
+          "subtitle": "Share of insured U.S. adults who say they have {phrase}, by age, spring 2026",
+          "source": "CHIP50 survey, {wave}, {fielded}. {usN} U.S. adults with health insurance, weighted to the adult population."
+        },
+        "state": {
+          "title": "{value} of insured {state} adults have {phrase}",
+          "subtitle": "Share of insured adults who say they have {phrase}, by age, spring 2026. Ticks mark the U.S.",
+          "source": "CHIP50 survey, {wave}, {fielded}. {n} insured adults in {state}, weighted within the state; U.S. ticks from all {usN}. No margins of error yet."
+        }
+      },
+      "states": {
+        "title": "Insured adults with {phrase}: {lo} to {hi} across states",
+        "subtitle": "Share of insured adults who say they have {phrase}, by state, spring 2026. U.S.: {us}",
+        "source": "CHIP50 survey, {wave}, {fielded}. {usN} insured adults, {nLo} to {nHi} per state, weighted within each state."
+      },
+      "radio": {
+        "us": "{usWords} of American adults with health insurance say they have {phrase}, according to a CHIP50 survey this spring.",
+        "state": "In {state}, {words} of adults with health insurance say they have {phrase}, compared with {usWords} nationally. That's from the CHIP50 survey, which reached {n} insured adults in {state} this spring."
+      }
+    }
+  },
+  "questions": [
+    {
+      "id": "ins-medicare-w38",
+      "column": "insurance_type_5",
+      "label": "Medicare",
+      "phrase": "Medicare",
+      "option": "Medicare"
+    },
+    {
+      "id": "ins-job-w38",
+      "column": "insurance_type_1",
+      "label": "Job-based",
+      "phrase": "job-based insurance",
+      "option": "Insurance from my job or my spouse's, partner's, or parent's job"
+    },
+    {
+      "id": "ins-medicaid-w38",
+      "column": "insurance_type_6",
+      "label": "Medicaid",
+      "phrase": "Medicaid",
+      "option": "Medicaid"
+    },
+    {
+      "id": "ins-marketplace-w38",
+      "column": "insurance_type_2",
+      "label": "Marketplace",
+      "phrase": "Marketplace coverage",
+      "option": "Insurance through healthcare.gov or my state's health insurance Marketplace"
+    },
+    {
+      "id": "ins-other-w38",
+      "column": "insurance_type_7",
+      "label": "Other",
+      "phrase": "some other type of insurance",
+      "option": "Some other type of health insurance"
+    },
+    {
+      "id": "ins-military-w38",
+      "column": "insurance_type_4",
+      "label": "Military or VA",
+      "phrase": "military or veteran benefits",
+      "option": "Military or veteran health benefits"
+    },
+    {
+      "id": "ins-retiree-w38",
+      "column": "insurance_type_3",
+      "label": "Retiree",
+      "phrase": "retiree health benefits",
+      "option": "Retiree health benefits from a prior job, my spouse's job, or my partner's job"
+    }
+  ]
+}

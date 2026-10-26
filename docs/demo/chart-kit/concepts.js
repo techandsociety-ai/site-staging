@@ -22,7 +22,7 @@
     if (on) a.setAttribute('aria-current', 'page');
     a.addEventListener('click', function (e) {
       var u = new URLSearchParams(location.search), keep = new URLSearchParams();
-      ['q', 'state', 'theme'].forEach(function (k) { if (u.get(k)) keep.set(k, u.get(k)); });
+      ['set', 'q', 'state', 'theme'].forEach(function (k) { if (u.get(k)) keep.set(k, u.get(k)); });
       a.href = p[0] + (String(keep) ? '?' + keep : '');
     });
     nav.appendChild(a);

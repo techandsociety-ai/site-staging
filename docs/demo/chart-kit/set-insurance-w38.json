@@ -1,0 +1,68 @@
+{
+ "set": "insurance-w38",
+ "wave": "Wave 38",
+ "text": {
+  "title": "Every kind of health insurance in every state",
+  "subtitle": "Share of insured adults who say they have each kind of coverage (they could pick more than one)",
+  "answer": "say they have {phrase}",
+  "noun": "kinds of coverage",
+  "base": "insured adults",
+  "note": "Test set for the matrix, not for publication. These shares don't square with Census counts: Medicare reads 15% among insured 18-to-44-year-olds, which suggests respondents mixing up Medicare and Medicaid. Check with the survey team before using any of it.",
+  "across": {
+   "us_title": "What health insurance insured U.S. adults have",
+   "state_title": "{place} across {count} kinds of coverage",
+   "subtitle": "Share of insured {place} adults who say they have each, spring 2026"
+  }
+ },
+ "questions": [
+  {
+   "id": "ins-medicare-w38",
+   "label": "Medicare",
+   "topic": "Health insurance",
+   "question": "Do you have Medicare?",
+   "us": 33.93
+  },
+  {
+   "id": "ins-job-w38",
+   "label": "Job-based",
+   "topic": "Health insurance",
+   "question": "Do you have job-based insurance?",
+   "us": 32.05
+  },
+  {
+   "id": "ins-medicaid-w38",
+   "label": "Medicaid",
+   "topic": "Health insurance",
+   "question": "Do you have Medicaid?",
+   "us": 29.44
+  },
+  {
+   "id": "ins-marketplace-w38",
+   "label": "Marketplace",
+   "topic": "Health insurance",
+   "question": "Do you have Marketplace coverage?",
+   "us": 11.66
+  },
+  {
+   "id": "ins-other-w38",
+   "label": "Other",
+   "topic": "Health insurance",
+   "question": "Do you have some other type of insurance?",
+   "us": 4.02
+  },
+  {
+   "id": "ins-military-w38",
+   "label": "Military or VA",
+   "topic": "Health insurance",
+   "question": "Do you have military or veteran benefits?",
+   "us": 3.88
+  },
+  {
+   "id": "ins-retiree-w38",
+   "label": "Retiree",
+   "topic": "Health insurance",
+   "question": "Do you have retiree health benefits?",
+   "us": 2.59
+  }
+ ]
+}

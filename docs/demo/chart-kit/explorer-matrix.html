@@ -10,8 +10,10 @@
 <link rel="stylesheet" href="../../assets/report.css"/>
 <style>
 /* An app page, not a report: full width, sans, dense, tabular figures.
-   Gap colours are orange (below the U.S.) and purple (above): a
-   colourblind-safe diverging pair that doesn't read as red/blue partisanship. */
+   Cells are coloured by share on one 0-100% blue scale for every row (drawn
+   in the script, per theme). The "vs U.S." option uses orange (below) and
+   purple (above): a colourblind-safe diverging pair that doesn't read as
+   red/blue partisanship. */
 :root{--below:#d95f02;--above:#6a51a3;--below-ink:#a84800;--above-ink:#55408f;--on-below:#14140f;--on-above:#ffffff}
 @media (prefers-color-scheme:dark){:root:where(:not([data-theme=light])){
   --below:#f08a3c;--above:#a28ee0;--below-ink:#f5a465;--above-ink:#bcaef0;--on-below:#14140f;--on-above:#14140f}}
@@ -27,6 +29,9 @@ body{font:400 14px/1.45 var(--sans);font-variant-numeric:tabular-nums}
 .brand b{font:650 14px/1 var(--sans);color:var(--ink);display:flex;align-items:center;gap:7px}
 .brand b::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--acc)}
 .brand span{font:500 11.5px/1 var(--sans);color:var(--muted);padding-left:16px}
+.setpick{display:flex;flex-direction:column;gap:3px;flex:none}
+.setpick label{font:650 10px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.setpick select{font:600 13px/1.2 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:5px 8px}
 .field{position:relative;width:320px;flex:none}
 .field label{position:absolute;left:12px;top:6px;font:650 10px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);pointer-events:none}
 .field input{width:100%;font:600 15px/1.2 var(--sans);color:var(--ink);background:var(--surface);
@@ -97,6 +102,12 @@ main.app{max-width:none;padding:16px 24px 80px}
 .legend{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;margin-top:9px;font:400 12px/1.4 var(--sans);color:var(--muted)}
 .ramp{display:flex;align-items:center;gap:5px}
 .ramp i{display:block;width:16px;height:11px;border-radius:2px}
+.scale{position:relative;width:300px;height:27px;font:400 11px/1 var(--sans);color:var(--muted)}
+.scale .bar{position:absolute;left:0;right:0;top:0;height:11px;border-radius:3px}
+.scale span{position:absolute;top:15px;transform:translateX(-50%)}
+.scale span:first-of-type{transform:none}
+.scale span:last-of-type{transform:translateX(-100%)}
+
 #tip{position:fixed;z-index:130;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:8px;padding:8px 10px;
   font:400 12.5px/1.45 var(--sans);box-shadow:0 8px 24px rgba(0,0,0,.25);display:none;max-width:300px}
 #tip b{font-weight:650}
@@ -107,7 +118,8 @@ main.app{max-width:none;padding:16px 24px 80px}
 .dhead h2{font:700 20px/1.2 var(--sans);letter-spacing:-.015em;margin:0}
 .dhead h2::before{display:none}
 .dhead p{margin:0;font:400 12.5px/1.4 var(--sans);color:var(--muted)}
-.detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.05fr);gap:16px;align-items:start}
+.detail{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
+@media (max-width:1400px){.detail{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .stack{display:flex;flex-direction:column;gap:16px;min-width:0}
 .chart-el svg{display:block;width:100%;height:auto}
 .click [data-key]{cursor:pointer}
@@ -128,22 +140,12 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
 .radio{margin:12px 0 6px;padding:10px 12px;background:var(--soft);border-radius:8px;font:400 13.5px/1.5 var(--sans);color:var(--ink)}
 .pos{font:400 12.5px/1.5 var(--sans);color:var(--muted);font-style:italic;margin:10px 0 0}
 
-/* wide screens: the grid stays put on the left while the details scroll on
-   the right, so the crosshair is always in view */
-@media (min-width:1800px){
-  main.app{display:grid;grid-template-columns:minmax(0,1fr) clamp(540px,29vw,780px);gap:18px;align-items:start}
-  .gridcol{position:sticky;top:80px;display:flex;flex-direction:column;gap:16px}
-  .detail{display:flex;flex-direction:column;gap:16px;align-items:stretch}
-  .detail>.stack{display:contents}
-  #pBy{order:1} #pAcross{order:2} #pStates{order:3} #pNotes{order:4} #pRadio{order:5}
-  .duo{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:16px;align-items:start}
-  .dhead{margin:0 2px 2px}
-}
 </style>
 </head>
 <body>
 <header class="xbar">
   <a class="brand" href="index.html"><b>CHIP50</b><span>Matrix explorer</span></a>
+  <div class="setpick"><label for="setSel">Questions</label><select id="setSel"></select></div>
   <div class="field" id="fq">
     <label for="qi">Question</label>
     <input id="qi" role="combobox" aria-expanded="false" aria-controls="ql" aria-autocomplete="list" autocomplete="off" spellcheck="false">
@@ -184,11 +186,10 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
         <h2 id="gh">Every platform in every state</h2>
         <p id="gsub"></p>
       </div>
-      <div class="ctl">Shade
-        <div class="seg" role="group" aria-label="Shade cells by">
-          <button type="button" data-shade="row" aria-pressed="true" title="Gap from the U.S., full shade at each row's own spread">Gap · row scale</button>
-          <button type="button" data-shade="fixed" aria-pressed="false" title="Gap from the U.S., full shade at ±10 points on every row">Gap · ±10</button>
-          <button type="button" data-shade="level" aria-pressed="false" title="Each row's lowest state to its highest">Level</button>
+      <div class="ctl">Colour
+        <div class="seg" role="group" aria-label="Colour cells by">
+          <button type="button" data-shade="share" aria-pressed="true" title="Share of the base, 0 to 100% on every row">Share</button>
+          <button type="button" data-shade="gap" aria-pressed="false" title="Points above or below the U.S., full colour at ±10 on every row">vs U.S.</button>
         </div>
       </div>
       <div class="ctl">Columns
@@ -201,8 +202,8 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     </div>
     <div id="grid" tabindex="0" role="application" aria-label="Question by place grid. Arrow keys move the selection; g focuses it."></div>
     <div class="legend">
-      <div class="ramp" id="ramp"></div>
-      <span id="noise">No margins of error yet (#273): 390 to 1,879 adults per state, so gaps of a few points may be noise.</span>
+      <div id="ramp"></div>
+      <span id="noise"></span>
     </div>
   </section>
   </div>
@@ -210,12 +211,14 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
   <div class="detailcol">
     <div class="dhead"><h2 id="dh"></h2><p id="dp"></p></div>
     <div class="detail">
-      <div class="stack" id="stackA">
+      <div class="stack">
         <section class="panel" id="pBy"></section>
-        <section class="panel" id="pNotes"></section>
         <section class="panel" id="pRadio"></section>
       </div>
-      <div class="stack"><section class="panel click" id="pAcross"></section></div>
+      <div class="stack">
+        <section class="panel click" id="pAcross"></section>
+        <section class="panel" id="pNotes"></section>
+      </div>
       <div class="stack"><section class="panel click" id="pStates"></section></div>
     </div>
   </div>
@@ -238,7 +241,49 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     ['South', 'DE DC FL GA MD NC SC VA WV AL KY MS TN AR LA OK TX'],
     ['West', 'AZ CO ID MT NV NM UT WY AK CA HI OR WA']
   ].map(([name, s]) => ({name, abbrs: s.split(' ')}));
-  const FIXED = 10;   /* the ±10 option saturates at 10 points */
+  const FIXED = 10;   /* the vs U.S. option saturates at 10 points */
+  const SETS = [['platforms-w38', 'Social media platforms'], ['insurance-w38', 'Health insurance']];
+  const setName = SETS.some(x => x[0] === params.get('set')) ? params.get('set') : K.DEFAULT_SET;
+
+  /* the share scale: one blue, light to dark (dark to light in dark mode),
+     the same 0-100% on every row so the big platforms read as big
+     everywhere. Stops are the kit's blue ramp, interpolated in OKLab so equal
+     steps look equal; each cell's ink is whichever of white or near-black
+     contrasts more with its fill. */
+  const RAMP = {light: ['#f2f6fb', '#9ec5f4', '#3987e5', '#184f95', '#0d366b'],
+    dark: ['#1c2330', '#184f95', '#3987e5', '#86b6ef', '#cde2fb']};
+  const lin = c => (c /= 255) <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  const gam = c => 255 * (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055);
+  const rgbOf = hex => { const n = parseInt(hex.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
+  function toLab(hex) {
+    const [r, g, b] = rgbOf(hex).map(lin);
+    const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b),
+      m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b),
+      q = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+    return [0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * q, 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * q,
+      0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * q];
+  }
+  function toHex([L, a, b]) {
+    const l = Math.pow(L + 0.3963377774 * a + 0.2158037573 * b, 3), m = Math.pow(L - 0.1055613458 * a - 0.0638541728 * b, 3),
+      q = Math.pow(L - 0.0894841775 * a - 1.2914855480 * b, 3);
+    return '#' + [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * q, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * q,
+      -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * q]
+      .map(c => Math.round(gam(Math.max(0, Math.min(1, c)))).toString(16).padStart(2, '0')).join('');
+  }
+  const lum = hex => { const [r, g, b] = rgbOf(hex).map(lin); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+  const contrast = (x, y) => { const a = lum(x), b = lum(y); return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05); };
+  let SCALE = [];
+  function buildScale() {
+    const surf = getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() || '#ffffff';
+    const stops = RAMP[/^#[0-9a-f]{6}$/i.test(surf) && lum(surf) < 0.2 ? 'dark' : 'light'].map(toLab), seg = 100 / (stops.length - 1);
+    SCALE = [];
+    for (let v = 0; v <= 100; v++) {
+      const i = Math.min(stops.length - 2, Math.floor(v / seg)), t = (v - i * seg) / seg;
+      const fill = toHex(stops[i].map((c, k) => c + (stops[i + 1][k] - c) * t));
+      SCALE.push({fill, ink: contrast(fill, '#ffffff') > contrast(fill, '#14140f') ? '#ffffff' : '#14140f'});
+    }
+  }
+  buildScale();
   const el = (tag, attrs, text) => {
     const e = document.createElement(tag);
     for (const a in attrs || {}) e.setAttribute(a, attrs[a]);
@@ -261,7 +306,17 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       (ref != null ? '<rect x="' + (x(ref) - 0.7) + '" y="0" width="1.4" height="12" style="fill:var(--ink)"/>' : '') + '</svg>';
   }
 
-  K.loadSet().then(({index, questions: Q}) => {
+  K.loadSet(setName).then(({index, questions: Q}) => {
+    const TX = index.text || {}, BASE = TX.base || 'adults';
+    const sel = $('setSel');
+    SETS.forEach(([v, l]) => { const o = el('option', {value: v}, l); if (v === setName) o.selected = true; sel.appendChild(o); });
+    /* another set has other questions, so the switch keeps only the place */
+    sel.onchange = () => {
+      const u = new URL(location.href);
+      u.searchParams.set('set', sel.value); u.searchParams.delete('q');
+      location.href = u.href;
+    };
+    K.flag($('gridcol'), index);
     const qById = new Map(Q.map(q => [q.id, q]));
     /* q.states[] is alphabetical by name and in the same order for every question */
     const places = Q[0].states.map(s => ({slug: s.slug, name: s.name, label: s.label, abbr: s.abbr, n: s.n}));
@@ -269,11 +324,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     const pBySlug = new Map(places.map(p => [p.slug, p])), pByAbbr = new Map(places.map(p => [p.abbr, p]));
     const val = (q, slug) => slug ? q.states[sIndex.get(slug)] : null;
     const STEPS = [null].concat(places.map(p => p.slug));   /* h/l order: U.S., then A to Z */
-    /* each row's spread: full shade at the 90th percentile of its states' gaps */
-    const rowScale = new Map(Q.map(q => {
-      const g = q.states.map(s => Math.abs(s.value - q.us.value)).sort((a, b) => a - b);
-      return [q.id, Math.max(0.5, g[Math.floor(0.9 * (g.length - 1))])];
-    }));
+    const ns = places.map(p => p.n), nLo = num(Math.min.apply(null, ns)), nHi = num(Math.max.apply(null, ns));
 
     const cur = {q: Q[0].id, s: null};
     function fromURL() {
@@ -282,8 +333,8 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       cur.s = pBySlug.has(u.get('state')) ? u.get('state') : null;
     }
     fromURL();
-    /* view modes can be linked too: ?shade=fixed|level, ?order=rank */
-    let shade = ['fixed', 'level'].indexOf(params.get('shade')) >= 0 ? params.get('shade') : 'row';
+    /* view modes can be linked too: ?shade=gap, ?order=rank */
+    let shade = params.get('shade') === 'gap' ? 'gap' : 'share';
     let order = params.get('order') === 'rank' ? 'rank' : 'region';
     const pressAll = () => {
       document.querySelectorAll('[data-shade]').forEach(x => x.setAttribute('aria-pressed', String(x.getAttribute('data-shade') === shade)));
@@ -392,7 +443,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
         $('ph').innerHTML = '<b>' + esc(q.label) + '</b> in 50 states and D.C. · U.S. ' + pct(q.us.value) + ' · tick = U.S.<span class="sp"></span>' +
           '<span class="seg" id="pSort"><button type="button" data-p="az" aria-pressed="' + (pSort === 'az') + '">A to Z</button>' +
           '<button type="button" data-p="share" aria-pressed="' + (pSort === 'share') + '">By share</button></span>';
-        $('pcols').innerHTML = '<span title="Rank on this question">#</span><span>Place</span><span>Share</span><span class="r">%</span><span class="r">vs U.S.</span><span class="r">Adults</span>';
+        $('pcols').innerHTML = '<span title="Rank on this question">#</span><span>Place</span><span>Share</span><span class="r">%</span><span class="r">vs U.S.</span><span class="r">n</span>';
       },
       current: () => cur.s || '', text: () => cur.s ? pBySlug.get(cur.s).name : 'United States', pick: id => select(cur.q, id || null)
     });
@@ -429,28 +480,25 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       return out;
     }
     /* fill for one cell, and which ink reads on it */
-    function fillFor(q, c, rowMin, rowMax) {
-      if (shade === 'level') {
-        const t = rowMax > rowMin ? (c.value - rowMin) / (rowMax - rowMin) : 0.5;
-        return {fill: 'color-mix(in srgb,var(--acc) ' + Math.round(6 + t * 80) + '%,var(--surface))', ink: t > 0.62 ? '#fff' : 'var(--ink)'};
-      }
-      const g = c.value - q.us.value, sat = shade === 'fixed' ? FIXED : rowScale.get(q.id);
-      const t = Math.min(1, Math.abs(g) / sat), m = Math.round(4 + t * 82), up = g >= 0;
+    function fillFor(q, v) {
+      if (shade === 'share') return SCALE[Math.max(0, Math.min(100, Math.round(v)))];
+      const g = v - q.us.value, t = Math.min(1, Math.abs(g) / FIXED), m = Math.round(4 + t * 82), up = g >= 0;
       return {fill: 'color-mix(in srgb,var(' + (up ? '--above' : '--below') + ') ' + m + '%,var(--surface))',
         ink: t > 0.62 ? 'var(' + (up ? '--on-above' : '--on-below') + ')' : 'var(--ink)'};
     }
     let geom = null;
     function drawGrid() {
-      const box = $('grid'), W = Math.max(860, box.clientWidth), cols = columns();
-      const nGaps = order === 'region' ? REGIONS.length - 1 : 0, scaleCol = shade === 'row';
-      const LAB = 150, USW = 46, GAP0 = 12, RG = 7, SCW = scaleCol ? 42 : 0, top = 40;
-      const cw = (W - LAB - USW - GAP0 - nGaps * RG - SCW) / cols.length;
-      const rh = cw >= 28 ? 26 : cw >= 22 ? 24 : 22, H = top + Q.length * rh + 4;
+      const box = $('grid'), W = Math.max(900, box.clientWidth), cols = columns();
+      const nGaps = order === 'region' ? REGIONS.length - 1 : 0;
+      const LAB = 150, GAP0 = 14, RG = 8, top = 40;
+      /* the U.S. column is a cell and a third wide; rows grow with the cells */
+      const cw = (W - LAB - GAP0 - nGaps * RG) / (cols.length + 1.35), USW = cw * 1.35;
+      const rh = Math.max(24, Math.min(34, Math.round(cw * 0.72))), H = top + Q.length * rh + 4;
       const xs = [];
       let x = LAB + USW + GAP0;
       cols.forEach((c, i) => { if (c.first && i > 0 && order === 'region') x += RG; xs.push(x); x += cw; });
       const gx1 = xs[xs.length - 1] + cw;
-      const fs = cw >= 28 ? 12 : 11, showNum = cw >= 18, pad = 1, dec = cw >= 27;
+      const fs = cw >= 34 ? 13 : cw >= 27 ? 12 : cw >= 22 ? 11 : 10, showNum = cw >= 18, pad = 1;
       const selRow = Q.findIndex(q => q.id === cur.q), selCol = cur.s ? cols.findIndex(c => c.p.slug === cur.s) : -1;
       const o = ['<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" font-family=\'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif\' style="font-variant-numeric:tabular-nums">'];
       if (order === 'region') {
@@ -470,7 +518,6 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       o.push('<rect data-c="us" data-r="head" x="' + LAB + '" y="' + (hy - 13) + '" width="' + USW + '" height="18" fill="transparent"/>');
       o.push('<text x="' + (LAB + USW / 2) + '" y="' + hy + '" text-anchor="middle" font-size="11.5" font-weight="' + (cur.s ? 600 : 800) +
         '" pointer-events="none" style="fill:' + (cur.s ? 'var(--ink2)' : 'var(--acct)') + '">U.S.</text>');
-      if (scaleCol) o.push('<text x="' + (gx1 + SCW - 2) + '" y="' + hy + '" text-anchor="end" font-size="10.5" font-weight="600" style="fill:var(--muted)">FULL ±</text>');
       cols.forEach((c, i) => {
         const on = i === selCol;
         o.push('<rect data-c="' + i + '" data-r="head" x="' + xs[i] + '" y="' + (hy - 13) + '" width="' + cw + '" height="18" fill="transparent"/>');
@@ -479,23 +526,22 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       });
       Q.forEach((q, r) => {
         const y = top + r * rh, on = r === selRow;
-        const vals = q.states.map(s => s.value), mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals);
         o.push('<rect data-c="label" data-r="' + r + '" x="0" y="' + y + '" width="' + (LAB - 6) + '" height="' + rh + '" rx="5" style="fill:' + (on ? 'var(--soft)' : 'transparent') + '"/>');
         if (on) o.push('<rect x="0" y="' + (y + 3) + '" width="3" height="' + (rh - 6) + '" rx="1.5" style="fill:var(--acc)" pointer-events="none"/>');
         o.push('<text x="10" y="' + (y + rh / 2 + 4.5) + '" font-size="13" font-weight="' + (on ? 700 : 500) + '" pointer-events="none" style="fill:' +
           (on ? 'var(--ink)' : 'var(--ink2)') + '">' + esc(q.label) + '</text>');
-        o.push('<rect data-c="us" data-r="' + r + '" x="' + (LAB + pad) + '" y="' + (y + pad) + '" width="' + (USW - 2 * pad) + '" height="' + (rh - 2 * pad) + '" rx="3" style="fill:var(--rule2)"/>');
-        o.push('<text x="' + (LAB + USW / 2) + '" y="' + (y + rh / 2 + 4) + '" text-anchor="middle" font-size="' + fs + '" font-weight="750" pointer-events="none" style="fill:var(--ink)">' +
+        /* the U.S. cell wears the share colour too; in vs U.S. mode it is the zero */
+        const fu = shade === 'share' ? fillFor(q, q.us.value) : {fill: 'var(--rule2)', ink: 'var(--ink)'};
+        o.push('<rect data-c="us" data-r="' + r + '" x="' + (LAB + pad) + '" y="' + (y + pad) + '" width="' + (USW - 2 * pad) + '" height="' + (rh - 2 * pad) + '" rx="3" style="fill:' + fu.fill + '"/>');
+        o.push('<text x="' + (LAB + USW / 2) + '" y="' + (y + rh / 2 + 4) + '" text-anchor="middle" font-size="' + fs + '" font-weight="750" pointer-events="none" style="fill:' + fu.ink + '">' +
           shown(q.us.value) + '</text>');
         cols.forEach((c, i) => {
-          const s = val(q, c.p.slug), f = fillFor(q, s, mn, mx);
+          const s = val(q, c.p.slug), f = fillFor(q, s.value);
           o.push('<rect data-c="' + i + '" data-r="' + r + '" x="' + (xs[i] + pad) + '" y="' + (y + pad) + '" width="' + (cw - 2 * pad) + '" height="' + (rh - 2 * pad) +
             '" rx="3" style="fill:' + f.fill + '"/>');
           if (showNum) o.push('<text x="' + (xs[i] + cw / 2) + '" y="' + (y + rh / 2 + 4) + '" text-anchor="middle" font-size="' + fs + '" pointer-events="none" style="fill:' +
-            f.ink + '">' + (dec || s.value >= 9.95 ? shown(s.value) : Math.round(s.value)) + '</text>');
+            f.ink + '">' + shown(s.value) + '</text>');
         });
-        if (scaleCol) o.push('<text x="' + (gx1 + SCW - 2) + '" y="' + (y + rh / 2 + 4) + '" text-anchor="end" font-size="11" pointer-events="none" style="fill:var(--muted)">' +
-          rowScale.get(q.id).toFixed(1) + '</text>');
       });
       /* crosshair: the selected row and column outlined, their meeting cell heavier */
       const gx0 = LAB, gy0 = top, gy1 = top + Q.length * rh;
@@ -524,7 +570,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       const q = Q[+t.r], slug = placeAt(t.c), s = slug ? val(q, slug) : null, g = s ? gapOf(s.value, q.us.value) : null;
       tip.innerHTML = '<b>' + esc(s ? s.name : 'United States') + '</b> · ' + esc(q.label) + '<br>' +
         '<b>' + pct(s ? s.value : q.us.value) + '</b>' + (s ? ' <span class="t">U.S. ' + pct(q.us.value) + ', ' + signed(g) + ' pts</span>' : '') +
-        '<br><span class="t">' + num(s ? s.n : q.us.n) + ' adults answered</span>';
+        '<br><span class="t">' + num(s ? s.n : q.us.n) + ' ' + BASE + ' answered</span>';
       tip.style.display = 'block';
       const w = tip.offsetWidth, h = tip.offsetHeight;
       let x = e.clientX + 14, y = e.clientY + 16;
@@ -560,27 +606,28 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     function drawRamp() {
       const r = $('ramp');
       r.textContent = '';
-      const sw = (c, m) => { const i = el('i'); i.style.background = 'color-mix(in srgb,var(' + c + ') ' + m + '%,var(--surface))'; return i; };
-      if (shade === 'level') {
-        r.appendChild(el('span', {}, 'Each row from its lowest state'));
-        [0, .25, .5, .75, 1].forEach(t => r.appendChild(sw('--acc', Math.round(6 + t * 80))));
-        r.appendChild(el('span', {}, 'to its highest'));
+      r.className = shade === 'share' ? 'scale' : 'ramp';
+      if (shade === 'share') {
+        const bar = el('i', {'class': 'bar'});
+        bar.style.background = 'linear-gradient(90deg,' + SCALE.filter((x, v) => v % 5 === 0).map((x, i) => x.fill + ' ' + i * 5 + '%').join(',') + ')';
+        r.appendChild(bar);
+        ['0', '25', '50', '75', '100%'].forEach((t, i) => r.appendChild(el('span', {style: 'left:' + i * 25 + '%'}, t)));
         return;
       }
+      const sw = (c, m) => { const i = el('i'); i.style.background = 'color-mix(in srgb,var(' + c + ') ' + m + '%,var(--surface))'; return i; };
       r.appendChild(el('span', {}, 'Below U.S.'));
       [1, .6, .3].forEach(t => r.appendChild(sw('--below', Math.round(4 + t * 82))));
       const z = sw('--below', 0); z.style.boxShadow = 'inset 0 0 0 1px var(--rule)'; r.appendChild(z);
       [.3, .6, 1].forEach(t => r.appendChild(sw('--above', Math.round(4 + t * 82))));
-      r.appendChild(el('span', {}, shade === 'row'
-        ? 'Above U.S. · full shade at each row\'s own spread (its 90th-percentile gap, the FULL ± column), so small platforms show their pattern'
-        : 'Above U.S. · full shade at ±10 points on every row'));
+      r.appendChild(el('span', {}, 'Above U.S. · full colour at ±10 points on every row'));
     }
     document.querySelectorAll('[data-shade]').forEach(b => b.onclick = () => { shade = b.getAttribute('data-shade'); pressAll(); drawRamp(); render(); });
     document.querySelectorAll('[data-order]').forEach(b => b.onclick = () => { order = b.getAttribute('data-order'); pressAll(); render(); });
     $('gridCsv').onclick = () => {
       const cols = columns();
       const rows = [['question', 'column', 'United States'].concat(cols.map(c => c.p.name))].concat(
-        Q.map(q => [q.label, q.column, q.us.value].concat(cols.map(c => val(q, c.p.slug).value))));
+        Q.map(q => [q.label, q.column, q.us.value].concat(cols.map(c => val(q, c.p.slug).value))),
+        [['unweighted_n', '', Q[0].us.n].concat(cols.map(c => c.p.n))]);
       K.csv({csv: rows}, 'chip50-' + index.set + '-grid.csv');
     };
 
@@ -636,8 +683,8 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       const dl = el('dl', {'class': 'notes'});
       const add = (k, v) => { dl.appendChild(el('dt', {}, k)); const d = el('dd'); if (v instanceof Node) d.appendChild(v); else d.textContent = v; dl.appendChild(d); };
       add('Wording', q.wording);
-      add('Base', st ? num(st.n) + ' adults in ' + st.name + '; n per group on the chart and in each CSV'
-        : num(q.us.n) + ' U.S. adults; n per group on the chart and in each CSV');
+      add('Base', st ? num(st.n) + ' ' + BASE + ' in ' + st.name + '; n per group on the chart and in each CSV'
+        : num(q.us.n) + ' U.S. ' + BASE + '; n per group on the chart and in each CSV');
       add('Fielded', q.fielded + ' (' + q.wave + ')');
       add('Weight', st ? q.weight.state + '; U.S. figures use ' + q.weight.us : q.weight.us);
       add('Small groups', q.suppression);
@@ -673,13 +720,13 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       $('answer').innerHTML = '<span class="where">' + esc((st ? st.name : 'United States') + ' · ' + q.label) + '</span>' +
         '<span class="nums"><span class="big">' + pct(st ? st.value : q.us.value) + '</span>' +
         (st ? '<span class="us">U.S. ' + pct(q.us.value) + '</span><span class="gap ' + cls(g) + '">' + signed(g) + ' pts</span>' : '') +
-        '<span class="n">' + num(st ? st.n : q.us.n) + ' adults</span></span>';
-      $('gsub').textContent = 'Share of adults who say they ever use each platform, ' + q.wave + ', ' + q.fielded +
+        '<span class="n">' + num(st ? st.n : q.us.n) + ' ' + BASE + '</span></span>';
+      $('gsub').textContent = (TX.subtitle || 'Share of adults') + ', ' + q.wave + ', ' + q.fielded +
         '. Click a cell for both; a row name or column head for one.';
       $('rankBtn').textContent = 'Rank on ' + q.label;
       drawGrid();
       $('dh').textContent = q.label + ' · ' + (st ? st.name : 'United States');
-      $('dp').textContent = (st ? num(st.n) + ' adults in ' + st.name : num(q.us.n) + ' U.S. adults') + ' answered · chart rows are clickable';
+      $('dp').textContent = (st ? num(st.n) + ' ' + BASE + ' in ' + st.name : num(q.us.n) + ' U.S. ' + BASE) + ' answered · chart rows are clickable';
       pBy.set(K.view(q, 'by', cur.s));
       pAcross.set(K.across(Q, cur.s, index));
       pStates.set(K.view(q, 'states', cur.s));
@@ -687,16 +734,12 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       radio(q, st);
       document.title = q.label + ' · ' + (st ? st.name : 'U.S.') + ' — CHIP50 matrix explorer';
     }
-    /* on a big enough screen the by-age chart sits under the grid, so both
-       stay in view; the rest of the detail scrolls on the right */
-    const roomy = matchMedia('(min-width:1800px) and (min-height:1000px)');
-    const duo = el('div', {'class': 'duo'});
-    function arrange() {
-      if (roomy.matches) { duo.appendChild($('pBy')); duo.appendChild($('pRadio')); $('gridcol').appendChild(duo); }
-      else { $('stackA').insertBefore($('pBy'), $('pNotes')); $('stackA').appendChild($('pRadio')); duo.remove(); }
-    }
-    arrange();
-    roomy.addEventListener('change', () => { arrange(); render(); });
+    $('gh').textContent = TX.title || 'Every question in every state';
+    $('noise').textContent = 'No margins of error yet (#273): ' + nLo + ' to ' + nHi + ' ' + BASE + ' per state, so gaps of a few points may be noise.';
+    /* the share colours are computed per theme, so a theme change redraws */
+    const retheme = () => { buildScale(); drawRamp(); drawGrid(); };
+    new MutationObserver(retheme).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme);
     drawRamp();
     render();
     rw = $('grid').clientWidth;

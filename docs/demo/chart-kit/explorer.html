@@ -226,7 +226,7 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute
 (function () {
   var K = CHIP50Kit, $ = function (id) { return document.getElementById(id); };
   /* cur is what the URL says; peek is what a list's highlight is previewing */
-  var qs, ix, Q = {}, PLACES, cur = {q: null, place: null}, peek = null, qSort = 'set';
+  var qs, ix, BASE, nRange, Q = {}, PLACES, cur = {q: null, place: null}, peek = null, qSort = 'set';
   var CARDS = [{key: 'link', label: 'Link', size: '1200×675', w: 1200, h: 675}, {key: 'square', label: 'Square', size: '1080²', w: 1080, h: 1080},
     {key: 'portrait', label: 'Portrait', size: '1080×1350', w: 1080, h: 1350}, {key: 'vertical', label: 'Vertical', size: '1080×1920', w: 1080, h: 1920, clip: true}];
   var qp = new URLSearchParams(location.search);
@@ -272,12 +272,14 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute
       '<rect x="' + (question.us.value * 1.6 - 0.6).toFixed(1) + '" y="1" width="1.2" height="12" style="fill:var(--ink)"/>' + me + '</svg>';
   }
 
-  K.loadSet().then(function (set) {
-    ix = set.index; qs = set.questions;
+  K.loadSet(qp.get('set')).then(function (set) {
+    ix = set.index; qs = set.questions; K.flag(document.querySelector('.lead'), ix); BASE = (ix.text && ix.text.base) || 'adults';
     qs.forEach(function (x) { Q[x.id] = x; x.bySlug = {}; x.states.forEach(function (s) { x.bySlug[s.slug] = s; }); });
     PLACES = [{slug: null, name: 'United States', label: 'U.S.', abbr: 'US'}].concat(qs[0].states.map(function (s) {
       return {slug: s.slug, name: s.name, label: s.label, abbr: s.abbr, n: s.n};
     }));
+    var ns = qs[0].states.map(function (s) { return s.n; });
+    nRange = K.num(Math.min.apply(null, ns)) + ' to ' + K.num(Math.max.apply(null, ns));
     var minAge = Math.min.apply(null, qs[0].states.map(function (s) { return Math.min.apply(null, s.by.map(function (g) { return g.n; })); }));
     $('wave').textContent = qs[0].wave + ' · ' + qs.length + ' questions · 51 places';
     $('pulled').textContent = qs[0].pulled;
@@ -321,18 +323,18 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute
       if (document.activeElement !== $('qIn')) $('qIn').value = x.label;
       if (document.activeElement !== $('pIn')) $('pIn').value = s ? s.name : 'United States';
       $('qMeta').textContent = 'U.S. ' + K.pct(x.us.value);
-      $('pMeta').textContent = K.num(s ? s.n : x.us.n) + ' adults';
+      $('pMeta').textContent = K.num(s ? s.n : x.us.n) + ' ' + BASE;
       document.title = x.label + (s ? ' · ' + s.name : '') + ' — CHIP50 Explorer';
       $('chip').innerHTML = s
         ? '<span class="big">' + K.pct(s.value) + '</span><span class="l1">' + esc(s.name) + ' · ' + esc(x.label) + '</span>' +
           '<span class="l2">U.S. ' + K.pct(x.us.value) + ' · <b class="' + cls(d) + '">' + gapTxt(d) + ' pts</b> · ' + ordinal(rankOf(x, n.place)) + ' of 51</span>'
         : '<span class="big">' + K.pct(x.us.value) + '</span><span class="l1">United States · ' + esc(x.label) + '</span>' +
-          '<span class="l2">states ' + rangeOf(x) + ' · ' + K.num(x.us.n) + ' adults</span>';
+          '<span class="l2">states ' + rangeOf(x) + ' · ' + K.num(x.us.n) + ' ' + BASE + '</span>';
       $('h1').innerHTML = esc(x.question) + (s ? ' <span>· ' + esc(s.name) + '</span>' : '');
       $('sub').innerHTML = esc(x.topic + ' · ' + x.wave + ', ' + x.fielded) + ' · “' + esc(x.wording) + '”<br>' +
         'Margins of error aren’t served by the MCP yet (#273). ' + (s
           ? 'With <b>' + K.num(s.n) + ' respondents in ' + esc(s.name) + '</b> (as few as ' + Math.min.apply(null, s.by.map(function (g) { return g.n; })) + ' in an age group), gaps of a few points may be noise.'
-          : 'States rest on 390 to 1,879 respondents each (age groups within a state on as few as ' + minAge + '), so gaps of a few points between states may be noise.');
+          : 'States rest on ' + nRange + ' respondents each (age groups within a state on as few as ' + minAge + '), so gaps of a few points between states may be noise.');
 
       ['states', 'by', 'across'].forEach(function (p) {
         var sp = spec(p), box = document.querySelector('[data-panel="' + p + '"]');
@@ -354,7 +356,7 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute
       return K.pct(Math.min.apply(null, v)) + '–' + K.pct(Math.max.apply(null, v));
     }
     function notes(x, s) {
-      var rows = [['Question', x.wording], ['Base', s ? K.num(s.n) + ' adults in ' + s.name + '; n per age group on the chart' : K.num(x.us.n) + ' U.S. adults'],
+      var rows = [['Question', x.wording], ['Base', s ? K.num(s.n) + ' ' + BASE + ' in ' + s.name + '; n per age group on the chart' : K.num(x.us.n) + ' U.S. ' + BASE],
         ['Fielded', x.fielded + ' (' + x.wave + ')'], ['Weight', s ? x.weight.state + '; U.S. figures use ' + x.weight.us : x.weight.us],
         ['Small groups', x.suppression], ['Margin of error', x.moe]];
       $('brief').innerHTML = rows.map(function (r) { return '<dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd>'; }).join('') +
@@ -457,7 +459,7 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute
         if (b.getAttribute('data-s') === 'gap') b.disabled = !slug;
       });
       $('qHead').innerHTML = '<b>' + list.length + ' of ' + qs.length + '</b> questions · shares for <b>' + esc(slug ? Q[cur.q].bySlug[slug].name : 'the United States') + '</b>';
-      $('qCols').innerHTML = '<span>Platform</span><span>' + esc(where) + (slug ? ' · tick = U.S.' : '') + '</span><span class="r">Share</span>' +
+      $('qCols').innerHTML = '<span>Question</span><span>' + esc(where) + (slug ? ' · tick = U.S.' : '') + '</span><span class="r">Share</span>' +
         '<span class="r">' + (slug ? 'vs U.S.' : '') + '</span><span class="r">' + (slug ? 'Rank' : '') + '</span><span>All 51 · tick = U.S.</span>';
       $('qList').innerHTML = list.length ? list.map(function (x, i) {
         var v = val(x), d = slug ? gapOf(v, x.us.value) : null;
@@ -465,7 +467,7 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--mute
           '<span class="nm">' + esc(x.label) + '</span>' + mini(v, slug ? x.us.value : null, 100) +
           '<span class="v">' + K.pct(v) + '</span><span class="g ' + cls(d) + '">' + (slug ? gapTxt(d) : '') + '</span>' +
           '<span class="k">' + (slug ? rankOf(x, slug) : '') + '</span>' + strip(x, slug) + '</div>';
-      }).join('') : '<p class="empty">No question matches. Try a platform name.</p>';
+      }).join('') : '<p class="empty">No question matches. Try another word.</p>';
       scrollHi($('qList'));
     }
     $('qSort').addEventListener('click', function (e) { var s = e.target.getAttribute('data-s'); if (s && !e.target.disabled) { qSort = s; drawQ(); } });

@@ -80,20 +80,20 @@
      place is a state. Rows keep the set's order so they don't jump when the
      place changes. */
   function across(qs, slug, meta) {
-    var st = null;
+    var st = null, T = meta.text || {}, A = T.across || {}, base = T.base || 'adults';
     var rows = qs.map(function (q) {
       var s = slug ? q.states.filter(function (x) { return x.slug === slug; })[0] : null;
       if (s) st = s;
       return {label: q.label, key: q.id, value: s ? s.value : q.us.value, n: s ? s.n : q.us.n, ref: s ? q.us.value : null};
     });
-    var q0 = qs[0], where = st ? st.label : 'U.S.';
+    var q0 = qs[0], where = st ? st.label : 'U.S.', o = {place: where, count: qs.length};
     return {kind: 'bars', question: meta.set, view: 'questions', state: st ? st.slug : null, site: q0.site, rows: rows,
-      title: st ? st.label + ' across ' + qs.length + ' platforms' : 'Which platforms U.S. adults use',
-      subtitle: 'Share of ' + (st ? st.label : 'U.S.') + ' adults who say they ever use each, spring 2026' +
+      title: st ? fill(A.state_title || '{place} across {count} platforms', o) : (A.us_title || 'Which platforms U.S. adults use'),
+      subtitle: fill(A.subtitle || 'Share of {place} adults who say they ever use each, spring 2026', o) +
         (st ? '. Ticks mark the U.S.' : ''),
-      source: 'CHIP50 survey, ' + q0.wave + ', ' + q0.fielded + '. ' + num(st ? st.n : q0.us.n) + ' adults' +
+      source: 'CHIP50 survey, ' + q0.wave + ', ' + q0.fielded + '. ' + num(st ? st.n : q0.us.n) + ' ' + base +
         (st ? ' in ' + st.label + ', weighted within the state' : ', weighted to the adult population') + '.',
-      radio: '', csv: [['platform', where + ' pct_weighted', 'unweighted_n'].concat(st ? ['us_pct_weighted'] : [])].concat(
+      radio: '', csv: [['question', where + ' pct_weighted', 'unweighted_n'].concat(st ? ['us_pct_weighted'] : [])].concat(
         rows.map(function (r) { return [r.label, r.value, r.n].concat(st ? [r.ref] : []); })),
       stem: 'chip50-' + meta.set + (st ? '-' + st.slug : '')};
   }
@@ -393,13 +393,32 @@
     return fetch(id + '.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
   }
 
-  /* every question the set's index.json lists, in its order */
-  function loadSet() {
-    return fetch('index.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (ix) {
+  /* every question a set's index (set-<name>.json) lists, in its order;
+     pages pass ?set=, and the platforms set is the default */
+  var DEFAULT_SET = 'platforms-w38';
+  function loadSet(name) {
+    name = name || DEFAULT_SET;
+    if (!/^[a-z0-9-]+$/.test(name)) return Promise.reject(new Error('bad set name'));
+    return fetch('set-' + name + '.json').then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }).then(function (ix) {
       return Promise.all(ix.questions.map(function (q) { return load(q.id); })).then(function (qs) { return {index: ix, questions: qs}; });
     });
   }
 
-  window.CHIP50Kit = {view: view, across: across, loadSet: loadSet, GRID: GRID, LIGHT: LIGHT, THEMED: THEMED, layout: layout, toSVG: toSVG, draw: draw, canvas: canvas, mount: mount, load: load,
+  /* a set whose numbers aren't fit to publish carries text.note; every page
+     shows it above the charts */
+  function flag(before, ix) {
+    var t = ix.text && ix.text.note;
+    if (!t || !before) return;
+    var p = document.createElement('p'), b = document.createElement('b');
+    p.setAttribute('role', 'note');
+    p.style.cssText = 'display:flex;gap:10px;align-items:baseline;margin:0 0 14px;padding:10px 14px;border-radius:10px;' +
+      'background:color-mix(in srgb,#fab219 14%,var(--surface));border:1px solid color-mix(in srgb,#fab219 55%,var(--rule));' +
+      'font:400 13px/1.45 var(--sans);color:var(--ink)';
+    b.style.whiteSpace = 'nowrap'; b.textContent = '⚠ Test data';
+    p.appendChild(b); p.appendChild(document.createTextNode(t));
+    before.parentNode.insertBefore(p, before);
+  }
+
+  window.CHIP50Kit = {view: view, across: across, loadSet: loadSet, flag: flag, DEFAULT_SET: DEFAULT_SET, GRID: GRID, LIGHT: LIGHT, THEMED: THEMED, layout: layout, toSVG: toSVG, draw: draw, canvas: canvas, mount: mount, load: load,
     png: png, svg: svg, csv: csv, clip: clip, save: save, pct: pct, num: num};
 })();

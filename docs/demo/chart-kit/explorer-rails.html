@@ -175,7 +175,7 @@ dl.notes code{white-space:normal;font-size:12px}
         <button type="button" data-sort="gap" aria-pressed="false">Gap vs U.S.</button>
       </div>
     </div>
-    <div class="colh"><span id="qColPlace">Platform</span><span></span><span id="qColVal">Share</span><span>Gap</span></div>
+    <div class="colh"><span id="qColPlace">Question</span><span></span><span id="qColVal">Share</span><span>Gap</span></div>
     <div class="usl" id="qLegend"></div>
     <div class="list" id="qList" role="listbox" aria-label="Questions"></div>
   </aside>
@@ -293,8 +293,12 @@ dl.notes code{white-space:normal;font-size:12px}
     }};
   }
 
-  K.loadSet().then(function (S) {
+  K.loadSet(new URLSearchParams(location.search).get('set')).then(function (S) {
     var QS = S.questions, IX = S.index, byId = {};
+    K.flag($('canvas').firstElementChild, IX);
+    var TX = IX.text || {}, BASE = TX.base || 'adults', NOUN = TX.noun || 'questions';
+    var says = function (q) { return (TX.answer || 'say they use {phrase}').replace('{phrase}', q.phrase || q.label); };
+    var ns = QS[0].states.map(function (s) { return s.n; }), nRange = K.num(Math.min.apply(null, ns)) + ' to ' + K.num(Math.max.apply(null, ns));
     QS.forEach(function (q) { byId[q.id] = q; });
     var places = QS[0].states.map(function (s) { return {slug: s.slug, name: s.name, label: s.label, abbr: s.abbr}; });
     var slugs = places.map(function (p) { return p.slug; });
@@ -314,7 +318,7 @@ dl.notes code{white-space:normal;font-size:12px}
     }
     readURL();
 
-    $('meta').textContent = IX.wave + ' · ' + QS[0].fielded + ' · ' + QS.length + ' platform questions · 50 states and D.C.';
+    $('meta').textContent = IX.wave + ' · ' + QS[0].fielded + ' · ' + QS.length + ' ' + NOUN + ' · 50 states and D.C.';
 
     var byChart = K.mount($('byChart'), K.view(byId[state.q], 'by', state.place), {bare: true, themed: true, animate: false});
     function st(q) { return state.place ? q.states[slugs.indexOf(state.place)] : null; }
@@ -353,7 +357,7 @@ dl.notes code{white-space:normal;font-size:12px}
         list.appendChild(b);
       });
       $('qColVal').textContent = state.place ? places[slugs.indexOf(state.place)].abbr : 'U.S.';
-      $('qColPlace').textContent = 'Platform (' + rows.length + ')';
+      $('qColPlace').textContent = 'Question (' + rows.length + ')';
       $('qLegend').textContent = state.place ? 'Bars: ' + placeName() + ', 0–100% · ticks: U.S. · gap in points' :
         'Bars: U.S. share, 0–100% · pick a place for gaps';
       [].forEach.call(document.querySelectorAll('.seg button'), function (x) {
@@ -404,7 +408,7 @@ dl.notes code{white-space:normal;font-size:12px}
         var s = r.s;
         var b = el('button', {'class': 'row' + (s.slug === state.place ? ' on' : '') + (i === state.pAct ? ' act' : ''),
           role: 'option', 'aria-selected': String(s.slug === state.place), 'data-slug': s.slug,
-          title: s.name + ': ' + K.pct(s.value) + ' of ' + K.num(s.n) + ' adults (rank ' + r.rank + ' of 51)'});
+          title: s.name + ': ' + K.pct(s.value) + ' of ' + K.num(s.n) + ' ' + BASE + ' (rank ' + r.rank + ' of 51)'});
         b.appendChild(el('span', {'class': 'rk'}, String(r.rank)));
         b.appendChild(el('span', {'class': 'nm'}, s.label));
         b.appendChild(dot(s.value, true));
@@ -441,19 +445,19 @@ dl.notes code{white-space:normal;font-size:12px}
         stats.appendChild(d); return nn;
       }
       if (s) {
-        stat(name, K.pct(s.value), 'say they use ' + q.label, ' main');
-        stat('United States', K.pct(q.us.value), 'all ' + K.num(q.us.n) + ' adults');
+        stat(name, K.pct(s.value), says(q), ' main');
+        stat('United States', K.pct(q.us.value), 'all ' + K.num(q.us.n) + ' ' + BASE);
         var g = gap(s.value, q.us.value), gn = stat('Gap', gapTxt(g) + ' pts', name + ' minus U.S.');
         gn.className = 'n ' + ({p: 'p', n: 'neg', z: ''})[gapCls(g)];
-        stat('Respondents', K.num(s.n), 'adults in ' + name);
+        stat('Respondents', K.num(s.n), BASE + ' in ' + name);
         $('caveat').textContent = 'Margins of error aren’t served by the MCP yet (#273). With ' + K.num(s.n) +
           ' respondents in ' + name + ', a gap of a few points may be noise.';
       } else {
         var r = ranked(q);
-        stat('United States', K.pct(q.us.value), 'say they use ' + q.label, ' main');
+        stat('United States', K.pct(q.us.value), says(q), ' main');
         stat('Highest state', K.pct(r[0].value), r[0].name);
         stat('Lowest state', K.pct(r[r.length - 1].value), r[r.length - 1].name);
-        stat('Respondents', K.num(q.us.n), 'U.S. adults · 390 to 1,879 per state');
+        stat('Respondents', K.num(q.us.n), 'U.S. ' + BASE + ' · ' + nRange + ' per state');
         $('caveat').textContent = 'Pick a place on the right to compare it with the U.S. Margins of error aren’t served by the MCP yet (#273); state gaps of a few points may be noise.';
       }
 
@@ -465,7 +469,7 @@ dl.notes code{white-space:normal;font-size:12px}
 
       var notes = $('notes'); notes.textContent = '';
       [['Question', q.wording],
-       ['Base', s ? K.num(s.n) + ' adults in ' + s.name + '; ' + K.num(q.us.n) + ' nationally' : K.num(q.us.n) + ' U.S. adults'],
+       ['Base', s ? K.num(s.n) + ' ' + BASE + ' in ' + s.name + '; ' + K.num(q.us.n) + ' nationally' : K.num(q.us.n) + ' U.S. ' + BASE],
        ['Fielded', q.fielded + ' (' + q.wave + ')'],
        ['Weight', s ? q.weight.state + '; U.S. figures use ' + q.weight.us : q.weight.us],
        ['Small groups', q.suppression], ['Margin of error', q.moe]
@@ -507,13 +511,13 @@ dl.notes code{white-space:normal;font-size:12px}
       e.stopPropagation();
       if (pop) { closePop(); return; }
       pop = el('div', {'class': 'pop'});
-      pop.appendChild(el('p', {'class': 'kind'}, 'This list as a chart: one place across every platform'));
+      pop.appendChild(el('p', {'class': 'kind'}, 'This list as a chart: one place across every question'));
       var r = $('acrossBtn').getBoundingClientRect();
       pop.style.left = r.left + 'px'; pop.style.top = (r.bottom + 6) + 'px';
       document.body.appendChild(pop);
       acrossTools = tools(pop, function () {
         var sp = K.across(QS, state.place, IX);
-        return {spec: sp, what: placeName() + ' · ' + QS.length + ' platforms',
+        return {spec: sp, what: placeName() + ' · ' + QS.length + ' ' + NOUN,
           attrs: 'data-chip50-chart="' + IX.set + '" data-view="questions"' + (state.place ? ' data-state="' + state.place + '"' : ''),
           preview: 'embed.html?q=' + IX.set + '&view=questions' + (state.place ? '&state=' + state.place : ''),
           png: function () { K.png(sp, 1200, null, sp.stem + '-web.png', 2); },

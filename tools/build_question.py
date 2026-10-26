@@ -1,7 +1,7 @@
 """Build a chart-kit question file from saved CHIP50 MCP results.
 
     python3 tools/build_question.py tools/questions/tiktok-w38.json     one question
-    python3 tools/build_question.py tools/questions/platforms-w38.json  a set, plus index.json
+    python3 tools/build_question.py tools/questions/platforms-w38.json  a set, plus set-platforms-w38.json
 
 A question config names up to four MCP results, saved as JSON (paths
 relative to tools/):
@@ -16,8 +16,9 @@ by-group cells, which partition each place under one weight. Save each result
 as the tool returned it (the {"result": "..."} wrapper is fine). The script
 writes docs/demo/chart-kit/<id>.json, which the page and the embed load, and
 prints facts to check headlines against. A set config (see
-platforms-w38.json) builds many questions from one template and writes
-index.json for the explorer; a question's own text overrides the template.
+platforms-w38.json) builds many questions from one template and writes an
+index for the explorer, set-<set>.json, which the pages load with ?set=<set>;
+a question's own text overrides the template.
 """
 import json
 import sys
@@ -111,7 +112,7 @@ def build_one(cfg, state_n=None):
 
     out = {k: cfg[k] for k in ("id", "site", "question", "dek", "wording", "wave", "fielded",
                                "weight", "suppression", "moe", "provenance", "pulled", "text")}
-    out.update(label=cfg.get("label", cfg["question"]), topic=cfg.get("topic"), column=cfg.get("column"),
+    out.update(label=cfg.get("label", cfg["question"]), phrase=cfg.get("phrase"), topic=cfg.get("topic"), column=cfg.get("column"),
                byName=cfg["by"]["name"], us={"value": us_value, "n": us_n}, by=groups(us_by), states=states)
     fill_auto(out)
     dest = OUT / f"{cfg['id']}.json"
@@ -122,14 +123,20 @@ def build_one(cfg, state_n=None):
 
 
 def fill_auto(q):
-    """Fill the build-time tokens a set's template uses ({label}, {lo}, {loState},
-    {hi}, {hiState}) from this question's numbers, and an "auto" dek with a
-    plain statement of the U.S. figure ({column} names the variable). Tokens like {state} and {value} are
-    left for the page, which fills them for the place picked."""
+    """Fill the build-time tokens a set's template uses from this question's
+    numbers: {label}, {phrase} (the label as it reads mid-sentence), {column},
+    {lo}/{loState}, {hi}/{hiState}, {usPct}, the per-state headcount range
+    {nLo}/{nHi}, and {cellMin}, the smallest state-by-group cell. An "auto"
+    dek states the U.S. figure. Tokens like {state} and {value} are left for
+    the page, which fills them for the place picked."""
     pct = lambda v: f"{v:.1f}%" if v < 9.95 else f"{round(v)}%"   # the kit's rule: a decimal under 10%
     ranked = sorted((s for s in q["states"] if s["value"] is not None), key=lambda s: s["value"])
-    tokens = {"label": q["label"], "column": q.get("column") or "", "lo": pct(ranked[0]["value"]), "loState": ranked[0]["label"],
-              "hi": pct(ranked[-1]["value"]), "hiState": ranked[-1]["label"]}
+    ns = [s["n"] for s in q["states"]]
+    q["phrase"] = q.get("phrase") or q["label"]
+    tokens = {"label": q["label"], "phrase": q["phrase"], "column": q.get("column") or "",
+              "lo": pct(ranked[0]["value"]), "loState": ranked[0]["label"],
+              "hi": pct(ranked[-1]["value"]), "hiState": ranked[-1]["label"], "usPct": pct(q["us"]["value"]),
+              "nLo": f"{min(ns):,}", "nHi": f"{max(ns):,}", "cellMin": f"{min(g['n'] for s in q['states'] for g in s['by']):,}"}
     def sub(v):
         for k, x in tokens.items():
             v = v.replace("{%s}" % k, x)
@@ -143,7 +150,8 @@ def fill_auto(q):
     if q["dek"] == "auto":
         q["dek"] = f"{pct(q['us']['value'])} of U.S. adults say they use {q['label']}."
     walk(q["text"])
-    q["question"] = sub(q["question"])
+    for k in ("question", "dek", "moe"):
+        q[k] = sub(q[k])
     q["provenance"] = [sub(c) for c in q["provenance"]]
     q["wording"] = q["wording"].replace("{option}", q.pop("option", q["label"]))
 
@@ -168,10 +176,14 @@ def facts(q, order):
 
 
 def build_set(cfg):
-    """Write every question in a set, then index.json, which lists them for the explorer."""
-    state_n = {r["demographic_value"]: r["unweighted_n"] for r in rows(cfg["state_n"])}
-    shared = {k: v for k, v in cfg.items() if k not in ("set", "questions", "template", "state_n")}
-    index = []
+    """Write every question in a set, then its index, which lists them for the
+    explorer along with the set's own copy (set_text). state_n, a
+    generate_crosstab(..., demographic="state") result, is optional: either
+    way every question in a set must rest on the same respondents in each
+    state, since the explorer compares them side by side."""
+    state_n = {r["demographic_value"]: r["unweighted_n"] for r in rows(cfg["state_n"])} if "state_n" in cfg else None
+    shared = {k: v for k, v in cfg.items() if k not in ("set", "questions", "template", "state_n", "set_text")}
+    index, base = [], None
     for q in cfg["questions"]:
         one = json.loads(json.dumps({**shared, **cfg["template"]}))
         if "config" in q:
@@ -179,10 +191,15 @@ def build_set(cfg):
         one.update(q)
         one.setdefault("raw", {"us_by": f"raw/{q['id']}/us_by_age.json", "states_by": f"raw/{q['id']}/states_by_age.json"})
         built = build_one(one, state_n)
+        heads = {s["name"]: s["n"] for s in built["states"]}
+        base = base or heads
+        if heads != base:
+            odd = sorted(k for k in heads if heads[k] != base[k])[:3]
+            sys.exit(f"{built['id']}: respondents per state differ from the set's first question ({', '.join(odd)}...)")
         index.append({"id": built["id"], "label": built["label"], "topic": built["topic"],
                       "question": built["question"], "us": built["us"]["value"]})
-    dest = OUT / "index.json"
-    dest.write_text(json.dumps({"set": cfg["set"], "wave": cfg["wave"], "questions": index}, indent=1) + "\n")
+    dest = OUT / f"set-{cfg['set']}.json"
+    dest.write_text(json.dumps({"set": cfg["set"], "wave": cfg["wave"], "text": cfg.get("set_text", {}), "questions": index}, indent=1) + "\n")
     print(f"wrote {dest.relative_to(TOOLS.parent)}")
 
 
