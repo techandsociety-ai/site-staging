@@ -283,7 +283,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
      shouts louder than the other */
   const DIVERGE = {light: ['#f18d68', '#f0efec', '#85aee3'], dark: ['#a45132', '#383835', '#3d6da8']};
   const inkOn = fill => contrast(fill, '#ffffff') > contrast(fill, '#14140f') ? '#ffffff' : '#14140f';
-  let SCALE = [], DIV = [];
+  let SCALE = [], DIV = [], HATCH = null;
   function buildScale() {
     const surf = getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() || '#ffffff';
     const mode = /^#[0-9a-f]{6}$/i.test(surf) && lum(surf) < 0.2 ? 'dark' : 'light';
@@ -302,6 +302,11 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       const fill = toHex(mid.map((c, k) => c + (end[k] - c) * t));
       DIV.push({fill, ink: inkOn(fill)});
     }
+    /* a gap inside the margin of error: the grey midpoint with diagonal
+       stripes a step darker (lighter in dark mode), so "can't tell" never
+       reads as "same as the U.S.", which is plain grey */
+    const ink = toLab(mode === 'dark' ? '#f4f3ee' : '#14140f');
+    HATCH = {mid: DIV[SPAN * 2].fill, stripe: toHex(mid.map((c, k) => c + (ink[k] - c) * 0.16))};
   }
   buildScale();
   const el = (tag, attrs, text) => {
@@ -511,7 +516,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     function fillFor(q, v, st) {
       if (shade === 'share') return SCALE[Math.max(0, Math.min(100, Math.round(v)))];
       /* vs U.S.: a gap inside the state's margin of error stays grey */
-      if (st && side(q, st) === 0) return DIV[SPAN * 2];
+      if (st && side(q, st) === 0) return Object.assign({hatch: true}, DIV[SPAN * 2]);
       const g = Math.max(-SPAN, Math.min(SPAN, gapOf(v, q.us.value)));
       return DIV[Math.round((g + SPAN) * 2)];
     }
@@ -534,9 +539,13 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
         fs: cw >= 34 ? 13 : cw >= 27 ? 12 : cw >= 22 ? 11 : 10, showNum: cw >= 18,
         selRow: Q.findIndex(q => q.id === cur.q), selCol: cur.s ? cols.findIndex(c => c.p.slug === cur.s) : -1};
     }
-    function svgOpen(G, H) {
+    /* each drawing carries its own stripe pattern, under its own id */
+    function svgOpen(G, H, hid) {
+      G.hid = hid;
       return '<svg viewBox="0 0 ' + G.W + ' ' + H + '" width="' + G.W + '" height="' + H +
-        '" font-family=\'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif\' style="font-variant-numeric:tabular-nums">';
+        '" font-family=\'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif\' style="font-variant-numeric:tabular-nums">' +
+        '<defs><pattern id="' + hid + '" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">' +
+        '<rect width="6" height="6" style="fill:' + HATCH.mid + '"/><rect width="1.75" height="6" style="fill:' + HATCH.stripe + '"/></pattern></defs>';
     }
     /* column heads, baseline at hy. The selected column's head is a filled
        tab, the U.S. included, as the selected row's label is filled */
@@ -568,7 +577,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       G.cols.forEach((c, i) => {
         const st = val(q, c.p.slug), f = fillFor(q, st.value, st);
         o.push('<rect data-c="' + i + '" data-r="' + r + '" x="' + (G.xs[i] + G.padX) + '" y="' + (y + G.padY) + '" width="' + (G.cw - 2 * G.padX) + '" height="' + h +
-          '" rx="3" style="fill:' + f.fill + '"/>');
+          '" rx="3" style="fill:' + (f.hatch ? 'url(#' + G.hid + ')' : f.fill) + '"/>');
         if (G.showNum) o.push('<text x="' + (G.xs[i] + G.cw / 2) + '" y="' + ty + '" text-anchor="middle" font-size="' + G.fs + '" pointer-events="none" style="fill:' +
           f.ink + '">' + shown(st.value) + '</text>');
       });
@@ -583,7 +592,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
         '" rx="4" fill="none" stroke-width="2.5" style="stroke:var(--ink)" pointer-events="none"/>';
     }
     function drawGrid() {
-      const G = layoutGrid(), H = G.top + Q.length * G.rh + 4, hy = G.top - 8, o = [svgOpen(G, H)];
+      const G = layoutGrid(), H = G.top + Q.length * G.rh + 4, hy = G.top - 8, o = [svgOpen(G, H, 'hatch-grid')];
       /* a label over each run of columns, shortened to fit a narrow run */
       const runs = [];
       G.cols.forEach((c, i) => { if (c.first) runs.push({name: c.name, i0: i, n: 0}); runs[runs.length - 1].n++; });
@@ -604,7 +613,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       $('grid').innerHTML = o.join('');
       /* the pinned strip: heads, then the selected row */
       const PH = 24 + G.rh;
-      $('pin').innerHTML = svgOpen(G, PH) + heads(G, 16) + row(G, Q[G.selRow], G.selRow, 22) + crosshair(G, 2, PH, 22) + '</svg>';
+      $('pin').innerHTML = svgOpen(G, PH, 'hatch-pin') + heads(G, 16) + row(G, Q[G.selRow], G.selRow, 22) + crosshair(G, 2, PH, 22) + '</svg>';
       geom = G;
       placePin();
     }
@@ -803,12 +812,14 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     }
     $('gh').textContent = TX.title || 'Every question in every state';
     const noise = () => {
-      $('noise').textContent = (shade === 'gap' ? 'Grey: the gap is within that state\u2019s 95% margin of error. ' : '') +
-        'Margins as in the Work report\u2019s Table 8 (unweighted n; weighting widens them). ' + nLo + ' to ' + nHi + ' ' + BASE + ' per state.';
+      const sw = 'display:inline-block;width:22px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:6px;' +
+        'background:repeating-linear-gradient(45deg,' + HATCH.stripe + ' 0 1.75px,' + HATCH.mid + ' 1.75px 6px)';
+      $('noise').innerHTML = (shade === 'gap' ? '<span style="white-space:nowrap"><i style="' + sw + '"></i>Striped: the gap is inside that state\u2019s 95% margin of error.</span> ' : '') +
+        'Margins as in the Work report\u2019s Table 8 (unweighted n; weighting widens them). ' + nLo + ' to ' + nHi + ' ' + esc(BASE) + ' per state.';
     };
     noise();
     /* the share colours are computed per theme, so a theme change redraws */
-    const retheme = () => { buildScale(); drawRamp(); drawGrid(); };
+    const retheme = () => { buildScale(); drawRamp(); noise(); drawGrid(); };
     new MutationObserver(retheme).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme);
     drawRamp();
