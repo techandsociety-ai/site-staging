@@ -22,15 +22,15 @@
   "pulled": "Oct 26, 2026",
   "set_text": {
     "title": "What matters to the 2026 midterm vote, in every state",
-    "subtitle": "Share of adults who rate each issue 8 to 10 for importance to their 2026 midterm vote (1 = not important at all, 10 = extremely important)",
+    "subtitle": "Share of eligible adults (all but those who said they can't vote) who rate each issue 8 to 10, on a scale of 1 to 10, for their 2026 midterm vote",
     "answer": "rate {phrase} 8 to 10",
     "noun": "issues",
-    "base": "adults",
+    "base": "eligible adults",
     "note": "Preliminary Wave 39 release: fielding ran to Oct. 26 and the survey team's final file may differ. Not for publication until it lands.",
     "across": {
-      "us_title": "What matters most to U.S. adults' 2026 midterm vote",
+      "us_title": "What matters most to eligible U.S. adults' 2026 midterm vote",
       "state_title": "{place} across {count} midterm issues",
-      "subtitle": "Share of {place} adults who rate each issue 8 to 10 for their midterm vote, fall 2026"
+      "subtitle": "Share of eligible {place} adults who rate each issue 8 to 10 for their midterm vote, fall 2026"
     },
     "note_label": "Preliminary",
     "default_q": "issue-2-w39",
@@ -39,7 +39,7 @@
   "template": {
     "topic": "The 2026 midterms",
     "question": "How important is {phrase} to your 2026 midterm vote?",
-    "dek": "{usPct} of U.S. adults rate {phrase} 8 to 10 for their 2026 midterm vote.",
+    "dek": "{usPct} of eligible U.S. adults rate {phrase} 8 to 10 for their 2026 midterm vote.",
     "wording": "How important are the following issues for your decision on how to vote in the 2026 midterm election? Please rate their importance on a scale from 1 to 10, where 1 is “Not important at all” and 10 is “Extremely important”. — {option} (shown here: 8 to 10)",
     "provenance": [
       "create_recoded_variable(name=\"issue_high_…\", source_column=\"{column}\", mapping 1–7 → 0, 8–10 → 1, binary=true) → {recode}",
@@ -50,23 +50,23 @@
       "age": {
         "us": {
           "title": "Who rates {phrase} 8 to 10, by age",
-          "subtitle": "Share of U.S. adults who rate {phrase} 8 to 10 for their 2026 midterm vote, by age, fall 2026",
-          "source": "CHIP50 survey, {wave}, {fielded}. {usN} U.S. adults, weighted to the adult population."
+          "subtitle": "Share of eligible U.S. adults who rate {phrase} 8 to 10 for their 2026 midterm vote, by age, fall 2026",
+          "source": "CHIP50 survey, {wave}, {fielded}. {usN} eligible U.S. adults, weighted to the adult population."
         },
         "state": {
-          "title": "{value} of {state} adults rate {phrase} 8 to 10",
+          "title": "{value} of eligible {state} adults rate {phrase} 8 to 10",
           "subtitle": "Share who rate {phrase} 8 to 10 for their 2026 midterm vote, by age, fall 2026. Ticks mark the U.S.",
-          "source": "CHIP50 survey, {wave}, {fielded}. {n} adults in {state}, weighted within the state; U.S. ticks from all {usN}."
+          "source": "CHIP50 survey, {wave}, {fielded}. {n} eligible adults in {state}, weighted within the state; U.S. ticks from all {usN}."
         }
       },
       "states": {
         "title": "{label}: {lo} to {hi} rate it 8 to 10 across states",
-        "subtitle": "Share of adults who rate {phrase} 8 to 10 for their 2026 midterm vote, by state, fall 2026. U.S.: {us}",
-        "source": "CHIP50 survey, {wave}, {fielded}. {usN} adults, {nLo} to {nHi} per state, weighted within each state."
+        "subtitle": "Share of eligible adults who rate {phrase} 8 to 10 for their 2026 midterm vote, by state, fall 2026. U.S.: {us}",
+        "source": "CHIP50 survey, {wave}, {fielded}. {usN} eligible adults, {nLo} to {nHi} per state, weighted within each state."
       },
       "radio": {
-        "us": "{usWords} of American adults say {phrase} is very important to how they'll vote in the midterms — 8 or higher on a 10-point scale — according to a CHIP50 survey this fall.",
-        "state": "In {state}, {words} of adults rate {phrase} 8 or higher for importance to their midterm vote, compared with {usWords} nationally. That's from the CHIP50 survey, which reached {n} adults in {state} this fall."
+        "us": "{usWords} of American adults eligible to vote say {phrase} is very important to how they'll vote in the midterms — 8 or higher on a 10-point scale — according to a CHIP50 survey this fall.",
+        "state": "In {state}, {words} of eligible adults rate {phrase} 8 or higher for importance to their midterm vote, compared with {usWords} nationally. That's from the CHIP50 survey, which reached {n} adults in {state} this fall."
       }
     }
   },
