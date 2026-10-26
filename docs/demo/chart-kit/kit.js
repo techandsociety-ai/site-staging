@@ -10,11 +10,83 @@
   /* exports are always light; the page chart follows the site theme */
   var LIGHT = {surface: '#ffffff', ink: '#14140f', ink2: '#4a4a44', muted: '#6e6d65',
     rule: '#e4e3dc', track: '#efeee8', acc: '#2a78d6', soft: '#aac9ef', onacc: '#ffffff', hit: 'transparent',
-    mix: function (t) { return lerp([239, 238, 232], [42, 120, 214], t); }};
+    mix: function (t) { return lerp([239, 238, 232], [42, 120, 214], t); },
+    gap: function (g, within) { return scales('light').gap(g, within); }, hatch: function () { return scales('light').hatch; }};
   var THEMED = {surface: 'var(--surface)', ink: 'var(--ink)', ink2: 'var(--ink2)', muted: 'var(--muted)',
     rule: 'var(--rule)', track: 'var(--rule2)', acc: 'var(--acc)', soft: 'color-mix(in srgb,var(--acc) 40%,var(--surface))',
     onacc: '#ffffff', hit: 'transparent',
-    mix: function (t) { return 'color-mix(in srgb,var(--acc) ' + Math.round(t * 100) + '%,var(--rule2))'; }};
+    mix: function (t) { return 'color-mix(in srgb,var(--acc) ' + Math.round(t * 100) + '%,var(--rule2))'; },
+    gap: function (g, within) { return scales().gap(g, within); }, hatch: function () { return scales().hatch; }};
+
+  /* ---------- the colour scales the explorers share ----------
+     share: one blue, 0-100% on every row, light to dark (dark to light in
+     dark mode), stops from the site's blue ramp, interpolated in OKLab.
+     gap: points from the U.S., orange below and blue above through a grey
+     midpoint; both arms end at the same OKLab lightness (0.74 light, 0.53
+     dark) so neither side shouts, and full colour comes at SPAN points. A gap
+     inside the margin of error is that grey with light diagonal stripes, so
+     "can't tell" never reads as "same as the U.S.", which is plain grey.
+     Each colour carries the ink (white or near-black) that contrasts more. */
+  var SPAN = 15;
+  var RAMP = {light: ['#f2f6fb', '#9ec5f4', '#3987e5', '#184f95', '#0d366b'], dark: ['#1c2330', '#184f95', '#3987e5', '#86b6ef', '#cde2fb']};
+  var DIVERGE = {light: ['#f18d68', '#f0efec', '#85aee3'], dark: ['#a45132', '#383835', '#3d6da8']};
+  function lin(c) { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }
+  function gam(c) { return 255 * (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055); }
+  function rgbOf(hex) { var n = parseInt(hex.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+  function toLab(hex) {
+    var c = rgbOf(hex).map(lin), r = c[0], g = c[1], b = c[2];
+    var l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b),
+      m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b),
+      q = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+    return [0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * q, 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * q,
+      0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * q];
+  }
+  function toHex(L) {
+    var l = Math.pow(L[0] + 0.3963377774 * L[1] + 0.2158037573 * L[2], 3), m = Math.pow(L[0] - 0.1055613458 * L[1] - 0.0638541728 * L[2], 3),
+      q = Math.pow(L[0] - 0.0894841775 * L[1] - 1.2914855480 * L[2], 3);
+    return '#' + [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * q, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * q,
+      -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * q]
+      .map(function (c) { return ('0' + Math.round(gam(Math.max(0, Math.min(1, c)))).toString(16)).slice(-2); }).join('');
+  }
+  function toward(a, b, t) { return a.map(function (c, k) { return c + (b[k] - c) * t; }); }
+  function lum(hex) { var c = rgbOf(hex).map(lin); return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]; }
+  function contrast(x, y) { var a = lum(x), b = lum(y); return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05); }
+  function inkOn(fill) { return contrast(fill, '#ffffff') > contrast(fill, '#14140f') ? '#ffffff' : '#14140f'; }
+  /* the page's theme, read off its surface colour */
+  function themeMode() {
+    var s = typeof getComputedStyle === 'function' ? getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() : '';
+    return /^#[0-9a-f]{6}$/i.test(s) && lum(s) < 0.2 ? 'dark' : 'light';
+  }
+  var built = {};
+  function scales(mode) {
+    mode = mode || themeMode();
+    if (built[mode]) return built[mode];
+    var stops = RAMP[mode].map(toLab), seg = 100 / (stops.length - 1), share = [], div = [];
+    for (var v = 0; v <= 100; v++) {
+      var i = Math.min(stops.length - 2, Math.floor(v / seg)), f = toHex(toward(stops[i], stops[i + 1], (v - i * seg) / seg));
+      share.push({fill: f, ink: inkOn(f)});
+    }
+    var d = DIVERGE[mode].map(toLab);
+    for (var j = 0; j <= SPAN * 4; j++) {
+      var g = j / 2 - SPAN, h = toHex(toward(d[1], g < 0 ? d[0] : d[2], Math.abs(g) / SPAN));
+      div.push({fill: h, ink: inkOn(h)});
+    }
+    var hatch = {mid: div[SPAN * 2].fill, stripe: toHex(toward(d[1], toLab(mode === 'dark' ? '#f4f3ee' : '#14140f'), 0.085))};
+    return (built[mode] = {mode: mode, share: share, div: div, hatch: hatch, span: SPAN,
+      level: function (v) { return share[Math.max(0, Math.min(100, Math.round(v)))]; },
+      gap: function (g, within) {
+        if (within) return {fill: hatch.mid, ink: div[SPAN * 2].ink, hatch: true};
+        return div[Math.round((Math.max(-SPAN, Math.min(SPAN, g)) + SPAN) * 2)];
+      },
+      /* CSS for a striped swatch, for the pages' own HTML keys and chips */
+      stripes: 'repeating-linear-gradient(45deg,' + hatch.stripe + ' 0 1.5px,' + hatch.mid + ' 1.5px 6px)'});
+  }
+  /* a share as printed (a decimal under 10%), the points between two shares
+     as printed, and which side of the U.S. a state sits on by Table 8's
+     margin: 1 above, -1 below, 0 inside the margin */
+  function shown(v) { return v < 9.95 ? Math.round(v * 10) / 10 : Math.round(v); }
+  function gapOf(v, us) { return Math.round((shown(v) - shown(us)) * 10) / 10; }
+  function side(st, us) { var g = gapOf(st.value, us); return Math.abs(g) <= (moe(st.value, st.n) || 0) ? 0 : g > 0 ? 1 : -1; }
 
   function lerp(a, b, t) {
     return '#' + a.map(function (v, i) { return ('0' + Math.round(v + (b[i] - v) * t).toString(16)).slice(-2); }).join('');
@@ -248,21 +320,40 @@
     var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
     var s = Math.min((g.w - 10 * gap) / 11, (g.region - 7 * gap) / 8);
     var gw = 11 * s + 10 * gap, gh = 8 * s + 7 * gap;
-    var x0 = g.x + (g.w - gw) / 2, y0 = g.y + (g.region - gh) / 2;
+    var x0 = g.x + (g.w - gw) / 2, y0 = g.y + (g.region - gh) / 2, byGap = spec.colour === 'gap';
+    /* a text op whose ink comes from the gap scale */
+    function inked(o, d, within) { if (byGap) { o.gap = d; o.within = within; } }
     spec.rows.forEach(function (r) {
       var at = GRID[r.abbr], x = x0 + at[1] * (s + gap), y = y0 + at[0] * (s + gap);
       var t = 0.1 + 0.9 * (r.value - lo) / (hi - lo), a = ease(g.p * 1.8 - (at[0] + at[1]) * 0.045);
-      var c = t > 0.55 ? 'onacc' : 'ink';
-      g.ops.push({t: 'rect', x: x, y: y, w: s, h: s, mix: t, r: s * 0.12, a: a, key: r.key,
-        stroke: r.hi ? 'ink' : null, sw: 3.5 * k, title: r.label + ': ' + pct(r.value) + ' ' + pm(r.value, r.n)});
-      g.text(r.abbr, x + s / 2, y + s * 0.45, s * 0.28, 700, c, 'middle', a);
-      g.text(pct(r.value), x + s / 2, y + s * 0.78, s * 0.24, 400, c, 'middle', a);
+      var c = t > 0.55 ? 'onacc' : 'ink', d = gapOf(r.value, spec.ref.value), within = side(r, spec.ref.value) === 0;
+      var tile = {t: 'rect', x: x, y: y, w: s, h: s, r: s * 0.12, a: a, key: r.key,
+        stroke: r.hi ? 'ink' : null, sw: 3.5 * k, title: r.label + ': ' + pct(r.value) + ' ' + pm(r.value, r.n) +
+          (byGap ? ', ' + (d > 0 ? '+' : '') + d + ' pts' + (within ? ', within the margin' : '') : '')};
+      if (byGap) { tile.gap = d; tile.within = within; } else tile.mix = t;
+      g.ops.push(tile);
+      g.text(r.abbr, x + s / 2, y + s * 0.45, s * 0.28, 700, c, 'middle', a); inked(g.ops[g.ops.length - 1], d, within);
+      g.text(pct(r.value), x + s / 2, y + s * 0.78, s * 0.24, 400, c, 'middle', a); inked(g.ops[g.ops.length - 1], d, within);
     });
     /* the legend sits in the grid's empty top rows, between Alaska and Maine:
        the chosen state (or the U.S.) on the first, the shading key on the second */
     var lx = x0 + s + gap + 6 * k;
     g.text(spec.callout ? spec.callout + '  ·  ' + spec.ref.label : spec.ref.label, lx, y0 + s / 2 + ls * 0.35, ls, 700, 'ink');
     var ky = y0 + s + gap + s / 2;
+    if (byGap) {
+      /* points key: below to above, then the striped swatch */
+      var kx0 = lx + measure('−' + SPAN, ls, 400) + 8 * k;
+      g.text('−' + SPAN, lx, ky + ls * 0.35, ls, 400, 'ink2');
+      [-SPAN, -SPAN / 2, 0, SPAN / 2, SPAN].forEach(function (d, i) {
+        g.ops.push({t: 'rect', x: kx0 + i * sw, y: ky - ls * 0.55, w: sw, h: ls * 1.1, gap: d, r: 0});
+      });
+      var kx1 = kx0 + 5 * sw + 8 * k;
+      g.text('+' + SPAN + ' pts', kx1, ky + ls * 0.35, ls, 400, 'ink2');
+      var kx2 = kx1 + measure('+' + SPAN + ' pts', ls, 400) + 16 * k;
+      g.ops.push({t: 'rect', x: kx2, y: ky - ls * 0.55, w: sw, h: ls * 1.1, gap: 0, within: true, r: 0});
+      g.text('in margin', kx2 + sw + 8 * k, ky + ls * 0.35, ls, 400, 'ink2');
+      return g.y + g.region;
+    }
     g.text(pct(lo), lx, ky + ls * 0.35, ls, 400, 'ink2');
     var kx = lx + measure(pct(lo), ls, 400) + 8 * k;
     [0.1, 0.325, 0.55, 0.775, 1].forEach(function (t, i) {
@@ -276,19 +367,29 @@
   function r1(v) { return Math.round(v * 10) / 10; }
   /* CSS variables only resolve inside style=, not in presentation attributes everywhere */
   function paint(prop, v) { return /^(var|color-mix)\(/.test(v) ? ' style="' + prop + ':' + v + '"' : ' ' + prop + '="' + v + '"'; }
-  function colour(o, pal) { return o.mix != null ? pal.mix(o.mix) : pal[o.c]; }
+  function colour(o, pal) { return o.gap != null ? pal.gap(o.gap, o.within).fill : o.mix != null ? pal.mix(o.mix) : pal[o.c]; }
+  function inkOf(o, pal) { return o.gap != null ? pal.gap(o.gap, o.within).ink : pal[o.c]; }
+  var hatchN = 0;
   function radius(o) { return o.r != null ? o.r : Math.min(o.h, o.w) / 2; }
 
   function toSVG(spec, L, pal, bg) {
     var out = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + L.w + ' ' + L.h + '" width="' + L.w +
       '" height="' + L.h + '" role="img" aria-label="' + esc(spec.title) + '" font-family=\'' + SANS + '\'>'];
     if (bg) out.push('<rect width="100%" height="100%"' + paint('fill', pal[bg]) + '/>');
+    /* stripes for gaps inside the margin: one pattern per drawing, its own id */
+    var hid = null;
+    if (L.ops.some(function (o) { return o.within; })) {
+      var h = pal.hatch();
+      hid = 'chip50-hatch-' + (++hatchN);
+      out.push('<defs><pattern id="' + hid + '" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">' +
+        '<rect width="6" height="6" fill="' + h.mid + '"/><rect width="1.5" height="6" fill="' + h.stripe + '"/></pattern></defs>');
+    }
     L.ops.forEach(function (o) {
       var a = o.a != null && o.a < 1 ? ' opacity="' + r1(o.a) + '"' : '';
       if (o.t === 'rect') {
         if (o.w <= 0) return;
         out.push('<rect x="' + r1(o.x) + '" y="' + r1(o.y) + '" width="' + r1(o.w) + '" height="' + r1(o.h) +
-          '" rx="' + r1(radius(o)) + '"' + paint('fill', colour(o, pal)) + a +
+          '" rx="' + r1(radius(o)) + '"' + (o.within ? ' fill="url(#' + hid + ')"' : paint('fill', colour(o, pal))) + a +
           (o.stroke ? paint('stroke', pal[o.stroke]) + ' stroke-width="' + r1(o.sw) + '"' : '') +
           (o.key ? ' data-key="' + esc(o.key) + '"' : '') + '>' +
           (o.title ? '<title>' + esc(o.title) + '</title>' : '') + '</rect>');
@@ -297,14 +398,25 @@
           '" stroke-width="' + r1(o.sw) + '"' + paint('stroke', pal[o.c]) + a + '/>');
       } else {
         out.push('<text x="' + r1(o.x) + '" y="' + r1(o.y) + '" font-size="' + r1(o.size) + '" font-weight="' + o.weight +
-          '" text-anchor="' + o.anchor + '" pointer-events="none"' + a + paint('fill', pal[o.c]) + '>' + esc(o.text) + '</text>');
+          '" text-anchor="' + o.anchor + '" pointer-events="none"' + a + paint('fill', inkOf(o, pal)) + '>' + esc(o.text) + '</text>');
       }
     });
     return out.join('') + '</svg>';
   }
 
+  /* the same stripes as a canvas pattern: an 8px tile with seamless 45° lines */
+  function hatchPattern(ctx, h) {
+    var c = document.createElement('canvas'); c.width = c.height = 8;
+    var x = c.getContext('2d');
+    x.fillStyle = h.mid; x.fillRect(0, 0, 8, 8);
+    x.strokeStyle = h.stripe; x.lineWidth = 1.5; x.beginPath();
+    [[0, 8, 8, 0], [-1, 1, 1, -1], [7, 9, 9, 7]].forEach(function (l) { x.moveTo(l[0], l[1]); x.lineTo(l[2], l[3]); });
+    x.stroke();
+    return ctx.createPattern(c, 'repeat');
+  }
   function draw(ctx, L, pal, bg) {
     if (bg) { ctx.fillStyle = pal[bg]; ctx.fillRect(0, 0, L.w, L.h); }
+    var stripes = L.ops.some(function (o) { return o.within; }) ? hatchPattern(ctx, pal.hatch()) : null;
     L.ops.forEach(function (o) {
       ctx.globalAlpha = o.a == null ? 1 : o.a;
       if (o.t === 'rect') {
@@ -313,13 +425,13 @@
         ctx.beginPath();
         ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
         ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
-        ctx.fillStyle = colour(o, pal); ctx.fill();
+        ctx.fillStyle = o.within ? stripes : colour(o, pal); ctx.fill();
         if (o.stroke) { ctx.strokeStyle = pal[o.stroke]; ctx.lineWidth = o.sw; ctx.stroke(); }
       } else if (o.t === 'line') {
         ctx.strokeStyle = pal[o.c]; ctx.lineWidth = o.sw;
         ctx.beginPath(); ctx.moveTo(o.x1, o.y1); ctx.lineTo(o.x2, o.y2); ctx.stroke();
       } else {
-        ctx.font = font(o.size, o.weight); ctx.fillStyle = pal[o.c];
+        ctx.font = font(o.size, o.weight); ctx.fillStyle = inkOf(o, pal);
         ctx.textAlign = o.anchor === 'end' ? 'right' : o.anchor === 'middle' ? 'center' : 'left';
         ctx.fillText(o.text, o.x, o.y);
       }
@@ -447,6 +559,7 @@
     before.parentNode.insertBefore(p, before);
   }
 
-  window.CHIP50Kit = {view: view, across: across, loadSet: loadSet, flag: flag, DEFAULT_SET: DEFAULT_SET, moe: moe, pm: pm, star: star, FEW: FEW, CAUTION: CAUTION, GRID: GRID, LIGHT: LIGHT, THEMED: THEMED, layout: layout, toSVG: toSVG, draw: draw, canvas: canvas, mount: mount, load: load,
+  window.CHIP50Kit = {view: view, across: across, loadSet: loadSet, flag: flag, DEFAULT_SET: DEFAULT_SET, moe: moe, pm: pm, star: star, FEW: FEW, CAUTION: CAUTION,
+    scales: scales, SPAN: SPAN, shown: shown, gapOf: gapOf, side: side, GRID: GRID, LIGHT: LIGHT, THEMED: THEMED, layout: layout, toSVG: toSVG, draw: draw, canvas: canvas, mount: mount, load: load,
     png: png, svg: svg, csv: csv, clip: clip, save: save, pct: pct, num: num};
 })();

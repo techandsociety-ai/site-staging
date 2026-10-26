@@ -21,7 +21,7 @@ body{font:400 14px/1.45 var(--sans);font-variant-numeric:tabular-nums}
 .mono{font:500 12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .up{color:var(--above-ink)} .down{color:var(--below-ink)}
 
-/* ---------- sticky bar: the two filters, side by side, then the answer ---------- */
+/* ---------- sticky bar: the two filters, side by side ---------- */
 .xbar{position:sticky;top:0;z-index:70;display:flex;align-items:center;gap:14px;padding:9px 24px;height:64px;
   background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--rule)}
 .brand{display:flex;flex-direction:column;gap:2px;flex:none;margin-right:4px;text-decoration:none}
@@ -39,13 +39,6 @@ body{font:400 14px/1.45 var(--sans);font-variant-numeric:tabular-nums}
 .field>kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%)}
 kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);border:1px solid var(--rule);
   border-bottom-width:2px;border-radius:5px;padding:2px 5px;background:var(--surface)}
-.answer{display:flex;flex-direction:column;gap:3px;min-width:0;margin-left:6px}
-.answer .where{font:600 12.5px/1.2 var(--sans);color:var(--ink2);white-space:nowrap}
-.answer .nums{display:flex;align-items:baseline;gap:12px;white-space:nowrap}
-.answer .big{font:700 27px/1 var(--sans);color:var(--ink);letter-spacing:-.02em}
-.answer .us{font:500 13.5px/1 var(--sans);color:var(--ink2)}
-.answer .gap{font:700 13.5px/1 var(--sans)}
-.answer .n{font:400 12.5px/1 var(--sans);color:var(--muted)}
 .xbar .tools{margin-left:auto;display:flex;gap:10px;align-items:center;flex:none}
 .keys{display:flex;gap:11px;align-items:center;font:400 12px/1 var(--sans);color:var(--muted)}
 .keys span{white-space:nowrap}
@@ -172,7 +165,6 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       <div class="ff"><span><kbd>↑</kbd> <kbd>↓</kbd> move</span><span><kbd>Enter</kbd> choose</span><span><kbd>Esc</kbd> close</span><span><kbd>h</kbd> <kbd>l</kbd> step A to Z without opening</span><span><kbd>u</kbd> United States</span></div>
     </div>
   </div>
-  <div class="answer" id="answer" aria-live="polite"></div>
   <div class="tools">
     <div class="keys" aria-label="Keyboard shortcuts">
       <span><kbd>j</kbd><kbd>k</kbd> question</span><span><kbd>h</kbd><kbd>l</kbd> place</span><span><kbd>g</kbd> grid</span>
@@ -247,67 +239,14 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     ['South', 'TX FL GA NC VA TN MD SC AL LA KY OK AR MS WV DE DC'],
     ['West', 'CA WA AZ CO OR UT NV NM ID HI MT AK WY']
   ].map(([name, s]) => ({name, abbrs: s.split(' ')}));
-  const SPAN = 15;   /* vs U.S.: full colour at 15 points either side */
+  const SPAN = K.SPAN;   /* vs U.S.: full colour at this many points either side */
   const SETS = [['platforms-w38', 'Social media platforms'], ['insurance-w38', 'Health insurance']];
   const setName = SETS.some(x => x[0] === params.get('set')) ? params.get('set') : K.DEFAULT_SET;
 
-  /* the share scale: one blue, light to dark (dark to light in dark mode),
-     the same 0-100% on every row so the big platforms read as big
-     everywhere. Stops are the kit's blue ramp, interpolated in OKLab so equal
-     steps look equal; each cell's ink is whichever of white or near-black
-     contrasts more with its fill. */
-  const RAMP = {light: ['#f2f6fb', '#9ec5f4', '#3987e5', '#184f95', '#0d366b'],
-    dark: ['#1c2330', '#184f95', '#3987e5', '#86b6ef', '#cde2fb']};
-  const lin = c => (c /= 255) <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-  const gam = c => 255 * (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055);
-  const rgbOf = hex => { const n = parseInt(hex.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
-  function toLab(hex) {
-    const [r, g, b] = rgbOf(hex).map(lin);
-    const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b),
-      m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b),
-      q = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
-    return [0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * q, 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * q,
-      0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * q];
-  }
-  function toHex([L, a, b]) {
-    const l = Math.pow(L + 0.3963377774 * a + 0.2158037573 * b, 3), m = Math.pow(L - 0.1055613458 * a - 0.0638541728 * b, 3),
-      q = Math.pow(L - 0.0894841775 * a - 1.2914855480 * b, 3);
-    return '#' + [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * q, -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * q,
-      -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * q]
-      .map(c => Math.round(gam(Math.max(0, Math.min(1, c)))).toString(16).padStart(2, '0')).join('');
-  }
-  const lum = hex => { const [r, g, b] = rgbOf(hex).map(lin); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
-  const contrast = (x, y) => { const a = lum(x), b = lum(y); return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05); };
-  /* the points scale: below, the U.S. (a neutral grey), above. Both arms
-     end at the same OKLab lightness (0.74 light, 0.53 dark), so neither side
-     shouts louder than the other */
-  const DIVERGE = {light: ['#f18d68', '#f0efec', '#85aee3'], dark: ['#a45132', '#383835', '#3d6da8']};
-  const inkOn = fill => contrast(fill, '#ffffff') > contrast(fill, '#14140f') ? '#ffffff' : '#14140f';
+  /* the share and points scales come from the kit (K.scales), so the matrix,
+     the rails and the tile map colour alike; they're rebuilt per theme */
   let SCALE = [], DIV = [], HATCH = null;
-  function buildScale() {
-    const surf = getComputedStyle(document.documentElement).getPropertyValue('--surface').trim() || '#ffffff';
-    const mode = /^#[0-9a-f]{6}$/i.test(surf) && lum(surf) < 0.2 ? 'dark' : 'light';
-    const stops = RAMP[mode].map(toLab), seg = 100 / (stops.length - 1);
-    SCALE = [];
-    for (let v = 0; v <= 100; v++) {
-      const i = Math.min(stops.length - 2, Math.floor(v / seg)), t = (v - i * seg) / seg;
-      const fill = toHex(stops[i].map((c, k) => c + (stops[i + 1][k] - c) * t));
-      SCALE.push({fill, ink: inkOn(fill)});
-    }
-    /* DIV[i] is the fill at (i / 2 - SPAN) points, half-point steps */
-    const [lo, mid, hi] = DIVERGE[mode].map(toLab);
-    DIV = [];
-    for (let i = 0; i <= SPAN * 4; i++) {
-      const g = i / 2 - SPAN, end = g < 0 ? lo : hi, t = Math.abs(g) / SPAN;
-      const fill = toHex(mid.map((c, k) => c + (end[k] - c) * t));
-      DIV.push({fill, ink: inkOn(fill)});
-    }
-    /* a gap inside the margin of error: the grey midpoint with diagonal
-       stripes a step darker (lighter in dark mode), so "can't tell" never
-       reads as "same as the U.S.", which is plain grey */
-    const ink = toLab(mode === 'dark' ? '#f4f3ee' : '#14140f');
-    HATCH = {mid: DIV[SPAN * 2].fill, stripe: toHex(mid.map((c, k) => c + (ink[k] - c) * 0.085))};
-  }
+  function buildScale() { const sc = K.scales(); SCALE = sc.share; DIV = sc.div; HATCH = sc.hatch; }
   buildScale();
   const el = (tag, attrs, text) => {
     const e = document.createElement(tag);
@@ -793,17 +732,16 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       const q = qById.get(cur.q), st = cur.s ? val(q, cur.s) : null;
       qFly.sync(); pFly.sync();
       const g = st ? gapOf(st.value, q.us.value) : null;
-      $('answer').innerHTML = '<span class="where">' + esc((st ? st.name : 'United States') + ' · ' + q.label) + '</span>' +
-        '<span class="nums"><span class="big">' + pct(st ? st.value : q.us.value) + '</span>' +
-        '<span class="n" title="95% margin of error">' + K.pm(st ? st.value : q.us.value, st ? st.n : q.us.n) + '</span>' +
-        (st ? '<span class="us">U.S. ' + pct(q.us.value) + '</span><span class="gap ' + cls(g) + '">' + signed(g) + ' pts</span>' : '') +
-        '<span class="n">' + num(st ? st.n : q.us.n) + ' ' + BASE + '</span></span>';
       $('gsub').textContent = (TX.subtitle || 'Share of adults') + ', ' + q.wave + ', ' + q.fielded +
         '. Click a cell for both; a row name or column head for one.';
       $('rankBtn').textContent = 'Rank on ' + q.label;
       drawGrid();
       $('dh').textContent = q.label + ' · ' + (st ? st.name : 'United States');
-      $('dp').textContent = (st ? num(st.n) + ' ' + BASE + ' in ' + st.name : num(q.us.n) + ' U.S. ' + BASE) + ' answered · chart rows are clickable';
+      /* the numbers for the pair, now that the bar carries only the two pickers */
+      const where = st ? (side(q, st) === 0 ? 'within the margin of error' : g > 0 ? 'above the U.S.' : 'below the U.S.') : '';
+      $('dp').textContent = pct(st ? st.value : q.us.value) + ' ' + K.pm(st ? st.value : q.us.value, st ? st.n : q.us.n) +
+        (st ? ' · U.S. ' + pct(q.us.value) + ' · ' + signed(g) + ' pts, ' + where : '') +
+        ' · ' + (st ? num(st.n) + ' ' + BASE + ' in ' + st.name : num(q.us.n) + ' U.S. ' + BASE) + ' answered';
       pBy.set(K.view(q, 'by', cur.s));
       pAcross.set(K.across(Q, cur.s, index));
       pStates.set(K.view(q, 'states', cur.s));

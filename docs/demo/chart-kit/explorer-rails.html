@@ -73,6 +73,13 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink2
 .rail.l .list{padding-top:3px}
 .gp{font:500 12.5px/1 var(--sans);text-align:right}
 .gp.p{color:var(--pos)}.gp.n{color:var(--neg)}.gp.z{color:var(--muted)}
+/* gaps as chips in the matrix's colours: orange below the U.S., blue above,
+   striped grey inside the 95% margin of error */
+.gp.c{justify-self:end;padding:3px 5px;border-radius:4px;font-weight:600;font-size:12px}
+.chip{display:block;width:12px;height:12px;border-radius:3px;justify-self:end}
+.grp{display:flex;justify-content:space-between;gap:8px;padding:9px 12px 4px;font:650 10.5px/1 var(--sans);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--muted)}
+.grp span:last-child{letter-spacing:0;text-transform:none;font-weight:500}
 .mb{position:relative;height:8px;border-radius:4px;background:var(--rule2)}
 .mb i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--acc)}
 .mb b{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:var(--ink);border-radius:1px}
@@ -88,6 +95,9 @@ kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink2
 .dp::before{content:"";position:absolute;left:0;right:0;top:11px;height:1px;background:var(--rule2)}
 /* the U.S. line runs the full row height, so stacked rows draw one line */
 .dp b{position:absolute;top:0;bottom:0;width:1.5px;margin-left:-.75px;background:color-mix(in srgb,var(--ink) 55%,transparent)}
+/* the state's 95% margin of error, through its dot */
+.dp s{position:absolute;top:10.5px;height:2px;border-radius:1px;background:color-mix(in srgb,var(--ink) 30%,transparent)}
+.rail.r .row.us .dp s{top:14px}
 .dp i{position:absolute;top:7.5px;width:8px;height:8px;margin-left:-4px;border-radius:50%;
   background:color-mix(in srgb,var(--acc) 60%,var(--surface));border:1px solid var(--acc)}
 .row.on .dp i,.row.us .dp i{width:10px;height:10px;top:6.5px;margin-left:-5px;background:var(--acc);
@@ -124,6 +134,11 @@ h1.q .pl{display:inline-block;vertical-align:4px;margin-left:6px;font:650 15px/1
 .panel h2::before{display:none}
 .panel .sub{font:400 13px/1.45 var(--sans);color:var(--ink2);margin:0 0 12px}
 .panel .kind{font:600 11px/1 var(--sans);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.mhead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.mseg{display:inline-flex;border:1px solid var(--rule);border-radius:7px;overflow:hidden;flex:none}
+.mseg button{font:500 11.5px/1 var(--sans);color:var(--ink2);background:transparent;border:0;padding:5px 8px;cursor:pointer}
+.mseg button+button{border-left:1px solid var(--rule)}
+.mseg button[aria-pressed=true]{background:var(--soft);color:var(--acct);font-weight:650}
 .chart svg{display:block;width:100%;height:auto}
 #map [data-key]{cursor:pointer}
 #map [data-key]:hover{stroke:var(--ink);stroke-width:2px}
@@ -195,7 +210,8 @@ dl.notes code{white-space:normal;font-size:12px}
           <div class="chart" id="byChart"></div>
         </section>
         <section class="panel" id="mapCard">
-          <p class="kind">Every state · click a tile to pick it</p>
+          <div class="mhead"><p class="kind">Every state · click a tile to pick it</p>
+            <div class="mseg" role="group" aria-label="Colour tiles by"><button type="button" data-m="gap" aria-pressed="true">vs U.S.</button><button type="button" data-m="share" aria-pressed="false">Share</button></div></div>
           <h2 id="mapTitle"></h2>
           <p class="sub" id="mapSub"></p>
           <div class="chart" id="map"></div>
@@ -220,7 +236,7 @@ dl.notes code{white-space:normal;font-size:12px}
       <p class="rnow" id="pNow"></p>
       <div class="srch"><input type="search" id="pSearch" placeholder="Search states" autocomplete="off" aria-label="Search places"><kbd>s</kbd></div>
     </div>
-    <div class="colh"><span>#</span><span>Place</span><span class="dom" id="pDom"></span><span>Share</span><span>n</span></div>
+    <div class="colh"><span></span><span>Place</span><span class="dom" id="pDom"></span><span>Share</span><span>n</span></div>
     <div class="list" id="pList" role="listbox" aria-label="Places"></div>
   </aside>
 </div>
@@ -351,8 +367,9 @@ dl.notes code{white-space:normal;font-size:12px}
         if (s) { var t = el('b'); t.style.left = q.us.value + '%'; mb.appendChild(t); }
         b.appendChild(mb);
         b.appendChild(el('span', {'class': 'v'}, K.pct(v)));
-        var g = s ? gap(s.value, q.us.value) : null;
-        b.appendChild(el('span', {'class': 'gp ' + (g ? gapCls(g) : 'z')}, g ? gapTxt(g) : '—'));
+        var g = s ? gap(s.value, q.us.value) : null, gp = el('span', {'class': 'gp ' + (g ? 'c' : 'z')}, g ? gapTxt(g) : '—');
+        if (g) paint(gp, g.d, K.side(s, q.us.value) === 0);
+        b.appendChild(gp);
         b.onclick = function () { pickQ(q.id); };
         list.appendChild(b);
       });
@@ -371,22 +388,36 @@ dl.notes code{white-space:normal;font-size:12px}
        states a few points apart sit visibly apart; it is a dot plot, not bars,
        because a zoomed axis can't carry bar lengths. */
     function ranked(q) { return q.states.slice().sort(function (a, b) { return b.value - a.value; }); }
+    /* places in three groups, the matrix's murky-middle split: above the U.S.
+       by more than the state's 95% margin of error, within it, below it;
+       highest first inside each. The keys walk this same order. */
+    var GROUPS = {'1': 'Above the U.S.', '0': 'Within the margin of error', '-1': 'Below the U.S.'};
     function pRows() {
-      var f = state.pFilter.trim().toLowerCase();
-      return ranked(byId[state.q]).map(function (s, i) { return {s: s, rank: i + 1}; }).filter(function (r) {
-        return !f || (r.s.name + ' ' + r.s.abbr + ' ' + r.s.label).toLowerCase().indexOf(f) >= 0;
-      });
+      var f = state.pFilter.trim().toLowerCase(), q = byId[state.q];
+      return ranked(q).map(function (s) { return {s: s, band: K.side(s, q.us.value)}; })
+        .sort(function (a, b) { return b.band - a.band || b.s.value - a.s.value; })
+        .filter(function (r) { return !f || (r.s.name + ' ' + r.s.abbr + ' ' + r.s.label).toLowerCase().indexOf(f) >= 0; });
+    }
+    /* colour an element as a gap: fill and ink from the shared scale, stripes inside the margin */
+    function paint(node, d, within) {
+      var sc = K.scales(), f = sc.gap(d, within);
+      node.style.background = within ? sc.stripes : f.fill;
+      node.style.color = f.ink;
+      node.title = within ? 'Within the 95% margin of error' : (d > 0 ? 'Above' : 'Below') + ' the U.S. by more than the margin of error';
     }
     function renderP() {
       var q = byId[state.q], list = $('pList'), rows = pRows();
-      var vals = q.states.map(function (s) { return s.value; }).concat([q.us.value]);
+      /* the track spans the margins too, so no whisker runs off it */
+      var vals = q.states.map(function (s) { return s.value - (K.moe(s.value, s.n) || 0); })
+        .concat(q.states.map(function (s) { return s.value + (K.moe(s.value, s.n) || 0); }), [q.us.value]);
       var lo = Math.floor(Math.min.apply(null, vals) / 5) * 5, hi = Math.ceil(Math.max.apply(null, vals) / 5) * 5;
       if (hi - lo < 5) hi = lo + 5;
       var X = function (v) { return ((v - lo) / (hi - lo) * 100) + '%'; };
       list.textContent = '';
-      function dot(v, us) {
-        var d = el('span', {'class': 'dp'});
+      function dot(v, us, n) {
+        var d = el('span', {'class': 'dp'}), m = K.moe(v, n);
         if (us) { var t = el('b'); t.style.left = X(q.us.value); d.appendChild(t); }
+        if (m) { var w = el('s'); w.style.left = X(v - m); w.style.width = 'calc(' + X(v + m) + ' - ' + X(v - m) + ')'; d.appendChild(w); }
         var i = el('i'); i.style.left = X(v); d.appendChild(i);
         return d;
       }
@@ -394,24 +425,31 @@ dl.notes code{white-space:normal;font-size:12px}
         role: 'option', 'aria-selected': String(!state.place), 'data-slug': ''});
       u.appendChild(el('span', {'class': 'rk'}, ''));
       u.appendChild(el('span', {'class': 'nm'}, 'United States'));
-      u.appendChild(dot(q.us.value, false));
+      u.appendChild(dot(q.us.value, false, q.us.n));
       u.appendChild(el('span', {'class': 'v'}, K.pct(q.us.value)));
       u.appendChild(el('span', {'class': 'nn'}, K.num(q.us.n)));
       u.onclick = function () { pickP(null); };
       list.appendChild(u);
       var lab = el('div', {'class': 'usl'});
-      lab.appendChild(el('span', {}, q.label + ', highest first'));
+      lab.appendChild(el('span', {}, q.label + ' · lines: 95% margins'));
       lab.appendChild(el('span', {}, 'line = U.S. ' + K.pct(q.us.value)));
       list.appendChild(lab);
       if (!rows.length) list.appendChild(el('div', {'class': 'empty'}, 'No place matches “' + state.pFilter + '”.'));
       rows.forEach(function (r, i) {
         var s = r.s;
+        if (!i || r.band !== rows[i - 1].band) {
+          var h = el('div', {'class': 'grp'}), cnt = rows.filter(function (x) { return x.band === r.band; }).length;
+          h.appendChild(el('span', {}, GROUPS[r.band])); h.appendChild(el('span', {}, cnt + (cnt === 1 ? ' place' : ' places')));
+          list.appendChild(h);
+        }
         var b = el('button', {'class': 'row' + (s.slug === state.place ? ' on' : '') + (i === state.pAct ? ' act' : ''),
           role: 'option', 'aria-selected': String(s.slug === state.place), 'data-slug': s.slug,
           title: s.name + ': ' + K.pct(s.value) + ' of ' + K.num(s.n) + ' ' + BASE + ' (' + K.pm(s.value, s.n) + ')'});
-        b.appendChild(el('span', {'class': 'rk'}, String(r.rank)));
+        var chip = el('span', {'class': 'chip'});
+        paint(chip, gap(s.value, q.us.value).d, r.band === 0);
+        b.appendChild(chip);
         b.appendChild(el('span', {'class': 'nm'}, s.label));
-        b.appendChild(dot(s.value, true));
+        b.appendChild(dot(s.value, true, s.n));
         b.appendChild(el('span', {'class': 'v'}, K.pct(s.value)));
         b.appendChild(el('span', {'class': 'nn'}, K.num(s.n)));
         b.onclick = function () { pickP(s.slug); };
@@ -422,7 +460,7 @@ dl.notes code{white-space:normal;font-size:12px}
     }
 
     /* ---------- canvas ---------- */
-    var mapSpec;
+    var mapSpec, mapMode = new URLSearchParams(location.search).get('map') === 'share' ? 'share' : 'gap';
     function drawMap() {
       var box = $('map'), W = Math.max(420, Math.round(box.clientWidth || 600)), H = Math.round(W * 0.7);
       box.innerHTML = K.toSVG(mapSpec, K.layout(mapSpec, W, H, {bare: true}), K.THEMED);
@@ -430,7 +468,7 @@ dl.notes code{white-space:normal;font-size:12px}
     function renderCanvas() {
       var q = byId[state.q], s = st(q), name = placeName();
       var bySpec = K.view(q, 'by', state.place);
-      mapSpec = K.view(q, 'states', state.place);
+      mapSpec = K.view(q, 'states', state.place); mapSpec.colour = mapMode;
       $('eyebrow').textContent = q.topic + ' · ' + q.wave + ', fielded ' + q.fielded;
       var t = $('title'); t.textContent = q.question + ' ';
       t.appendChild(el('span', {'class': 'pl'}, name));
@@ -447,24 +485,29 @@ dl.notes code{white-space:normal;font-size:12px}
       if (s) {
         stat(name, K.pct(s.value), says(q) + ' · ' + K.pm(s.value, s.n), ' main');
         stat('United States', K.pct(q.us.value), 'all ' + K.num(q.us.n) + ' ' + BASE);
-        var g = gap(s.value, q.us.value), gn = stat('Gap', gapTxt(g) + ' pts', name + ' minus U.S.');
-        gn.className = 'n ' + ({p: 'p', n: 'neg', z: ''})[gapCls(g)];
+        var g = gap(s.value, q.us.value), inside = K.side(s, q.us.value) === 0;
+        var gn = stat('Gap', gapTxt(g) + ' pts', inside ? 'within the margin of error' : (g.d > 0 ? 'above' : 'below') + ' the U.S. by more than the margin');
+        gn.className = 'n ' + (inside ? '' : ({p: 'p', n: 'neg', z: ''})[gapCls(g)]);
         stat('Respondents', K.num(s.n), BASE + ' in ' + name);
         $('caveat').textContent = 'The 95% margin of error for ' + name + ' is ' + K.pm(s.value, s.n) + ' points (the Work report’s Table 8 formula, ' +
           'unweighted n; weighting widens it), so this gap is ' + (Math.abs(g.d) <= K.moe(s.value, s.n) ? 'within it.' : 'bigger than it.');
       } else {
-        var r = ranked(q);
-        stat('United States', K.pct(q.us.value), says(q), ' main');
-        stat('Highest state', K.pct(r[0].value), r[0].name);
-        stat('Lowest state', K.pct(r[r.length - 1].value), r[r.length - 1].name);
+        /* groups, not a top and bottom state: the order inside a group is noise */
+        var bands = q.states.map(function (x) { return K.side(x, q.us.value); });
+        var count = function (b) { var c = bands.filter(function (x) { return x === b; }).length; return c + (c === 1 ? ' place' : ' places'); };
+        stat('United States', K.pct(q.us.value), says(q) + ' · ' + K.pm(q.us.value, q.us.n), ' main');
+        stat('Above the U.S.', count(1), 'by more than the margin of error');
+        stat('Below the U.S.', count(-1), 'by more than the margin of error');
         stat('Respondents', K.num(q.us.n), 'U.S. ' + BASE + ' · ' + nRange + ' per state');
-        $('caveat').textContent = 'Pick a place on the right to compare it with the U.S. Margins of error aren’t served by the MCP yet (#273); state gaps of a few points may be noise.';
+        $('caveat').textContent = count(0) + ' sit within their 95% margin of error of the U.S. (the Work report’s Table 8 formula, unweighted n; ' +
+          'weighting widens it). Pick a place on the right to compare it.';
       }
 
       $('byKind').textContent = 'By ' + q.byName + (s ? ' · ' + name + ' with U.S. ticks' : ' · U.S.');
       $('byTitle').textContent = bySpec.title; $('bySub').textContent = bySpec.subtitle;
       byChart.set(bySpec);
-      $('mapTitle').textContent = mapSpec.title; $('mapSub').textContent = mapSpec.subtitle;
+      $('mapTitle').textContent = mapSpec.title;
+      $('mapSub').textContent = mapSpec.subtitle + (mapMode === 'gap' ? '. Colour: points from the U.S., striped inside the state’s 95% margin of error' : '');
       drawMap();
 
       var notes = $('notes'); notes.textContent = '';
@@ -500,6 +543,7 @@ dl.notes code{white-space:normal;font-size:12px}
     /* the tile map has no embed (the embed draws the ranked list); its PNG is the square tile card */
     var mapTools = tools($('mapCard'), function () {
       var q = byId[state.q], sp = K.view(q, 'states', state.place);
+      sp.colour = mapMode;
       return {spec: sp, what: 'tile map PNG, 1080 × 1080',
         png: function () { K.png(sp, 1080, 1080, sp.stem + '-map.png'); }};
     }, {embed: false, svg: false});
@@ -531,6 +575,18 @@ dl.notes code{white-space:normal;font-size:12px}
     };
     document.addEventListener('click', closePop);
 
+    [].forEach.call(document.querySelectorAll('.mseg button'), function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-m') === mapMode));
+      b.onclick = function () {
+        mapMode = b.getAttribute('data-m');
+        [].forEach.call(document.querySelectorAll('.mseg button'), function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        renderCanvas();
+      };
+    });
+    /* chips and tiles carry computed colours, so a theme change repaints them */
+    var repaint = function () { renderQ(); renderP(); drawMap(); };
+    new MutationObserver(repaint).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', repaint);
     $('radioCopy').onclick = function () { copy($('radio').textContent, $('radioCopy'), 'Copy radio copy'); };
     $('map').addEventListener('click', function (e) {
       var k = e.target.getAttribute && e.target.getAttribute('data-key');
