@@ -142,15 +142,15 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
 <body>
 <header class="xbar">
   <a class="brand" href="index.html"><b>CHIP50</b><span>Matrix explorer</span></a>
-  <div class="setpick"><label for="setSel">Questions</label><select id="setSel"></select></div>
+  <div class="setpick"><label for="setSel">Topic</label><select id="setSel"></select></div>
   <div class="field" id="fq">
-    <label for="qi">Question</label>
+    <label for="qi">Item</label>
     <input id="qi" role="combobox" aria-expanded="false" aria-controls="ql" aria-autocomplete="list" autocomplete="off" spellcheck="false">
     <kbd>/</kbd>
     <div class="fly">
       <div class="fh" id="qh"></div>
       <div class="cols qc" id="qcols"></div>
-      <div class="fl" id="ql" role="listbox" aria-label="Questions"></div>
+      <div class="fl" id="ql" role="listbox" aria-label="Items"></div>
       <div class="ff"><span><kbd>↑</kbd> <kbd>↓</kbd> move</span><span><kbd>Enter</kbd> choose</span><span><kbd>Esc</kbd> close</span><span><kbd>j</kbd> <kbd>k</kbd> step without opening</span></div>
     </div>
   </div>
@@ -167,7 +167,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
   </div>
   <div class="tools">
     <div class="keys" aria-label="Keyboard shortcuts">
-      <span><kbd>j</kbd><kbd>k</kbd> question</span><span><kbd>h</kbd><kbd>l</kbd> place</span><span><kbd>g</kbd> grid</span>
+      <span><kbd>j</kbd><kbd>k</kbd> item</span><span><kbd>h</kbd><kbd>l</kbd> place</span><span><kbd>g</kbd> grid</span>
       <span class="wide"><kbd>/</kbd><kbd>s</kbd> search</span><span class="wide"><kbd>u</kbd> U.S.</span>
     </div>
     <button class="btn" id="tt" aria-label="Toggle dark mode">Theme</button>
@@ -196,7 +196,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       </div>
       <button class="btn sm" type="button" id="gridCsv">CSV</button>
     </div>
-    <div id="grid" tabindex="0" role="application" aria-label="Question by place grid. Arrow keys move the selection; g focuses it."></div>
+    <div id="grid" tabindex="0" role="application" aria-label="The grid: every item by place. Arrow keys move the selection; g focuses it."></div>
     <div class="pin" id="pin" aria-hidden="true"></div>
     <div class="legend">
       <div id="ramp"></div>
@@ -240,10 +240,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     ['West', 'CA WA AZ CO OR UT NV NM ID HI MT AK WY']
   ].map(([name, s]) => ({name, abbrs: s.split(' ')}));
   const SPAN = K.SPAN;   /* vs U.S.: full colour at this many points either side */
-  /* the W39 sets; the W38 ones (platforms-w38, trust-w38, insurance-w38) still open with ?set= */
-  const SETS = [['issues-w39', 'Midterm issues · W39'], ['platforms-w39', 'Social media platforms · W39'], ['trust-w39', 'Trust in institutions · W39']];
-  if (/-w38$/.test(params.get('set') || '')) SETS.push([params.get('set'), params.get('set').replace(/-w38$/, ' · W38')]);
-  const setName = SETS.some(x => x[0] === params.get('set')) ? params.get('set') : K.DEFAULT_SET;
+  const setName = /^[a-z0-9-]+$/.test(params.get('set') || '') ? params.get('set') : K.DEFAULT_SET;
 
   /* the share and points scales come from the kit (K.scales), so the matrix,
      the rails and the tile map colour alike; they're rebuilt per theme */
@@ -277,14 +274,13 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
 
   K.loadSet(setName).then(({index, questions: Q}) => {
     const TX = index.text || {}, BASE = TX.base || 'adults';
-    const sel = $('setSel');
-    SETS.forEach(([v, l]) => { const o = el('option', {value: v}, l); if (v === setName) o.selected = true; sel.appendChild(o); });
-    /* another set has other questions, so the switch keeps only the place */
-    sel.onchange = () => {
-      const u = new URL(location.href);
-      u.searchParams.set('set', sel.value); u.searchParams.delete('q');
-      location.href = u.href;
-    };
+    K.topicPicker($('setSel'), index.set);
+    /* the set's own word for one of its items (an issue, a platform), for every label */
+    const ITEM = TX.item || 'Item', NOUN = TX.noun || 'items', item = ITEM.toLowerCase();
+    document.querySelector('label[for=qi]').textContent = ITEM;
+    $('ql').setAttribute('aria-label', NOUN[0].toUpperCase() + NOUN.slice(1));
+    $('grid').setAttribute('aria-label', 'Every ' + item + ' by place. Arrow keys move the selection; g focuses it.');
+    document.querySelector('.keys span').innerHTML = '<kbd>j</kbd><kbd>k</kbd> ' + esc(item);
     K.flag($('gridcol'), index);
     const qById = new Map(Q.map(q => [q.id, q]));
     /* q.states[] is alphabetical by name and in the same order for every question */
@@ -384,9 +380,9 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
             '<span class="g r ' + cls(g) + '">' + (s ? signed(g) : '') + '</span>'};
       }),
       head: n => {
-        $('qh').innerHTML = '<b>' + n + ' of ' + Q.length + '</b> questions · shares for <b>' + esc(cur.s ? pBySlug.get(cur.s).name : 'the United States') + '</b>' +
+        $('qh').innerHTML = '<b>' + n + ' of ' + Q.length + '</b> ' + esc(NOUN) + ' · shares for <b>' + esc(cur.s ? pBySlug.get(cur.s).name : 'the United States') + '</b>' +
           (cur.s ? ' · tick = U.S.' : '') + '<span class="sp"></span>' + esc(Q[0].wave);
-        $('qcols').innerHTML = '<span>Question</span><span>Share</span><span class="r">' + esc(cur.s ? pBySlug.get(cur.s).abbr : 'U.S.') +
+        $('qcols').innerHTML = '<span>' + esc(ITEM) + '</span><span>Share</span><span class="r">' + esc(cur.s ? pBySlug.get(cur.s).abbr : 'U.S.') +
           '</span><span class="r">' + (cur.s ? 'U.S.' : '') + '</span><span class="r">' + (cur.s ? 'vs U.S.' : '') + '</span>';
       },
       current: () => cur.q, text: () => qById.get(cur.q).label, pick: id => select(id, cur.s)
@@ -414,7 +410,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
         $('ph').innerHTML = '<b>' + esc(q.label) + '</b> in 50 states and D.C. · U.S. ' + pct(q.us.value) + ' · tick = U.S.<span class="sp"></span>' +
           '<span class="seg" id="pSort"><button type="button" data-p="az" aria-pressed="' + (pSort === 'az') + '">A to Z</button>' +
           '<button type="button" data-p="share" aria-pressed="' + (pSort === 'share') + '">By share</button></span>';
-        $('pcols').innerHTML = '<span title="Rank on this question">#</span><span>Place</span><span>Share</span><span class="r">%</span><span class="r">vs U.S.</span><span class="r">n</span>';
+        $('pcols').innerHTML = '<span title="Rank on this ' + esc(item) + '">#</span><span>Place</span><span>Share</span><span class="r">%</span><span class="r">vs U.S.</span><span class="r">n</span>';
       },
       current: () => cur.s || '', text: () => cur.s ? pBySlug.get(cur.s).name : 'United States', pick: id => select(cur.q, id || null)
     });
@@ -543,7 +539,8 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       G.cols.forEach((c, i) => { if (c.first) runs.push({name: c.name, i0: i, n: 0}); runs[runs.length - 1].n++; });
       runs.forEach(r => {
         const x0 = G.xs[r.i0], x1 = G.xs[r.i0 + r.n - 1] + G.cw;
-        const tries = order === 'rank' ? [r.name + ' · ' + r.n, r.name.split(' ')[0] + ' · ' + r.n, String(r.n)] : [r.name];
+        const arrow = /^Above/.test(r.name) ? '▲ ' : /^Below/.test(r.name) ? '▼ ' : '';
+        const tries = order === 'rank' ? [r.name + ' · ' + r.n, r.name.split(' ')[0] + ' · ' + r.n, arrow + r.n] : [r.name];
         const label = tries.find(t => t.length * 7.4 <= x1 - x0) || tries[tries.length - 1];
         o.push('<text x="' + x0 + '" y="12" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">' + esc(label.toUpperCase()) + '</text>');
         o.push('<line x1="' + x0 + '" x2="' + x1 + '" y1="17" y2="17" stroke-width="1" style="stroke:var(--rule)"/>');
@@ -754,7 +751,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       radio(q, st);
       document.title = q.label + ' · ' + (st ? st.name : 'U.S.') + ' — CHIP50 matrix explorer';
     }
-    $('gh').textContent = TX.title || 'Every question in every state';
+    $('gh').textContent = TX.title || 'Every ' + item + ' in every state';
     const noise = () => {
       const sw = 'display:inline-block;width:22px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:6px;' +
         'background:repeating-linear-gradient(45deg,' + HATCH.stripe + ' 0 1.5px,' + HATCH.mid + ' 1.5px 6px)';
@@ -774,7 +771,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     if (params.get('open') === 'place') pFly.focus();
     if (params.get('focus') === 'grid') $('grid').focus();
   }).catch(err => {
-    document.querySelector('main').insertAdjacentHTML('afterbegin', '<p class="panel">Could not load the questions: ' + esc(err.message) + '</p>');
+    document.querySelector('main').insertAdjacentHTML('afterbegin', '<p class="panel">Could not load this topic: ' + esc(err.message) + '</p>');
   });
 })();
 </script>

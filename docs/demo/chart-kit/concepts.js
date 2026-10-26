@@ -1,9 +1,9 @@
 /* Demo only: a switcher pinned to the bottom of the window that moves between
-   the three explorer concepts on the same question and place. Each page
+   the two explorer concepts on the same item and place. Each page
    keeps ?q= and ?state= in its URL, so the switch reads them at click time. */
 (function () {
-  var pages = [['explorer.html', 'Command bar'], ['explorer-rails.html', 'Rails'], ['explorer-matrix.html', 'Matrix']];
-  var here = location.pathname.split('/').pop() || 'explorer.html';
+  var pages = [['explorer-rails.html', 'Rails'], ['explorer-matrix.html', 'Matrix']];
+  var here = location.pathname.split('/').pop();
   var nav = document.createElement('nav');
   nav.setAttribute('aria-label', 'Explorer concepts');
   nav.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:200;display:flex;align-items:center;gap:2px;padding:4px;' +

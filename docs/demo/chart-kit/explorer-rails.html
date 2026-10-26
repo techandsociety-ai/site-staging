@@ -21,6 +21,9 @@ button{font:inherit;color:inherit}
   background:var(--surface)}
 .bar0 .mark{font:640 14.5px/1 var(--sans);color:var(--ink);text-decoration:none;white-space:nowrap}
 .bar0 .mark .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--acc);margin-right:8px}
+.setpick{display:flex;align-items:center;gap:7px;flex:none}
+.setpick label{font:650 10.5px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.setpick select{font:600 13px/1.2 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--rule);border-radius:7px;padding:4px 7px}
 .bar0 .meta{font:400 13px/1.3 var(--sans);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar0 .keys{margin-left:auto;font:400 12.5px/1 var(--sans);color:var(--muted);white-space:nowrap}
 kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink2);background:var(--rule2);
@@ -174,25 +177,26 @@ dl.notes code{white-space:normal;font-size:12px}
 <body>
 <header class="bar0">
   <a class="mark" href="../../index.html"><span class="dot"></span>CHIP50 Explorer</a>
+  <span class="setpick"><label for="setSel">Topic</label><select id="setSel"></select></span>
   <span class="meta" id="meta"></span>
-  <span class="keys"><kbd>/</kbd>question<kbd>s</kbd>place<kbd>j</kbd><kbd style="margin-left:0">k</kbd>next question<kbd>u</kbd>U.S.<kbd>esc</kbd>clear</span>
+  <span class="keys" id="keys"><kbd>/</kbd><span class="ki">item</span><kbd>s</kbd>place<kbd>j</kbd><kbd style="margin-left:0">k</kbd>next <span class="ki">item</span><kbd>u</kbd>U.S.<kbd>esc</kbd>clear</span>
   <button class="btn" id="tt" aria-label="Toggle dark mode">Theme</button>
 </header>
 <div class="app">
-  <aside class="rail l" aria-label="Questions">
+  <aside class="rail l" id="railL" aria-label="Items">
     <div class="rhead">
-      <div class="rlab"><span>Question</span><span class="tools"><button class="tb" id="acrossBtn" aria-expanded="false">Export this list</button></span></div>
+      <div class="rlab"><span id="qRailLab">Item</span><span class="tools"><button class="tb" id="acrossBtn" aria-expanded="false">Export this list</button></span></div>
       <p class="rnow" id="qNow"></p>
-      <div class="srch"><input type="search" id="qSearch" placeholder="Search questions" autocomplete="off" aria-label="Search questions"><kbd>/</kbd></div>
-      <div class="seg" role="group" aria-label="Sort questions">
+      <div class="srch"><input type="search" id="qSearch" placeholder="Search" autocomplete="off" aria-label="Search"><kbd>/</kbd></div>
+      <div class="seg" role="group" aria-label="Sort">
         <button type="button" data-sort="set" aria-pressed="true">Set order</button>
         <button type="button" data-sort="value" aria-pressed="false">Share</button>
         <button type="button" data-sort="gap" aria-pressed="false">Gap vs U.S.</button>
       </div>
     </div>
-    <div class="colh"><span id="qColPlace">Question</span><span></span><span id="qColVal">Share</span><span>Gap</span></div>
+    <div class="colh"><span id="qColPlace">Item</span><span></span><span id="qColVal">Share</span><span>Gap</span></div>
     <div class="usl" id="qLegend"></div>
-    <div class="list" id="qList" role="listbox" aria-label="Questions"></div>
+    <div class="list" id="qList" role="listbox" aria-label="Items"></div>
   </aside>
 
   <main class="canvas" id="canvas">
@@ -312,7 +316,15 @@ dl.notes code{white-space:normal;font-size:12px}
   K.loadSet(new URLSearchParams(location.search).get('set')).then(function (S) {
     var QS = S.questions, IX = S.index, byId = {};
     K.flag($('canvas').firstElementChild, IX);
-    var TX = IX.text || {}, BASE = TX.base || 'adults', NOUN = TX.noun || 'questions';
+    var TX = IX.text || {}, BASE = TX.base || 'adults', NOUN = TX.noun || 'items';
+    /* the set's own word for one of its items (an issue, a platform), for every label */
+    var ITEM = TX.item || 'Item', item = ITEM.toLowerCase();
+    K.topicPicker($('setSel'), IX.set);
+    [].forEach.call(document.querySelectorAll('#keys .ki'), function (s) { s.textContent = item; });
+    $('railL').setAttribute('aria-label', NOUN[0].toUpperCase() + NOUN.slice(1));
+    $('qList').setAttribute('aria-label', NOUN[0].toUpperCase() + NOUN.slice(1));
+    $('qRailLab').textContent = ITEM;
+    $('qSearch').placeholder = 'Search ' + NOUN; $('qSearch').setAttribute('aria-label', 'Search ' + NOUN);
     var says = function (q) { return (TX.answer || 'say they use {phrase}').replace('{phrase}', q.phrase || q.label); };
     var ns = QS[0].states.map(function (s) { return s.n; }), nRange = K.num(Math.min.apply(null, ns)) + ' to ' + K.num(Math.max.apply(null, ns));
     QS.forEach(function (q) { byId[q.id] = q; });
@@ -357,7 +369,7 @@ dl.notes code{white-space:normal;font-size:12px}
     function renderQ() {
       var list = $('qList'), rows = qRows();
       list.textContent = '';
-      if (!rows.length) list.appendChild(el('div', {'class': 'empty'}, 'No question matches “' + state.qFilter + '”.'));
+      if (!rows.length) list.appendChild(el('div', {'class': 'empty'}, 'No ' + item + ' matches “' + state.qFilter + '”.'));
       rows.forEach(function (q, i) {
         var s = st(q), v = s ? s.value : q.us.value;
         var b = el('button', {'class': 'row' + (q.id === state.q ? ' on' : '') + (i === state.qAct ? ' act' : ''),
@@ -375,7 +387,7 @@ dl.notes code{white-space:normal;font-size:12px}
         list.appendChild(b);
       });
       $('qColVal').textContent = state.place ? places[slugs.indexOf(state.place)].abbr : 'U.S.';
-      $('qColPlace').textContent = 'Question (' + rows.length + ')';
+      $('qColPlace').textContent = NOUN[0].toUpperCase() + NOUN.slice(1) + ' (' + rows.length + ')';
       $('qLegend').textContent = state.place ? 'Bars: ' + placeName() + ', 0–100% · ticks: U.S. · gap in points' :
         'Bars: U.S. share, 0–100% · pick a place for gaps';
       [].forEach.call(document.querySelectorAll('.seg button'), function (x) {
@@ -556,7 +568,7 @@ dl.notes code{white-space:normal;font-size:12px}
       e.stopPropagation();
       if (pop) { closePop(); return; }
       pop = el('div', {'class': 'pop'});
-      pop.appendChild(el('p', {'class': 'kind'}, 'This list as a chart: one place across every question'));
+      pop.appendChild(el('p', {'class': 'kind'}, 'This list as a chart: one place across every ' + item));
       var r = $('acrossBtn').getBoundingClientRect();
       pop.style.left = r.left + 'px'; pop.style.top = (r.bottom + 6) + 'px';
       document.body.appendChild(pop);

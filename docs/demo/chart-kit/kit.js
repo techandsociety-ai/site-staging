@@ -537,6 +537,17 @@
   /* every question a set's index (set-<name>.json) lists, in its order;
      pages pass ?set=, and W39's midterm issues are the default */
   var DEFAULT_SET = 'issues-w39';
+  /* the topics the pages offer, in order; the W38 sets still open with ?set= */
+  var SETS = [['issues-w39', 'Midterm issues · W39'], ['platforms-w39', 'Social media platforms · W39'],
+    ['trust-w39', 'Trust in institutions · W39']];
+  /* a topic picker: fills sel, and on a change reloads with the new set, keeping
+     the place (another topic has other items, so the item goes) */
+  function topicPicker(sel, current) {
+    var sets = SETS.slice();
+    if (!sets.some(function (x) { return x[0] === current; })) sets.push([current, current[0].toUpperCase() + current.slice(1).replace(/-w(\d+)$/, ' · W$1')]);
+    sets.forEach(function (x) { var o = document.createElement('option'); o.value = x[0]; o.textContent = x[1]; o.selected = x[0] === current; sel.appendChild(o); });
+    sel.onchange = function () { var u = new URL(location.href); u.searchParams.set('set', sel.value); u.searchParams.delete('q'); location.href = u.href; };
+  }
   function loadSet(name) {
     name = name || DEFAULT_SET;
     if (!/^[a-z0-9-]+$/.test(name)) return Promise.reject(new Error('bad set name'));
@@ -561,6 +572,6 @@
   }
 
   window.CHIP50Kit = {view: view, across: across, loadSet: loadSet, flag: flag, DEFAULT_SET: DEFAULT_SET, moe: moe, pm: pm, star: star, FEW: FEW, CAUTION: CAUTION,
-    scales: scales, SPAN: SPAN, shown: shown, gapOf: gapOf, side: side, GRID: GRID, LIGHT: LIGHT, THEMED: THEMED, layout: layout, toSVG: toSVG, draw: draw, canvas: canvas, mount: mount, load: load,
+    scales: scales, SPAN: SPAN, shown: shown, gapOf: gapOf, side: side, SETS: SETS, topicPicker: topicPicker, GRID: GRID, LIGHT: LIGHT, THEMED: THEMED, layout: layout, toSVG: toSVG, draw: draw, canvas: canvas, mount: mount, load: load,
     png: png, svg: svg, csv: csv, clip: clip, save: save, pct: pct, num: num};
 })();
