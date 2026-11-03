@@ -13,14 +13,14 @@
     ]
   },
   "wave": "Wave 39",
-  "fielded": "Oct 1 to 26, 2026 (preliminary release)",
+  "fielded": "Oct 1 to Nov 2, 2026",
   "weight": {
     "us": "weight: the survey team's demographic weight",
     "state": "weight_state: demographics, calibrated within each state"
   },
   "suppression": "Groups under 10 respondents are withheld; none were",
   "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 × √(p(1 − p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on {nLo} to {nHi} respondents each, an age group within a state on as few as {cellMin}. Groups under 100 are starred: interpret with caution.",
-  "pulled": "Oct 26, 2026",
+  "pulled": "Nov 3, 2026",
   "set_text": {
     "title": "Every platform in every state",
     "subtitle": "Share of adults who say they ever use each platform",
@@ -32,9 +32,10 @@
       "state_title": "{place} across {count} platforms",
       "subtitle": "Share of {place} adults who say they ever use each, fall 2026"
     },
-    "note": "Preliminary Wave 39 release: fielding ran to Oct. 26 and the survey team's final file may differ. Not for publication until it lands.",
+    "note": "Wave 39 from the survey team's cleaned release of Nov. 3, 2026, which may still change before the final file. Not for publication.",
     "note_label": "Preliminary",
-    "item": "Platform"
+    "item": "Platform",
+    "context": "context-w39"
   },
   "template": {
     "topic": "Social media",
@@ -72,7 +73,7 @@
   "questions": [
     {
       "id": "facebook-w39",
-      "column": "use_facebook",
+      "column": "sm_use_facebook",
       "label": "Facebook",
       "raw": {
         "us_by": "raw/facebook-w39/us_by_age.json",
@@ -82,7 +83,7 @@
     },
     {
       "id": "youtube-w39",
-      "column": "use_youtube",
+      "column": "sm_use_youtube",
       "label": "YouTube",
       "raw": {
         "us_by": "raw/youtube-w39/us_by_age.json",
@@ -92,7 +93,7 @@
     },
     {
       "id": "messenger-w39",
-      "column": "use_messenger",
+      "column": "sm_use_messenger",
       "label": "Facebook Messenger",
       "raw": {
         "us_by": "raw/messenger-w39/us_by_age.json",
@@ -102,7 +103,7 @@
     },
     {
       "id": "instagram-w39",
-      "column": "use_instagram",
+      "column": "sm_use_instagram",
       "label": "Instagram",
       "raw": {
         "us_by": "raw/instagram-w39/us_by_age.json",
@@ -112,7 +113,7 @@
     },
     {
       "id": "tiktok-w39",
-      "column": "use_tiktok",
+      "column": "sm_use_tiktok",
       "label": "TikTok",
       "raw": {
         "us_by": "raw/tiktok-w39/us_by_age.json",
@@ -122,7 +123,7 @@
     },
     {
       "id": "pinterest-w39",
-      "column": "use_pinterest",
+      "column": "sm_use_pinterest",
       "label": "Pinterest",
       "raw": {
         "us_by": "raw/pinterest-w39/us_by_age.json",
@@ -132,7 +133,7 @@
     },
     {
       "id": "snapchat-w39",
-      "column": "use_snapchat",
+      "column": "sm_use_snapchat",
       "label": "Snapchat",
       "raw": {
         "us_by": "raw/snapchat-w39/us_by_age.json",
@@ -142,7 +143,7 @@
     },
     {
       "id": "twitter-w39",
-      "column": "use_twitter",
+      "column": "sm_use_twitter",
       "label": "X (Twitter)",
       "raw": {
         "us_by": "raw/twitter-w39/us_by_age.json",
@@ -152,7 +153,7 @@
     },
     {
       "id": "reddit-w39",
-      "column": "use_reddit",
+      "column": "sm_use_reddit",
       "label": "Reddit",
       "raw": {
         "us_by": "raw/reddit-w39/us_by_age.json",
@@ -162,7 +163,7 @@
     },
     {
       "id": "linkedin-w39",
-      "column": "use_linkedin",
+      "column": "sm_use_linkedin",
       "label": "LinkedIn",
       "raw": {
         "us_by": "raw/linkedin-w39/us_by_age.json",
@@ -172,7 +173,7 @@
     },
     {
       "id": "whatsapp-w39",
-      "column": "use_whatsapp",
+      "column": "sm_use_whatsapp",
       "label": "WhatsApp",
       "raw": {
         "us_by": "raw/whatsapp-w39/us_by_age.json",
@@ -182,7 +183,7 @@
     },
     {
       "id": "threads-w39",
-      "column": "use_threads",
+      "column": "sm_use_threads",
       "label": "Threads",
       "raw": {
         "us_by": "raw/threads-w39/us_by_age.json",
@@ -192,7 +193,7 @@
     },
     {
       "id": "tumblr-w39",
-      "column": "use_tumblr",
+      "column": "sm_use_tumblr",
       "label": "Tumblr",
       "raw": {
         "us_by": "raw/tumblr-w39/us_by_age.json",
@@ -202,7 +203,7 @@
     },
     {
       "id": "bluesky-w39",
-      "column": "use_bluesky",
+      "column": "sm_use_bluesky",
       "label": "Bluesky",
       "raw": {
         "us_by": "raw/bluesky-w39/us_by_age.json",
@@ -212,7 +213,7 @@
     },
     {
       "id": "truth-w39",
-      "column": "use_truth",
+      "column": "sm_use_truth",
       "label": "Truth Social",
       "raw": {
         "us_by": "raw/truth-w39/us_by_age.json",

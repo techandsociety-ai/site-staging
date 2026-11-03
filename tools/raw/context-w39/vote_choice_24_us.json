@@ -1,0 +1,55 @@
+{
+ "variable": "vote_choice_24",
+ "type": "demographic",
+ "wave_filter": "all",
+ "weight_used": "weight_vote",
+ "weight_note": "vote_choice_24 is a political item, so the rule picks weight_vote (demographics plus presidential vote and turnout).",
+ "suppression_note": "Cells with n<10 suppressed for privacy",
+ "scale_labels": {
+  "1": "Kamala Harris (Democrat)",
+  "2": "Donald Trump (Republican)",
+  "3": "Another candidate:",
+  "4": "I did not vote",
+  "5": "Not sure"
+ },
+ "note": "All rates/means/pct are WEIGHTED (population-representative). unweighted_n is raw headcount for reliability checks only — never use it to compute percentages.",
+ "interpretation_note": "unweighted_n = raw respondent headcount (reliability check only). pct = WEIGHTED, population-representative percentage. Label clearly when presenting to users.",
+ "data": [
+  {
+   "value": 1,
+   "unweighted_n": 10052,
+   "weighted_n": 8094.9,
+   "pct": 47.52,
+   "suppressed": false
+  },
+  {
+   "value": 2,
+   "unweighted_n": 8854,
+   "weighted_n": 8359.7,
+   "pct": 49.08,
+   "suppressed": false
+  },
+  {
+   "value": 3,
+   "unweighted_n": 513,
+   "weighted_n": 312.4,
+   "pct": 1.83,
+   "suppressed": false
+  },
+  {
+   "value": 4,
+   "unweighted_n": 120,
+   "weighted_n": 174.9,
+   "pct": 1.03,
+   "suppressed": false
+  },
+  {
+   "value": 5,
+   "unweighted_n": 138,
+   "weighted_n": 91.8,
+   "pct": 0.54,
+   "suppressed": false
+  }
+ ],
+ "data_source": "w39"
+}

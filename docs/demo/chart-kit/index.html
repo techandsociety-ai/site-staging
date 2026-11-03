@@ -97,6 +97,7 @@ main.app{max-width:none;padding:16px 24px 80px}
 .scale span{position:absolute;top:15px;transform:translateX(-50%);white-space:nowrap}
 .scale span:first-of-type{transform:none}
 .scale span:last-of-type{transform:translateX(-100%)}
+.legend[hidden],.panel[hidden]{display:none}
 
 /* the selected row, pinned under the bar once it scrolls out of view */
 .pin{position:fixed;top:64px;z-index:65;display:none;box-sizing:border-box;padding:6px 16px 8px;
@@ -192,6 +193,15 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
         <div class="seg" role="group" aria-label="Order columns by">
           <button type="button" data-order="rank" aria-pressed="true" id="rankBtn">Rank</button>
           <button type="button" data-order="region" aria-pressed="false" title="Census regions, most populous state first">Region</button>
+          <button type="button" data-order="vote24" aria-pressed="false" class="ctxonly" hidden title="Most Republican 2024 vote first">2024 vote</button>
+          <button type="button" data-order="party" aria-pressed="false" class="ctxonly" hidden title="Most Republican party ID first">Party ID</button>
+        </div>
+      </div>
+      <div class="ctl">Rows
+        <div class="seg" role="group" aria-label="Order rows by">
+          <button type="button" data-rows="us" aria-pressed="true" title="Highest U.S. share first">U.S. share</button>
+          <button type="button" data-rows="spread" aria-pressed="false" title="Most states that differ from the U.S. first">Spread</button>
+          <button type="button" data-rows="r" aria-pressed="false" class="corronly" hidden title="Rank correlation with the 2024 vote, highest first">r with vote</button>
         </div>
       </div>
       <button class="btn sm" type="button" id="gridCsv">CSV</button>
@@ -202,6 +212,10 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       <div id="ramp"></div>
       <span id="noise"></span>
     </div>
+    <div class="legend" id="ctxLegend" hidden>
+      <div id="pramp" class="scale"></div>
+      <span id="ctxNote"></span>
+    </div>
   </section>
   </div>
 
@@ -209,6 +223,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     <div class="dhead"><h2 id="dh"></h2><p id="dp"></p></div>
     <div class="detail">
       <div class="stack">
+        <section class="panel" id="pScatter" hidden></section>
         <section class="panel" id="pBy"></section>
         <section class="panel" id="pRadio"></section>
       </div>
@@ -244,9 +259,44 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
 
   /* the share and points scales come from the kit (K.scales), so the matrix,
      the rails and the tile map colour alike; they're rebuilt per theme */
-  let SCALE = [], DIV = [], HATCH = null;
-  function buildScale() { const sc = K.scales(); SCALE = sc.share; DIV = sc.div; HATCH = sc.hatch; }
+  let SCALE = [], DIV = [], HATCH = null, PS = null;
+  function buildScale() { const sc = K.scales(); SCALE = sc.share; DIV = sc.div; HATCH = sc.hatch; PS = partisan(); }
+  /* the state context rows' own scale: blue (Democratic) through grey to
+     red (Republican), full colour at PSPAN points of margin; t runs -1 to 1 */
+  const PSPAN = 30;
+  function partisan() {
+    const t0 = document.documentElement.getAttribute('data-theme');
+    const dark = t0 ? t0 === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    const [d, m, r] = dark ? ['#3d6da8', '#383835', '#a8463c'] : ['#7aa6e0', '#f0efec', '#e8877a'];
+    const rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+    const mix = (a, b, t) => rgb(a).map((v, i) => Math.round(v + (rgb(b)[i] - v) * t));
+    return t => {
+      t = Math.max(-1, Math.min(1, t));
+      const c = t >= 0 ? mix(m, r, t) : mix(m, d, -t), lum = (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255;
+      return {fill: 'rgb(' + c.join(',') + ')', ink: lum > 0.55 ? '#14140f' : '#ffffff'};
+    };
+  }
   buildScale();
+  /* Spearman's rank correlation: Pearson's r on the ranks, ties averaged */
+  function ranks(a) {
+    const ix = a.map((v, i) => [v, i]).sort((x, y) => x[0] - y[0]), out = new Array(a.length);
+    for (let i = 0; i < ix.length;) {
+      let j = i;
+      while (j + 1 < ix.length && ix[j + 1][0] === ix[i][0]) j++;
+      for (let k = i; k <= j; k++) out[ix[k][1]] = (i + j) / 2 + 1;
+      i = j + 1;
+    }
+    return out;
+  }
+  function rho(x, y) {
+    const a = ranks(x), b = ranks(y), n = a.length, ma = a.reduce((s, v) => s + v, 0) / n, mb = b.reduce((s, v) => s + v, 0) / n;
+    let sab = 0, saa = 0, sbb = 0;
+    for (let i = 0; i < n; i++) { sab += (a[i] - ma) * (b[i] - mb); saa += (a[i] - ma) ** 2; sbb += (b[i] - mb) ** 2; }
+    return sab / Math.sqrt(saa * sbb);
+  }
+  const fmtR = v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v).toFixed(2).replace(/^0/, '');
+  /* a margin in points, positive for the Republican side */
+  const margin = v => Math.abs(v) < 0.05 ? 'Even' : (v > 0 ? 'R+' : 'D+') + Math.abs(v).toFixed(1);
   const el = (tag, attrs, text) => {
     const e = document.createElement(tag);
     for (const a in attrs || {}) e.setAttribute(a, attrs[a]);
@@ -272,7 +322,13 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       (ref != null ? '<rect x="' + (x(ref) - 0.7) + '" y="0" width="1.4" height="12" style="fill:var(--ink)"/>' : '') + '</svg>';
   }
 
-  K.loadSet(setName).then(({index, questions: Q}) => {
+  /* a set may name state context rows (context-<wave>.json: partisanship by
+     state) to draw under its items */
+  K.loadSet(setName).then(got => {
+    const c = got.index.text && got.index.text.context;
+    if (!c || !/^[a-z0-9-]+$/.test(c)) return Object.assign(got, {ctx: null});
+    return fetch(c + '.json').then(r => r.ok ? r.json() : null).catch(() => null).then(ctx => Object.assign(got, {ctx}));
+  }).then(({index, questions: Q, ctx}) => {
     const TX = index.text || {}, BASE = TX.base || 'adults';
     K.topicPicker($('setSel'), index.set);
     /* the set's own word for one of its items (an issue, a platform), for every label */
@@ -292,8 +348,36 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     const steps = () => [null].concat(geom ? geom.cols.map(c => c.p.slug) : places.map(p => p.slug));
     const ns = places.map(p => p.n), nLo = num(Math.min.apply(null, ns)), nHi = num(Math.max.apply(null, ns));
 
-    /* a set may name the question to open on (W39's midterm issues open on immigration) */
-    const FIRST = qById.has(TX.default_q) ? TX.default_q : Q[0].id;
+    /* state context rows, one cell per place in place order. ?corr=1 is the
+       experimental page: a rank correlation per item and a scatter */
+    const CTX = ctx ? ctx.rows.map(c => Object.assign({}, c, {cells: places.map(p => c.states[p.name])})) : [];
+    const CORR = params.get('corr') === '1' && CTX.length > 0;
+    document.querySelectorAll('.ctxonly').forEach(b => { b.hidden = !CTX.length; });
+    document.querySelectorAll('.corronly').forEach(b => { b.hidden = !CORR; });
+    /* spread: how many places differ from the U.S. by more than their own
+       margin of error, the test the grid's colours use */
+    Q.forEach(q => {
+      const sides = q.states.map(s => side(q, s)), above = sides.filter(x => x > 0).length, below = sides.filter(x => x < 0).length;
+      q.spread = {above, below, n: above + below};
+      q.rho = CTX.map(c => rho(q.states.map(s => s.value), c.cells.map(x => x.value)));
+    });
+    /* the spread strip's reach: the widest gap in the set, in 5s, at least SPAN */
+    const REACH = Math.max(SPAN, Math.ceil(Math.max.apply(null, Q.map(q => Math.max.apply(null, q.states.map(s => Math.abs(gapOf(s.value, q.us.value)))))) / 5) * 5);
+    /* rows: by U.S. share (the default), by spread, or (experimental) by r with the 2024 vote */
+    let rowsBy = /^(us|spread|r)$/.test(params.get('rows') || '') ? params.get('rows') : 'us';
+    if (rowsBy === 'r' && !CORR) rowsBy = 'us';
+    let RQ = Q;
+    function orderRows() {
+      const a = Q.slice();
+      if (rowsBy === 'spread') a.sort((x, y) => y.spread.n - x.spread.n || y.us.value - x.us.value);
+      else if (rowsBy === 'r') a.sort((x, y) => y.rho[0] - x.rho[0]);
+      else a.sort((x, y) => y.us.value - x.us.value);
+      RQ = a;
+    }
+    orderRows();
+
+    /* the page opens on the top row */
+    const FIRST = RQ[0].id;
     const cur = {q: FIRST, s: null};
     function fromURL() {
       const u = new URLSearchParams(location.search);
@@ -303,10 +387,13 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     fromURL();
     /* view modes can be linked too: ?shade=share, ?order=region */
     let shade = params.get('shade') === 'share' ? 'share' : 'gap';
-    let order = params.get('order') === 'region' ? 'region' : 'rank';
+    /* ...?order=vote24|party ranks the columns by a context row, ?rows=spread orders the rows */
+    const po = params.get('order');
+    let order = po === 'region' || CTX.some(c => c.id === po) ? po : 'rank';
     const pressAll = () => {
       document.querySelectorAll('[data-shade]').forEach(x => x.setAttribute('aria-pressed', String(x.getAttribute('data-shade') === shade)));
       document.querySelectorAll('[data-order]').forEach(x => x.setAttribute('aria-pressed', String(x.getAttribute('data-order') === order)));
+      document.querySelectorAll('[data-rows]').forEach(x => x.setAttribute('aria-pressed', String(x.getAttribute('data-rows') === rowsBy)));
     };
     pressAll();
 
@@ -373,7 +460,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     }
     const qFly = flyout($('fq'), {
       cls: 'qc',
-      rows: () => Q.map(q => {
+      rows: () => RQ.map(q => {
         const s = val(q, cur.s), v = s ? s.value : q.us.value, g = s ? gapOf(v, q.us.value) : null;
         return {id: q.id, title: q.wording, search: (q.label + ' ' + q.question + ' ' + q.column + ' ' + q.topic).toLowerCase(),
           html: '<span class="nm">' + esc(q.label) + '</span>' + mini(v, s ? q.us.value : null, 100) +
@@ -425,7 +512,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     addEventListener('keydown', e => {
       const t = e.target, typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
       if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
-      const ids = Q.map(q => q.id);
+      const ids = RQ.map(q => q.id);
       const k = e.key;
       if (k === '/') { e.preventDefault(); qFly.focus(); }
       else if (k === 's') { e.preventDefault(); pFly.focus(); }
@@ -443,6 +530,13 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
        question (above the U.S. by more than the margin of error, within it,
        below), highest first inside each, or the Census regions */
     function columns() {
+      /* or ranked by a context row, most Republican first, split at even */
+      const cx = CTX.find(c => c.id === order);
+      if (cx) {
+        const cols = places.map((p, i) => ({p, v: cx.cells[i].value})).sort((a, b) => b.v - a.v);
+        const name = v => cx.id === 'vote24' ? (v > 0 ? 'Trump margin' : 'Harris margin') : (v > 0 ? 'More Republicans' : 'More Democrats');
+        return cols.map((c, i) => Object.assign(c, {first: i === 0 || (c.v > 0) !== (cols[i - 1].v > 0), name: name(c.v)}));
+      }
       if (order === 'rank') {
         const q = qById.get(cur.q), v = p => val(q, p.slug).value;
         const cols = places.map(p => ({p, band: side(q, val(q, p.slug))})).sort((a, b) => b.band - a.band || v(b.p) - v(a.p));
@@ -468,17 +562,21 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       const W = Math.max(900, $('grid').clientWidth), cols = columns();
       const nGaps = cols.filter(c => c.first).length - 1;
       /* the label column fits the longest row name, bold, at 13px */
-      const LAB = Math.max(150, Math.ceil(Math.max.apply(null, Q.map(q => q.label.length)) * 7.6 + 22)), GAP0 = 14, RG = 8, top = 40;
+      const LAB = Math.max(150, Math.ceil(Math.max.apply(null, Q.map(q => q.label.length).concat(CTX.map(c => c.label.length))) * 7.6 + 22)), GAP0 = 14, RG = 8, top = 40;
+      /* right of the states: the spread column, then (experimental) one r per context row */
+      const SPW = 136, RW = CORR ? CTX.length * 46 + 6 : 0, CTXGAP = CTX.length ? 30 : 0;
       /* the U.S. column is a cell and a third wide; rows are taller than
          cells are wide, with a gap between rows so each reads as a line */
-      const cw = (W - LAB - GAP0 - nGaps * RG) / (cols.length + 1.35), USW = cw * 1.35;
+      const cw = (W - LAB - GAP0 - nGaps * RG - GAP0 - SPW - RW) / (cols.length + 1.35), USW = cw * 1.35;
       const rh = Math.max(32, Math.min(42, Math.round(cw * 0.95)));
       const xs = [];
       let x = LAB + USW + GAP0;
       cols.forEach((c, i) => { if (c.first && i > 0) x += RG; xs.push(x); x += cw; });
-      return {W, cols, LAB, top, cw, USW, rh, xs, gx1: xs[xs.length - 1] + cw, padX: 1, padY: 3,
+      const gx1 = xs[xs.length - 1] + cw;
+      return {W, cols, LAB, top, cw, USW, rh, xs, gx1, sx: gx1 + GAP0, SPW, rx: gx1 + GAP0 + SPW, RW, x1: gx1 + GAP0 + SPW + RW,
+        ctxTop: top + RQ.length * rh + CTXGAP, padX: 1, padY: 3,
         fs: cw >= 34 ? 13 : cw >= 27 ? 12 : cw >= 22 ? 11 : 10, showNum: cw >= 18,
-        selRow: Q.findIndex(q => q.id === cur.q), selCol: cur.s ? cols.findIndex(c => c.p.slug === cur.s) : -1};
+        selRow: RQ.findIndex(q => q.id === cur.q), selCol: cur.s ? cols.findIndex(c => c.p.slug === cur.s) : -1};
     }
     /* each drawing carries its own stripe pattern, under its own id */
     function svgOpen(G, H, hid) {
@@ -500,6 +598,52 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       };
       head('us', G.LAB, G.USW, 'U.S.', 11.5, !cur.s);
       G.cols.forEach((c, i) => head(i, G.xs[i], G.cw, c.p.abbr, G.cw >= 22 ? 11 : 10, i === G.selCol));
+      /* the spread column: a count, then a strip of every place's gap from the U.S. */
+      const a = G.sx + 34, b = G.sx + G.SPW - 6, t = (x, s, anchor) => o.push('<text x="' + x + '" y="' + hy + '" text-anchor="' + anchor +
+        '" font-size="10.5" pointer-events="none" style="fill:var(--muted)">' + s + '</text>');
+      t(G.sx + 24, 'Differ', 'end'); t(a, '−' + REACH, 'start'); t((a + b) / 2, 'U.S.', 'middle'); t(b, '+' + REACH, 'end');
+      if (CORR) CTX.forEach((c, j) => t(G.rx + 6 + j * 46 + 21, c.id === 'vote24' ? 'r vote' : 'r party', 'middle'));
+      return o.join('');
+    }
+    /* a row's spread: how many places differ from the U.S. beyond their
+       margin, and a dot per place at its gap (above blue, below orange,
+       inside the margin grey), the selected place ringed */
+    function spreadCell(G, q, r, y) {
+      const cy = y + G.rh / 2, a = G.sx + 34, b = G.sx + G.SPW - 6, mid = (a + b) / 2;
+      const X = g => (mid + Math.max(-1, Math.min(1, g / REACH)) * (b - a) / 2).toFixed(1);
+      const o = ['<rect data-c="spread" data-r="' + r + '" x="' + G.sx + '" y="' + (y + G.padY) + '" width="' + G.SPW + '" height="' + (G.rh - 2 * G.padY) +
+        '" rx="3" style="fill:' + (r === G.selRow ? 'var(--soft)' : 'transparent') + '"/>',
+        '<text x="' + (G.sx + 24) + '" y="' + (cy + 4.5) + '" text-anchor="end" font-size="13" font-weight="650" pointer-events="none" style="fill:var(--ink)">' + q.spread.n + '</text>',
+        '<line x1="' + a + '" x2="' + b + '" y1="' + cy + '" y2="' + cy + '" stroke-width="1" pointer-events="none" style="stroke:var(--rule)"/>',
+        '<line x1="' + mid + '" x2="' + mid + '" y1="' + (cy - 7) + '" y2="' + (cy + 7) + '" stroke-width="1" pointer-events="none" style="stroke:var(--muted)"/>'];
+      q.states.slice().sort((s, t) => (s.slug === cur.s) - (t.slug === cur.s)).forEach(s => {
+        const sd = side(q, s), sel = s.slug === cur.s;
+        o.push('<circle cx="' + X(gapOf(s.value, q.us.value)) + '" cy="' + cy + '" r="' + (sel ? 3.8 : 2.5) + '" pointer-events="none" opacity="' + (sel ? 1 : sd ? 0.85 : 0.35) +
+          '" style="fill:' + (sd > 0 ? 'var(--above-ink)' : sd < 0 ? 'var(--below-ink)' : 'var(--muted)') + (sel ? ';stroke:var(--ink);stroke-width:1.5' : '') + '"/>');
+      });
+      return o.join('');
+    }
+    /* experimental: an item's rank correlation with a context row, shaded on the context scale */
+    function rhoCell(G, v, j, r, y) {
+      const x = G.rx + 6 + j * 46, f = PS(v);
+      return '<rect data-c="rho' + j + '" data-r="' + r + '" x="' + x + '" y="' + (y + G.padY) + '" width="42" height="' + (G.rh - 2 * G.padY) + '" rx="3" style="fill:' + f.fill + '"/>' +
+        '<text x="' + (x + 21) + '" y="' + (y + G.rh / 2 + 4.5) + '" text-anchor="middle" font-size="12.5" font-weight="650" pointer-events="none" style="fill:' + f.ink + '">' + fmtR(v) + '</text>';
+    }
+    /* a context row (partisanship by state), top edge at y; its label ranks the columns by it */
+    function ctxRow(G, c, j, y) {
+      const o = [], h = G.rh - 2 * G.padY, ty = y + G.rh / 2 + G.fs * 0.36, on = order === c.id;
+      const txt = (v, wide) => (wide ? (v > 0 ? 'R' : v < 0 ? 'D' : '') : '') + Math.round(Math.abs(v));
+      o.push('<rect data-c="ctxlabel" data-r="x' + j + '" x="0" y="' + (y + G.padY) + '" width="' + (G.LAB - 6) + '" height="' + h + '" rx="5" style="fill:' + (on ? 'var(--soft)' : 'transparent') + '"/>');
+      o.push('<text x="10" y="' + (y + G.rh / 2 + 4.5) + '" font-size="13" font-weight="' + (on ? 700 : 500) + '" pointer-events="none" style="fill:var(--ink2)">' + esc(c.label) + '</text>');
+      const fu = PS(c.us.value / PSPAN);
+      o.push('<rect data-c="us" data-r="x' + j + '" x="' + (G.LAB + G.padX) + '" y="' + (y + G.padY) + '" width="' + (G.USW - 2 * G.padX) + '" height="' + h + '" rx="3" style="fill:' + fu.fill + '"/>');
+      o.push('<text x="' + (G.LAB + G.USW / 2) + '" y="' + ty + '" text-anchor="middle" font-size="' + G.fs + '" font-weight="750" pointer-events="none" style="fill:' + fu.ink + '">' + txt(c.us.value, true) + '</text>');
+      G.cols.forEach((col, i) => {
+        const v = c.cells[sIndex.get(col.p.slug)].value, f = PS(v / PSPAN);
+        o.push('<rect data-c="' + i + '" data-r="x' + j + '" x="' + (G.xs[i] + G.padX) + '" y="' + (y + G.padY) + '" width="' + (G.cw - 2 * G.padX) + '" height="' + h + '" rx="3" style="fill:' + f.fill + '"/>');
+        if (G.showNum) o.push('<text x="' + (G.xs[i] + G.cw / 2) + '" y="' + ty + '" text-anchor="middle" font-size="' + G.fs + '" pointer-events="none" opacity="0.85" style="fill:' +
+          f.ink + '">' + txt(v, G.cw >= 26) + '</text>');
+      });
       return o.join('');
     }
     /* one question's row, top edge at y */
@@ -523,6 +667,8 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
         if (G.showNum) o.push('<text x="' + (G.xs[i] + G.cw / 2) + '" y="' + ty + '" text-anchor="middle" font-size="' + G.fs + '" pointer-events="none" opacity="0.78" style="fill:' +
           f.ink + '">' + shown(st.value) + '</text>');
       });
+      o.push(spreadCell(G, q, r, y));
+      if (CORR) q.rho.forEach((v, j) => o.push(rhoCell(G, v, j, r, y)));
       return o.join('');
     }
     /* outline of the selected column from y0 to y1, and of the selected cell */
@@ -534,29 +680,41 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
         '" rx="4" fill="none" stroke-width="2.5" style="stroke:var(--ink)" pointer-events="none"/>';
     }
     function drawGrid() {
-      const G = layoutGrid(), H = G.top + Q.length * G.rh + 4, hy = G.top - 8, o = [svgOpen(G, H, 'hatch-grid')];
+      const G = layoutGrid(), yEnd = CTX.length ? G.ctxTop + CTX.length * G.rh : G.top + RQ.length * G.rh;
+      const H = yEnd + 4, hy = G.top - 8, o = [svgOpen(G, H, 'hatch-grid')];
       /* a label over each run of columns, shortened to fit a narrow run */
       const runs = [];
       G.cols.forEach((c, i) => { if (c.first) runs.push({name: c.name, i0: i, n: 0}); runs[runs.length - 1].n++; });
       runs.forEach(r => {
         const x0 = G.xs[r.i0], x1 = G.xs[r.i0 + r.n - 1] + G.cw;
         const arrow = /^Above/.test(r.name) ? '▲ ' : /^Below/.test(r.name) ? '▼ ' : '';
-        const tries = order === 'rank' ? [r.name + ' · ' + r.n, r.name.split(' ')[0] + ' · ' + r.n, arrow + r.n] : [r.name];
+        const tries = order !== 'region' ? [r.name + ' · ' + r.n, r.name.split(' ')[0] + ' · ' + r.n, arrow + r.n] : [r.name];
         const label = tries.find(t => t.length * 7.4 <= x1 - x0) || tries[tries.length - 1];
         o.push('<text x="' + x0 + '" y="12" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">' + esc(label.toUpperCase()) + '</text>');
         o.push('<line x1="' + x0 + '" x2="' + x1 + '" y1="17" y2="17" stroke-width="1" style="stroke:var(--rule)"/>');
       });
+      [['States that differ', G.sx, G.sx + G.SPW]].concat(CORR ? [['Rank corr.', G.rx + 6, G.x1]] : []).forEach(([name, x0, x1]) => {
+        o.push('<text x="' + x0 + '" y="12" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">' + esc(name.toUpperCase()) + '</text>');
+        o.push('<line x1="' + x0 + '" x2="' + x1 + '" y1="17" y2="17" stroke-width="1" style="stroke:var(--rule)"/>');
+      });
       o.push(heads(G, hy));
-      Q.forEach((q, r) => o.push(row(G, q, r, G.top + r * G.rh)));
+      RQ.forEach((q, r) => o.push(row(G, q, r, G.top + r * G.rh)));
+      /* the state context rows, under a rule, on their own scale */
+      if (CTX.length) {
+        const ly = G.ctxTop - 9;
+        o.push('<text x="10" y="' + ly + '" font-size="11" font-weight="650" letter-spacing=".06em" style="fill:var(--muted)">STATE CONTEXT</text>');
+        o.push('<line x1="' + (G.LAB + 2) + '" x2="' + G.gx1 + '" y1="' + (ly - 4) + '" y2="' + (ly - 4) + '" stroke-width="1" style="stroke:var(--rule)"/>');
+        CTX.forEach((c, j) => o.push(ctxRow(G, c, j, G.ctxTop + j * G.rh)));
+      }
       const selY = G.top + G.selRow * G.rh;
-      o.push('<rect x="0.5" y="' + (selY + G.padY - 1.5) + '" width="' + (G.gx1 - 1) + '" height="' + (G.rh - 2 * G.padY + 3) +
+      o.push('<rect x="0.5" y="' + (selY + G.padY - 1.5) + '" width="' + (G.x1 - 1) + '" height="' + (G.rh - 2 * G.padY + 3) +
         '" rx="5" fill="none" stroke-width="1.25" style="stroke:var(--ink2)" pointer-events="none"/>');
-      o.push(crosshair(G, hy - 15, G.top + Q.length * G.rh, selY));
+      o.push(crosshair(G, hy - 15, yEnd, selY));
       o.push('</svg>');
       $('grid').innerHTML = o.join('');
       /* the pinned strip: heads, then the selected row */
       const PH = 24 + G.rh;
-      $('pin').innerHTML = svgOpen(G, PH, 'hatch-pin') + heads(G, 16) + row(G, Q[G.selRow], G.selRow, 22) + crosshair(G, 2, PH, 22) + '</svg>';
+      $('pin').innerHTML = svgOpen(G, PH, 'hatch-pin') + heads(G, 16) + row(G, RQ[G.selRow], G.selRow, 22) + crosshair(G, 2, PH, 22) + '</svg>';
       geom = G;
       placePin();
     }
@@ -583,12 +741,32 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     ['grid', 'pin'].forEach(id => $(id).addEventListener('mousemove', e => {
       const t = target(e);
       if (!t || t.r === 'head' || t.c === 'label') { tip.style.display = 'none'; return; }
-      const q = Q[+t.r], slug = placeAt(t.c), s = slug ? val(q, slug) : null, g = s ? gapOf(s.value, q.us.value) : null;
+      if (t.r[0] === 'x') {
+        /* a context cell, or its label */
+        const c = CTX[+t.r.slice(1)];
+        if (t.c === 'ctxlabel') tip.innerHTML = '<b>' + esc(c.long) + '</b><br><span class="t">From the same survey (' + esc(c.weight) + '). Click to rank the columns by it.</span>';
+        else {
+          const slug = placeAt(t.c), x = slug ? c.cells[sIndex.get(slug)] : c.us;
+          tip.innerHTML = '<b>' + esc(slug ? pBySlug.get(slug).name : 'United States') + '</b> · ' + esc(c.label) + '<br><b>' + margin(x.value) + '</b> <span class="t">· ' +
+            c.parts.map(k => k + ' ' + (x.parts[k] == null ? '—' : pct(x.parts[k]))).join(', ') + '</span><br><span class="t">' + num(x.n) + (c.id === 'vote24' ? ' 2024 voters answered' : ' adults answered') + '</span>';
+        }
+      } else if (t.c === 'spread') {
+        const q = RQ[+t.r], sp = q.spread, by = q.states.slice().sort((a, b) => a.value - b.value), lo = by[0], hi = by[by.length - 1];
+        tip.innerHTML = '<b>' + esc(q.label) + '</b><br><b>' + sp.n + ' of ' + places.length + '</b> places differ from the U.S. by more than their margin of error: ' +
+          sp.above + ' above, ' + sp.below + ' below.<br><span class="t">' + pct(lo.value) + ' (' + esc(lo.name) + ') to ' + pct(hi.value) + ' (' + esc(hi.name) +
+          '). Each dot is a place, at its gap from the U.S.; grey dots are inside their margin.</span>';
+      } else if (/^rho/.test(t.c)) {
+        const q = RQ[+t.r], j = +t.c.slice(3), v = q.rho[j];
+        tip.innerHTML = '<b>' + esc(q.label) + '</b> and <b>' + esc(CTX[j].label.toLowerCase()) + '</b><br><b>r = ' + fmtR(v) + '</b> <span class="t">(Spearman rank correlation across ' +
+          places.length + ' places; higher where the margin is more ' + (v >= 0 ? 'Republican' : 'Democratic') + '). Each state estimate carries sampling error, which pulls r toward zero.</span>';
+      } else {
+      const q = RQ[+t.r], slug = placeAt(t.c), s = slug ? val(q, slug) : null, g = s ? gapOf(s.value, q.us.value) : null;
       const v = s ? s.value : q.us.value, n = s ? s.n : q.us.n;
       tip.innerHTML = '<b>' + esc(s ? s.name : 'United States') + '</b> · ' + esc(q.label) + '<br>' +
         '<b>' + pct(v) + '</b> <span class="t">' + K.pm(v, n) + '</span>' +
         (s ? ' <span class="t">· U.S. ' + pct(q.us.value) + ', ' + signed(g) + ' pts' + (side(q, s) === 0 ? ', within the margin' : '') + '</span>' : '') +
         '<br><span class="t">' + num(n) + K.star(n) + ' ' + BASE + ' answered' + (n < K.FEW ? ': interpret with caution' : '') + '</span>';
+      }
       tip.style.display = 'block';
       const w = tip.offsetWidth, h = tip.offsetHeight;
       let x = e.clientX + 14, y = e.clientY + 16;
@@ -602,22 +780,25 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
         const t = target(e);
         if (!t) return;
         if (t.r === 'head') return select(cur.q, placeAt(t.c));
-        if (t.c === 'label') return select(Q[+t.r].id, cur.s);
-        select(Q[+t.r].id, placeAt(t.c));
+        /* a context row's label ranks the columns by it (again: back to the item) */
+        if (t.c === 'ctxlabel') { const id = CTX[+t.r.slice(1)].id; order = order === id ? 'rank' : id; pressAll(); return render(); }
+        if (t.r[0] === 'x') return select(cur.q, placeAt(t.c));
+        if (t.c === 'label' || t.c === 'spread' || /^rho/.test(t.c)) return select(RQ[+t.r].id, cur.s);
+        select(RQ[+t.r].id, placeAt(t.c));
       });
     });
     $('grid').addEventListener('keydown', e => {
       const k = e.key;
       if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].indexOf(k) < 0) return;
       e.preventDefault();
-      const cols = geom.cols, r = Q.findIndex(q => q.id === cur.q);
+      const cols = geom.cols, r = RQ.findIndex(q => q.id === cur.q);
       let c = cur.s ? cols.findIndex(x => x.p.slug === cur.s) : -1;   /* -1 = the U.S. column */
       let nr = r;
       if (k === 'ArrowUp') nr = Math.max(0, r - 1);
-      if (k === 'ArrowDown') nr = Math.min(Q.length - 1, r + 1);
+      if (k === 'ArrowDown') nr = Math.min(RQ.length - 1, r + 1);
       if (k === 'ArrowLeft') c = Math.max(-1, c - 1);
       if (k === 'ArrowRight') c = Math.min(cols.length - 1, c + 1);
-      select(Q[nr].id, c < 0 ? null : cols[c].p.slug, 'step');
+      select(RQ[nr].id, c < 0 ? null : cols[c].p.slug, 'step');
     });
     let rw = 0;
     addEventListener('resize', () => { const w = $('grid').clientWidth; if (w !== rw) { rw = w; drawGrid(); } else placePin(); });
@@ -641,10 +822,26 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     }
     document.querySelectorAll('[data-shade]').forEach(b => b.onclick = () => { shade = b.getAttribute('data-shade'); pressAll(); drawRamp(); noise(); render(); });
     document.querySelectorAll('[data-order]').forEach(b => b.onclick = () => { order = b.getAttribute('data-order'); pressAll(); render(); });
+    document.querySelectorAll('[data-rows]').forEach(b => b.onclick = () => { rowsBy = b.getAttribute('data-rows'); orderRows(); pressAll(); render(); });
+    /* the context rows' key */
+    function drawPartisan() {
+      $('ctxLegend').hidden = !CTX.length;
+      if (!CTX.length) return;
+      const r = $('pramp');
+      r.textContent = '';
+      const bar = el('i', {'class': 'bar'});
+      bar.style.background = 'linear-gradient(90deg,' + PS(-1).fill + ',' + PS(0).fill + ',' + PS(1).fill + ')';
+      r.appendChild(bar);
+      [['D+' + PSPAN, 0], ['Even', 50], ['R+' + PSPAN, 100]].forEach(([t, x]) => r.appendChild(el('span', {style: 'left:' + x + '%'}, t)));
+      $('ctxNote').textContent = 'State context, from the same survey: ' + CTX.map(c => c.long.charAt(0).toLowerCase() + c.long.slice(1)).join('; ') +
+        '. Red is the Republican side, blue the Democratic, on their own scale. Click a context row’s name to rank the columns by it.' +
+        (CORR ? ' r: Spearman rank correlation of each item with each context row across 50 states and D.C. Experimental.' : '');
+    }
     $('gridCsv').onclick = () => {
       const cols = columns();
-      const rows = [['question', 'column', 'United States'].concat(cols.map(c => c.p.name))].concat(
-        Q.map(q => [q.label, q.column, q.us.value].concat(cols.map(c => val(q, c.p.slug).value))),
+      const rows = [['question', 'column', 'United States'].concat(cols.map(c => c.p.name), ['places_differing_from_us'], CORR ? CTX.map(c => 'r_' + c.id) : [])].concat(
+        RQ.map(q => [q.label, q.column, q.us.value].concat(cols.map(c => val(q, c.p.slug).value), [q.spread.n], CORR ? q.rho.map(v => +v.toFixed(3)) : [])),
+        CTX.map(c => [c.label + ' (R minus D, points)', c.id, c.us.value].concat(cols.map(x => c.cells[sIndex.get(x.p.slug)].value))),
         [['unweighted_n', '', Q[0].us.n].concat(cols.map(c => c.p.n))]);
       K.csv({csv: rows}, 'chip50-' + index.set + '-grid.csv');
     };
@@ -711,8 +908,59 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       q.provenance.forEach((c, i) => { if (i) pv.appendChild(el('br')); pv.appendChild(el('code', {}, c)); });
       pv.appendChild(document.createTextNode(' on the CHIP50 MCP, ' + q.pulled));
       add('Pulled with', pv);
+      if (CTX.length) {
+        const cv = el('span');
+        CTX.forEach((c, i) => {
+          if (i) cv.appendChild(el('br'));
+          cv.appendChild(document.createTextNode(c.long + ' (' + c.weight + '): '));
+          c.provenance.forEach(p => { cv.appendChild(el('br')); cv.appendChild(el('code', {}, p)); });
+        });
+        add('State context', cv);
+      }
       root.appendChild(dl);
     }
+    /* experimental (?corr=1): the item against a context row, one mark per state */
+    let scX = 0;
+    function scatter(q) {
+      const root = $('pScatter');
+      root.hidden = !CORR;
+      if (!CORR) return;
+      const c = CTX[scX], W = 560, H = 360, L = 40, R = 12, T = 10, B = 34;
+      const xv = c.cells.map(x => x.value), yv = q.states.map(s => s.value);
+      const x0 = Math.floor(Math.min.apply(null, xv) / 10) * 10, x1 = Math.ceil(Math.max.apply(null, xv) / 10) * 10;
+      const y0 = Math.floor(Math.min.apply(null, yv) / 5) * 5, y1 = Math.ceil(Math.max.apply(null, yv) / 5) * 5;
+      const X = v => L + (v - x0) / (x1 - x0) * (W - L - R), Y = v => T + (1 - (v - y0) / (y1 - y0)) * (H - T - B);
+      const o = ['<svg viewBox="0 0 ' + W + ' ' + H + '" font-family=\'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif\' style="font-variant-numeric:tabular-nums">'];
+      const xstep = x1 - x0 > 80 ? 20 : 10;
+      for (let v = Math.ceil(x0 / xstep) * xstep; v <= x1; v += xstep) {
+        o.push('<line x1="' + X(v) + '" x2="' + X(v) + '" y1="' + T + '" y2="' + (H - B) + '" stroke-width="1" style="stroke:var(' + (v === 0 ? '--muted' : '--rule2') + ')"/>');
+        o.push('<text x="' + X(v) + '" y="' + (H - B + 14) + '" text-anchor="middle" font-size="10.5" style="fill:var(--muted)">' + (v === 0 ? 'Even' : (v > 0 ? 'R+' : 'D+') + Math.abs(v)) + '</text>');
+      }
+      for (let v = y0; v <= y1; v += 5) {
+        o.push('<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v) + '" y2="' + Y(v) + '" stroke-width="1" style="stroke:var(--rule2)"/>');
+        o.push('<text x="' + (L - 6) + '" y="' + (Y(v) + 3.5) + '" text-anchor="end" font-size="10.5" style="fill:var(--muted)">' + v + '%</text>');
+      }
+      o.push('<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(q.us.value) + '" y2="' + Y(q.us.value) + '" stroke-width="1" stroke-dasharray="3 3" style="stroke:var(--ink2)"/>');
+      o.push('<text x="' + (W - R) + '" y="' + (Y(q.us.value) - 4) + '" text-anchor="end" font-size="10.5" style="fill:var(--ink2)">U.S. ' + pct(q.us.value) + '</text>');
+      o.push('<text x="' + (W - R) + '" y="' + (H - 4) + '" text-anchor="end" font-size="10.5" style="fill:var(--muted)">' + esc(c.label) + ' →</text>');
+      q.states.forEach((s, i) => {
+        const sd = side(q, s), sel = s.slug === cur.s;
+        o.push('<text data-key="' + s.slug + '" x="' + X(xv[i]).toFixed(1) + '" y="' + (Y(s.value) + 3.5).toFixed(1) + '" text-anchor="middle" font-size="' + (sel ? 12 : 10) +
+          '" font-weight="' + (sel ? 800 : 600) + '" style="cursor:pointer;fill:' + (sd > 0 ? 'var(--above-ink)' : sd < 0 ? 'var(--below-ink)' : 'var(--muted)') + '">' + s.abbr + '</text>');
+      });
+      o.push('</svg>');
+      const answer = (TX.answer || '').replace('{phrase}', q.phrase || q.label);
+      root.innerHTML = '<p class="ct">' + esc(q.label) + ' against ' + esc(c.label.toLowerCase()) + ', by state</p>' +
+        '<p class="cs">Up: share of ' + esc(BASE) + ' who ' + esc(answer) + '. Across: ' + esc(c.long.charAt(0).toLowerCase() + c.long.slice(1)) +
+        '. Colour: above or below the U.S. beyond the margin, as on the grid. r = ' + fmtR(q.rho[scX]) + ' (Spearman, ' + places.length + ' places).</p>' +
+        '<div class="seg" style="margin-bottom:8px">' + CTX.map((x, j) => '<button type="button" data-sx="' + j + '" aria-pressed="' + (j === scX) + '">' + esc(x.label) + '</button>').join('') + '</div>' +
+        '<div class="chart-el">' + o.join('') + '</div><p class="pos">Experimental. A correlation across states says nothing about individuals, and sampling error in each state estimate pulls r toward zero.</p>';
+    }
+    $('pScatter').addEventListener('click', e => {
+      const sx = e.target.getAttribute && e.target.getAttribute('data-sx'), k = e.target.getAttribute && e.target.getAttribute('data-key');
+      if (sx != null) { scX = +sx; render(); }
+      else if (k && pBySlug.has(k)) select(cur.q, k === cur.s ? null : k);
+    });
     /* radio copy and the range across states: short, so on a big screen it
        sits beside the by-age chart under the grid */
     function radio(q, st) {
@@ -750,6 +998,7 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       pStates.set(K.view(q, 'states', cur.s));
       notes(q, st);
       radio(q, st);
+      scatter(q);
       document.title = q.label + ' · ' + (st ? st.name : 'U.S.') + ' — CHIP50 matrix explorer';
     }
     $('gh').textContent = TX.title || 'Every ' + item + ' in every state';
@@ -761,10 +1010,12 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
     };
     noise();
     /* the share colours are computed per theme, so a theme change redraws */
-    const retheme = () => { buildScale(); drawRamp(); noise(); drawGrid(); };
+    const retheme = () => { buildScale(); drawRamp(); drawPartisan(); noise(); drawGrid(); };
     new MutationObserver(retheme).observe(document.documentElement, {attributes: true, attributeFilter: ['data-theme']});
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme);
     drawRamp();
+    drawPartisan();
+    pressAll();
     render();
     rw = $('grid').clientWidth;
     /* ?open=question|place opens that picker on load; ?focus=grid focuses the grid */

@@ -12,29 +12,29 @@
     ]
   },
   "wave": "Wave 39",
-  "fielded": "Oct 1 to 26, 2026 (preliminary release)",
+  "fielded": "Oct 1 to Nov 2, 2026",
   "weight": {
     "us": "weight: the survey team's demographic weight",
     "state": "weight_state: demographics, calibrated within each state"
   },
   "suppression": "Groups under 10 respondents are withheld",
   "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 × √(p(1 − p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on {nLo} to {nHi} respondents each, an age group within a state on as few as {cellMin}. Groups under 100 are starred: interpret with caution.",
-  "pulled": "Oct 26, 2026",
+  "pulled": "Nov 3, 2026",
   "set_text": {
     "title": "What matters to the 2026 midterm vote, in every state",
     "subtitle": "Share of eligible adults (all but those who said they can't vote) who rate each issue 8 to 10, on a scale of 1 to 10, for their 2026 midterm vote",
     "answer": "rate {phrase} 8 to 10",
     "noun": "issues",
     "base": "eligible adults",
-    "note": "Preliminary Wave 39 release: fielding ran to Oct. 26 and the survey team's final file may differ. Not for publication until it lands.",
+    "note": "Wave 39 from the survey team's cleaned release of Nov. 3, 2026, which may still change before the final file. Not for publication.",
     "across": {
       "us_title": "What matters most to eligible U.S. adults' 2026 midterm vote",
       "state_title": "{place} across {count} midterm issues",
       "subtitle": "Share of eligible {place} adults who rate each issue 8 to 10 for their midterm vote, fall 2026"
     },
     "note_label": "Preliminary",
-    "default_q": "issue-2-w39",
-    "item": "Issue"
+    "item": "Issue",
+    "context": "context-w39"
   },
   "template": {
     "topic": "The 2026 midterms",
@@ -72,207 +72,207 @@
   },
   "questions": [
     {
-      "id": "issue-3-w39",
-      "column": "vote_issues_3",
+      "id": "issue-economy-w39",
+      "column": "vote_issues_economy",
       "label": "The economy",
       "phrase": "the economy",
       "option": "Economy",
       "raw": {
-        "us_by": "raw/issue-3-w39/us_by_age.json",
-        "states_by": "raw/issue-3-w39/states_by_age.json",
-        "states": "raw/issue-3-w39/states.json"
+        "us_by": "raw/issue-economy-w39/us_by_age.json",
+        "states_by": "raw/issue-economy-w39/states_by_age.json",
+        "states": "raw/issue-economy-w39/states.json"
       }
     },
     {
-      "id": "issue-13-w39",
-      "column": "vote_issues_13",
+      "id": "issue-inflation-w39",
+      "column": "vote_issues_inflation",
       "label": "Inflation",
       "phrase": "inflation",
       "option": "Inflation",
       "raw": {
-        "us_by": "raw/issue-13-w39/us_by_age.json",
-        "states_by": "raw/issue-13-w39/states_by_age.json",
-        "states": "raw/issue-13-w39/states.json"
+        "us_by": "raw/issue-inflation-w39/us_by_age.json",
+        "states_by": "raw/issue-inflation-w39/states_by_age.json",
+        "states": "raw/issue-inflation-w39/states.json"
       }
     },
     {
-      "id": "issue-15-w39",
-      "column": "vote_issues_15",
+      "id": "issue-healthcare-w39",
+      "column": "vote_issues_healthcare",
       "label": "Health care",
       "phrase": "health care",
       "option": "Healthcare",
       "raw": {
-        "us_by": "raw/issue-15-w39/us_by_age.json",
-        "states_by": "raw/issue-15-w39/states_by_age.json",
-        "states": "raw/issue-15-w39/states.json"
+        "us_by": "raw/issue-healthcare-w39/us_by_age.json",
+        "states_by": "raw/issue-healthcare-w39/states_by_age.json",
+        "states": "raw/issue-healthcare-w39/states.json"
       }
     },
     {
-      "id": "issue-11-w39",
-      "column": "vote_issues_11",
+      "id": "issue-housing-w39",
+      "column": "vote_issues_housing",
       "label": "Affordable housing",
       "phrase": "affordable housing",
       "option": "Affordable housing",
       "raw": {
-        "us_by": "raw/issue-11-w39/us_by_age.json",
-        "states_by": "raw/issue-11-w39/states_by_age.json",
-        "states": "raw/issue-11-w39/states.json"
+        "us_by": "raw/issue-housing-w39/us_by_age.json",
+        "states_by": "raw/issue-housing-w39/states_by_age.json",
+        "states": "raw/issue-housing-w39/states.json"
       }
     },
     {
-      "id": "issue-17-w39",
-      "column": "vote_issues_17",
+      "id": "issue-taxes-w39",
+      "column": "vote_issues_taxes",
       "label": "Taxes",
       "phrase": "taxes",
       "option": "Taxes",
       "raw": {
-        "us_by": "raw/issue-17-w39/us_by_age.json",
-        "states_by": "raw/issue-17-w39/states_by_age.json",
-        "states": "raw/issue-17-w39/states.json"
+        "us_by": "raw/issue-taxes-w39/us_by_age.json",
+        "states_by": "raw/issue-taxes-w39/states_by_age.json",
+        "states": "raw/issue-taxes-w39/states.json"
       }
     },
     {
-      "id": "issue-14-w39",
-      "column": "vote_issues_14",
+      "id": "issue-education-w39",
+      "column": "vote_issues_education",
       "label": "Education",
       "phrase": "education",
       "option": "Education",
       "raw": {
-        "us_by": "raw/issue-14-w39/us_by_age.json",
-        "states_by": "raw/issue-14-w39/states_by_age.json",
-        "states": "raw/issue-14-w39/states.json"
+        "us_by": "raw/issue-education-w39/us_by_age.json",
+        "states_by": "raw/issue-education-w39/states_by_age.json",
+        "states": "raw/issue-education-w39/states.json"
       }
     },
     {
-      "id": "issue-4-w39",
-      "column": "vote_issues_4",
+      "id": "issue-preserving-democracy-w39",
+      "column": "vote_issues_preserving_democracy",
       "label": "Preserving democracy",
       "phrase": "preserving democracy",
       "option": "Preserving democracy",
       "raw": {
-        "us_by": "raw/issue-4-w39/us_by_age.json",
-        "states_by": "raw/issue-4-w39/states_by_age.json",
-        "states": "raw/issue-4-w39/states.json"
+        "us_by": "raw/issue-preserving-democracy-w39/us_by_age.json",
+        "states_by": "raw/issue-preserving-democracy-w39/states_by_age.json",
+        "states": "raw/issue-preserving-democracy-w39/states.json"
       }
     },
     {
-      "id": "issue-21-w39",
-      "column": "vote_issues_21",
+      "id": "issue-crime-w39",
+      "column": "vote_issues_crime",
       "label": "Crime",
       "phrase": "crime",
       "option": "Crime",
       "raw": {
-        "us_by": "raw/issue-21-w39/us_by_age.json",
-        "states_by": "raw/issue-21-w39/states_by_age.json",
-        "states": "raw/issue-21-w39/states.json"
+        "us_by": "raw/issue-crime-w39/us_by_age.json",
+        "states_by": "raw/issue-crime-w39/states_by_age.json",
+        "states": "raw/issue-crime-w39/states.json"
       }
     },
     {
-      "id": "issue-2-w39",
-      "column": "vote_issues_2",
+      "id": "issue-immigration-w39",
+      "column": "vote_issues_immigration",
       "label": "Immigration",
       "phrase": "immigration",
       "option": "Immigration",
       "raw": {
-        "us_by": "raw/issue-2-w39/us_by_age.json",
-        "states_by": "raw/issue-2-w39/states_by_age.json",
-        "states": "raw/issue-2-w39/states.json"
+        "us_by": "raw/issue-immigration-w39/us_by_age.json",
+        "states_by": "raw/issue-immigration-w39/states_by_age.json",
+        "states": "raw/issue-immigration-w39/states.json"
       }
     },
     {
-      "id": "issue-16-w39",
-      "column": "vote_issues_16",
+      "id": "issue-race-w39",
+      "column": "vote_issues_race",
       "label": "Race relations",
       "phrase": "race relations and racism",
       "option": "Race relations/racism",
       "raw": {
-        "us_by": "raw/issue-16-w39/us_by_age.json",
-        "states_by": "raw/issue-16-w39/states_by_age.json",
-        "states": "raw/issue-16-w39/states.json"
+        "us_by": "raw/issue-race-w39/us_by_age.json",
+        "states_by": "raw/issue-race-w39/states_by_age.json",
+        "states": "raw/issue-race-w39/states.json"
       }
     },
     {
-      "id": "issue-1-w39",
-      "column": "vote_issues_1",
+      "id": "issue-abortion-w39",
+      "column": "vote_issues_abortion",
       "label": "Abortion",
       "phrase": "abortion",
       "option": "Abortion",
       "raw": {
-        "us_by": "raw/issue-1-w39/us_by_age.json",
-        "states_by": "raw/issue-1-w39/states_by_age.json",
-        "states": "raw/issue-1-w39/states.json"
+        "us_by": "raw/issue-abortion-w39/us_by_age.json",
+        "states_by": "raw/issue-abortion-w39/states_by_age.json",
+        "states": "raw/issue-abortion-w39/states.json"
       }
     },
     {
-      "id": "issue-22-w39",
-      "column": "vote_issues_22",
+      "id": "issue-guns-w39",
+      "column": "vote_issues_guns",
       "label": "Gun control",
       "phrase": "gun control",
       "option": "Gun control",
       "raw": {
-        "us_by": "raw/issue-22-w39/us_by_age.json",
-        "states_by": "raw/issue-22-w39/states_by_age.json",
-        "states": "raw/issue-22-w39/states.json"
+        "us_by": "raw/issue-guns-w39/us_by_age.json",
+        "states_by": "raw/issue-guns-w39/states_by_age.json",
+        "states": "raw/issue-guns-w39/states.json"
       }
     },
     {
-      "id": "issue-12-w39",
-      "column": "vote_issues_12",
+      "id": "issue-climate-w39",
+      "column": "vote_issues_climate",
       "label": "Climate change",
       "phrase": "climate change",
       "option": "Climate change",
       "raw": {
-        "us_by": "raw/issue-12-w39/us_by_age.json",
-        "states_by": "raw/issue-12-w39/states_by_age.json",
-        "states": "raw/issue-12-w39/states.json"
+        "us_by": "raw/issue-climate-w39/us_by_age.json",
+        "states_by": "raw/issue-climate-w39/states_by_age.json",
+        "states": "raw/issue-climate-w39/states.json"
       }
     },
     {
-      "id": "issue-7-w39",
-      "column": "vote_issues_7",
+      "id": "issue-opioid-crisis-w39",
+      "column": "vote_issues_opioid_crisis",
       "label": "The opioid crisis",
       "phrase": "the opioid crisis",
       "option": "The opioid crisis",
       "raw": {
-        "us_by": "raw/issue-7-w39/us_by_age.json",
-        "states_by": "raw/issue-7-w39/states_by_age.json",
-        "states": "raw/issue-7-w39/states.json"
+        "us_by": "raw/issue-opioid-crisis-w39/us_by_age.json",
+        "states_by": "raw/issue-opioid-crisis-w39/states_by_age.json",
+        "states": "raw/issue-opioid-crisis-w39/states.json"
       }
     },
     {
-      "id": "issue-5-w39",
-      "column": "vote_issues_5",
+      "id": "issue-israel-hamas-w39",
+      "column": "vote_issues_israel_hamas",
       "label": "Israel–Hamas",
       "phrase": "the Israel–Hamas conflict",
       "option": "The Israel-Hamas conflict",
       "raw": {
-        "us_by": "raw/issue-5-w39/us_by_age.json",
-        "states_by": "raw/issue-5-w39/states_by_age.json",
-        "states": "raw/issue-5-w39/states.json"
+        "us_by": "raw/issue-israel-hamas-w39/us_by_age.json",
+        "states_by": "raw/issue-israel-hamas-w39/states_by_age.json",
+        "states": "raw/issue-israel-hamas-w39/states.json"
       }
     },
     {
-      "id": "issue-6-w39",
-      "column": "vote_issues_6",
+      "id": "issue-russia-ukraine-w39",
+      "column": "vote_issues_russia_ukraine",
       "label": "Russia–Ukraine",
       "phrase": "the Russia–Ukraine war",
       "option": "The Russia-Ukraine war",
       "raw": {
-        "us_by": "raw/issue-6-w39/us_by_age.json",
-        "states_by": "raw/issue-6-w39/states_by_age.json",
-        "states": "raw/issue-6-w39/states.json"
+        "us_by": "raw/issue-russia-ukraine-w39/us_by_age.json",
+        "states_by": "raw/issue-russia-ukraine-w39/states_by_age.json",
+        "states": "raw/issue-russia-ukraine-w39/states.json"
       }
     },
     {
-      "id": "issue-10-w39",
-      "column": "vote_issues_10",
+      "id": "issue-antisemitism-w39",
+      "column": "vote_issues_antisemitism",
       "label": "Antisemitism",
       "phrase": "antisemitism",
       "option": "Antisemitism",
       "raw": {
-        "us_by": "raw/issue-10-w39/us_by_age.json",
-        "states_by": "raw/issue-10-w39/states_by_age.json",
-        "states": "raw/issue-10-w39/states.json"
+        "us_by": "raw/issue-antisemitism-w39/us_by_age.json",
+        "states_by": "raw/issue-antisemitism-w39/states_by_age.json",
+        "states": "raw/issue-antisemitism-w39/states.json"
       }
     }
   ]

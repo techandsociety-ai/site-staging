@@ -1,0 +1,35 @@
+{
+ "recoded_variables_used": {
+  "party_rep__d16efce1cf9c": {
+   "source_column": "party3",
+   "binary": true,
+   "groups": {
+    "0": [
+     "Democrat",
+     "Independent/Other"
+    ],
+    "1": [
+     "Republican"
+    ]
+   }
+  }
+ },
+ "variable": "party_rep__d16efce1cf9c",
+ "type": "platform",
+ "wave_filter": "all",
+ "weight_used": "weight_vote",
+ "weight_note": "party_rep__d16efce1cf9c is a political item, so the rule picks weight_vote (demographics plus presidential vote and turnout).",
+ "note": "All rates/means/pct are WEIGHTED (population-representative). unweighted_n is raw headcount for reliability checks only — never use it to compute percentages.",
+ "interpretation_note": "unweighted_n = raw respondent headcount (reliability check only). user_rate_pct = WEIGHTED, population-representative share coded 1 (selected this option / flag set).",
+ "data": [
+  {
+   "platform": "party_rep__d16efce1cf9c",
+   "unweighted_n": 28761,
+   "weighted_n": 28752.5,
+   "weighted_users": 8391.7,
+   "weighted_non_users": 20360.8,
+   "user_rate_pct": 29.19
+  }
+ ],
+ "data_source": "w39"
+}

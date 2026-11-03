@@ -12,14 +12,14 @@
     ]
   },
   "wave": "Wave 39",
-  "fielded": "Oct 1 to 26, 2026 (preliminary release)",
+  "fielded": "Oct 1 to Nov 2, 2026",
   "weight": {
     "us": "weight: the survey team's demographic weight",
     "state": "weight_state: demographics, calibrated within each state"
   },
   "suppression": "Groups under 10 respondents are withheld; none were",
   "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 × √(p(1 − p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on {nLo} to {nHi} respondents each, an age group within a state on as few as {cellMin}. Groups under 100 are starred: interpret with caution.",
-  "pulled": "Oct 26, 2026",
+  "pulled": "Nov 3, 2026",
   "set_text": {
     "title": "Trust in every institution, in every state",
     "subtitle": "Share of adults who trust each to do what is right some or a lot (of not at all, not too much, some, a lot)",
@@ -31,9 +31,10 @@
       "state_title": "{place} across {count} institutions",
       "subtitle": "Share of {place} adults who trust each some or a lot, fall 2026"
     },
-    "note": "Preliminary Wave 39 release: fielding ran to Oct. 26 and the survey team's final file may differ. Not for publication until it lands.",
+    "note": "Wave 39 from the survey team's cleaned release of Nov. 3, 2026, which may still change before the final file. Not for publication.",
     "note_label": "Preliminary",
-    "item": "Institution"
+    "item": "Institution",
+    "context": "context-w39"
   },
   "template": {
     "topic": "Trust",
@@ -107,15 +108,15 @@
       }
     },
     {
-      "id": "trust-education-w39",
-      "column": "pol_trust_education",
+      "id": "trust-university-w39",
+      "column": "pol_trust_university",
       "label": "Colleges",
       "phrase": "colleges and universities",
       "option": "Colleges and universities",
       "raw": {
-        "us_by": "raw/trust-education-w39/us_by_age.json",
-        "states_by": "raw/trust-education-w39/states_by_age.json",
-        "states": "raw/trust-education-w39/states.json"
+        "us_by": "raw/trust-university-w39/us_by_age.json",
+        "states_by": "raw/trust-university-w39/states_by_age.json",
+        "states": "raw/trust-university-w39/states.json"
       }
     },
     {

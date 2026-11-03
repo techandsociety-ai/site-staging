@@ -1,0 +1,71 @@
+{
+ "recoded_variables_used": {
+  "issue_high_crime__39050b3e1a2d": {
+   "source_column": "vote_issues_crime",
+   "binary": true,
+   "groups": {
+    "0": [
+     "1 Not important at all 1",
+     "2 2",
+     "3 3",
+     "4 4",
+     "5 5",
+     "6 6",
+     "7 7"
+    ],
+    "1": [
+     "10 Extremely important 10",
+     "8 8",
+     "9 9"
+    ]
+   }
+  }
+ },
+ "platform": "issue_high_crime__39050b3e1a2d",
+ "demographic": "age_cat_4",
+ "wave_filter": "all",
+ "weight_used": "weight_vote",
+ "weight_note": "issue_high_crime__39050b3e1a2d is a political item, so the rule picks weight_vote (demographics plus presidential vote and turnout).",
+ "suppression_note": "Cells with n<10 suppressed for privacy",
+ "note": "All rates/means/pct are WEIGHTED (population-representative). unweighted_n is raw headcount for reliability checks only — never use it to compute percentages.",
+ "interpretation_note": "unweighted_n = raw respondent headcount — for reliability checks only, NOT a population estimate. user_rate_pct = WEIGHTED share coded 1 (selected this option / flag set) — population-representative. When presenting a table, label the N column as 'Unweighted N' and the rate column as '% (weighted)'.",
+ "data": [
+  {
+   "demographic_value": "18 to 24",
+   "unweighted_n": 2380,
+   "weighted_n": 3186.9,
+   "weighted_users": 1542.0,
+   "weighted_non_users": 1644.9,
+   "user_rate_pct": 48.39,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "25 to 44",
+   "unweighted_n": 11128,
+   "weighted_n": 9314.0,
+   "weighted_users": 5135.9,
+   "weighted_non_users": 4178.1,
+   "user_rate_pct": 55.14,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "45 to 64",
+   "unweighted_n": 9287,
+   "weighted_n": 8556.9,
+   "weighted_users": 5064.0,
+   "weighted_non_users": 3492.9,
+   "user_rate_pct": 59.18,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "65 and over",
+   "unweighted_n": 4652,
+   "weighted_n": 5972.2,
+   "weighted_users": 3855.5,
+   "weighted_non_users": 2116.8,
+   "user_rate_pct": 64.56,
+   "suppressed": false
+  }
+ ],
+ "data_source": "w39"
+}

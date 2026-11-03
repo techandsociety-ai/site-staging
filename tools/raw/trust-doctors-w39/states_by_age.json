@@ -1,1 +1,2076 @@
-{"result":"{\n  \"recoded_variables_used\": {\n    \"trust_some_doctors__5b761eafd6f9\": {\n      \"source_column\": \"pol_trust_doctors\",\n      \"binary\": true,\n      \"groups\": {\n        \"0\": [\n          \"1 Not at all\",\n          \"2 Not too much\"\n        ],\n        \"1\": [\n          \"3 Some\",\n          \"4 A lot\"\n        ]\n      }\n    }\n  },\n  \"variable\": \"trust_some_doctors__5b761eafd6f9\",\n  \"result_type\": \"adoption_rate\",\n  \"demographics\": [\n    \"state\",\n    \"age_cat_4\"\n  ],\n  \"wave_filter\": \"all\",\n  \"weight_used\": \"weight_state\",\n  \"weight_note\": \"No political item is measured and the query is broken down or filtered by state, so the rule picks weight_state (demographics, calibrated within each state).\",\n  \"n_cells\": 204,\n  \"n_suppressed\": 1,\n  \"suppression_note\": \"Cells with n<10 suppressed for privacy\",\n  \"scale_labels\": null,\n  \"note\": \"All rates/means/pct are WEIGHTED (population-representative). unweighted_n is raw headcount for reliability checks only \\u2014 never use it to compute percentages.\",\n  \"interpretation_note\": \"Each row is one unique combination of all demographic variables. user_rate_pct = WEIGHTED share coded 1 (selected this option / flag set) for that subgroup intersection. unweighted_n = raw respondent headcount (reliability check only).\",\n  \"data\": [\n    {\n      \"state\": \"Alabama\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 35,\n      \"weighted_n\": 59.9,\n      \"weighted_users\": 52.8,\n      \"weighted_non_users\": 7.1,\n      \"user_rate_pct\": 88.15,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Alabama\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 199,\n      \"weighted_n\": 157.6,\n      \"weighted_users\": 129.4,\n      \"weighted_non_users\": 28.2,\n      \"user_rate_pct\": 82.1,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Alabama\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 180,\n      \"weighted_n\": 160.3,\n      \"weighted_users\": 138.4,\n      \"weighted_non_users\": 21.9,\n      \"user_rate_pct\": 86.33,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Alabama\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 69,\n      \"weighted_n\": 107.1,\n      \"weighted_users\": 87.5,\n      \"weighted_non_users\": 19.6,\n      \"user_rate_pct\": 81.69,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Alaska\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 14,\n      \"weighted_n\": 19.9,\n      \"weighted_users\": 18.6,\n      \"weighted_non_users\": 1.3,\n      \"user_rate_pct\": 93.64,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Alaska\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 65,\n      \"weighted_n\": 60.9,\n      \"weighted_users\": 54.6,\n      \"weighted_non_users\": 6.3,\n      \"user_rate_pct\": 89.7,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Alaska\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 64,\n      \"weighted_n\": 51.0,\n      \"weighted_users\": 47.0,\n      \"weighted_non_users\": 4.0,\n      \"user_rate_pct\": 92.12,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Alaska\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 15,\n      \"weighted_n\": 26.6,\n      \"weighted_users\": 26.6,\n      \"weighted_non_users\": 0.0,\n      \"user_rate_pct\": 100.0,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Arizona\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 39,\n      \"weighted_n\": 71.6,\n      \"weighted_users\": 47.3,\n      \"weighted_non_users\": 24.3,\n      \"user_rate_pct\": 66.05,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Arizona\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 230,\n      \"weighted_n\": 196.1,\n      \"weighted_users\": 169.0,\n      \"weighted_non_users\": 27.1,\n      \"user_rate_pct\": 86.2,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Arizona\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 195,\n      \"weighted_n\": 177.7,\n      \"weighted_users\": 146.1,\n      \"weighted_non_users\": 31.6,\n      \"user_rate_pct\": 82.21,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Arizona\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 116,\n      \"weighted_n\": 134.7,\n      \"weighted_users\": 125.2,\n      \"weighted_non_users\": 9.5,\n      \"user_rate_pct\": 92.95,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Arkansas\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 40,\n      \"weighted_n\": 53.2,\n      \"weighted_users\": 47.3,\n      \"weighted_non_users\": 5.9,\n      \"user_rate_pct\": 88.94,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Arkansas\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 164,\n      \"weighted_n\": 145.4,\n      \"weighted_users\": 113.4,\n      \"weighted_non_users\": 32.0,\n      \"user_rate_pct\": 78.02,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Arkansas\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 159,\n      \"weighted_n\": 141.8,\n      \"weighted_users\": 115.3,\n      \"weighted_non_users\": 26.4,\n      \"user_rate_pct\": 81.35,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Arkansas\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 75,\n      \"weighted_n\": 97.7,\n      \"weighted_users\": 91.2,\n      \"weighted_non_users\": 6.4,\n      \"user_rate_pct\": 93.41,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"California\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 103,\n      \"weighted_n\": 118.5,\n      \"weighted_users\": 101.4,\n      \"weighted_non_users\": 17.1,\n      \"user_rate_pct\": 85.59,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"California\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 456,\n      \"weighted_n\": 354.2,\n      \"weighted_users\": 292.5,\n      \"weighted_non_users\": 61.7,\n      \"user_rate_pct\": 82.59,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"California\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 273,\n      \"weighted_n\": 306.8,\n      \"weighted_users\": 267.3,\n      \"weighted_non_users\": 39.5,\n      \"user_rate_pct\": 87.14,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"California\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 130,\n      \"weighted_n\": 182.6,\n      \"weighted_users\": 177.6,\n      \"weighted_non_users\": 5.0,\n      \"user_rate_pct\": 97.26,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Colorado\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 23,\n      \"weighted_n\": 45.1,\n      \"weighted_users\": 37.5,\n      \"weighted_non_users\": 7.6,\n      \"user_rate_pct\": 83.18,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Colorado\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 154,\n      \"weighted_n\": 147.1,\n      \"weighted_users\": 127.2,\n      \"weighted_non_users\": 19.9,\n      \"user_rate_pct\": 86.47,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Colorado\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 148,\n      \"weighted_n\": 120.2,\n      \"weighted_users\": 99.2,\n      \"weighted_non_users\": 21.0,\n      \"user_rate_pct\": 82.5,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Colorado\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 60,\n      \"weighted_n\": 72.9,\n      \"weighted_users\": 67.4,\n      \"weighted_non_users\": 5.5,\n      \"user_rate_pct\": 92.42,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Connecticut\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 42,\n      \"weighted_n\": 53.5,\n      \"weighted_users\": 44.6,\n      \"weighted_non_users\": 8.9,\n      \"user_rate_pct\": 83.42,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Connecticut\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 152,\n      \"weighted_n\": 133.3,\n      \"weighted_users\": 113.5,\n      \"weighted_non_users\": 19.8,\n      \"user_rate_pct\": 85.11,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Connecticut\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 150,\n      \"weighted_n\": 152.2,\n      \"weighted_users\": 134.5,\n      \"weighted_non_users\": 17.7,\n      \"user_rate_pct\": 88.34,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Connecticut\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 92,\n      \"weighted_n\": 96.9,\n      \"weighted_users\": 88.8,\n      \"weighted_non_users\": 8.1,\n      \"user_rate_pct\": 91.67,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Delaware\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 20,\n      \"weighted_n\": 30.9,\n      \"weighted_users\": 28.9,\n      \"weighted_non_users\": 2.0,\n      \"user_rate_pct\": 93.45,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Delaware\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 131,\n      \"weighted_n\": 92.0,\n      \"weighted_users\": 73.8,\n      \"weighted_non_users\": 18.2,\n      \"user_rate_pct\": 80.19,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Delaware\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 92,\n      \"weighted_n\": 96.5,\n      \"weighted_users\": 85.7,\n      \"weighted_non_users\": 10.8,\n      \"user_rate_pct\": 88.86,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Delaware\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 48,\n      \"weighted_n\": 72.4,\n      \"weighted_users\": 68.6,\n      \"weighted_non_users\": 3.8,\n      \"user_rate_pct\": 94.81,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"District of Columbia\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 28,\n      \"weighted_n\": 26.0,\n      \"weighted_users\": 18.5,\n      \"weighted_non_users\": 7.6,\n      \"user_rate_pct\": 70.85,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"District of Columbia\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 109,\n      \"weighted_n\": 109.6,\n      \"weighted_users\": 98.6,\n      \"weighted_non_users\": 10.9,\n      \"user_rate_pct\": 90.02,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"District of Columbia\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 78,\n      \"weighted_n\": 57.9,\n      \"weighted_users\": 54.3,\n      \"weighted_non_users\": 3.6,\n      \"user_rate_pct\": 93.85,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"District of Columbia\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 11,\n      \"weighted_n\": 33.0,\n      \"weighted_users\": 33.0,\n      \"weighted_non_users\": 0.0,\n      \"user_rate_pct\": 100.0,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Florida\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 88,\n      \"weighted_n\": 104.7,\n      \"weighted_users\": 83.8,\n      \"weighted_non_users\": 20.9,\n      \"user_rate_pct\": 80.04,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Florida\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 409,\n      \"weighted_n\": 312.7,\n      \"weighted_users\": 247.3,\n      \"weighted_non_users\": 65.4,\n      \"user_rate_pct\": 79.07,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Florida\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 290,\n      \"weighted_n\": 324.5,\n      \"weighted_users\": 280.8,\n      \"weighted_non_users\": 43.7,\n      \"user_rate_pct\": 86.52,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Florida\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 214,\n      \"weighted_n\": 258.4,\n      \"weighted_users\": 245.0,\n      \"weighted_non_users\": 13.5,\n      \"user_rate_pct\": 94.79,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Georgia\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 74,\n      \"weighted_n\": 94.4,\n      \"weighted_users\": 78.4,\n      \"weighted_non_users\": 16.1,\n      \"user_rate_pct\": 83.0,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Georgia\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 288,\n      \"weighted_n\": 261.7,\n      \"weighted_users\": 210.6,\n      \"weighted_non_users\": 51.1,\n      \"user_rate_pct\": 80.46,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Georgia\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 276,\n      \"weighted_n\": 245.2,\n      \"weighted_users\": 213.5,\n      \"weighted_non_users\": 31.7,\n      \"user_rate_pct\": 87.05,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Georgia\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 101,\n      \"weighted_n\": 137.6,\n      \"weighted_users\": 124.4,\n      \"weighted_non_users\": 13.2,\n      \"user_rate_pct\": 90.41,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Hawaii\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": null,\n      \"weighted_n\": null,\n      \"weighted_users\": null,\n      \"weighted_non_users\": null,\n      \"user_rate_pct\": null,\n      \"suppressed\": true\n    },\n    {\n      \"state\": \"Hawaii\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 62,\n      \"weighted_n\": 59.2,\n      \"weighted_users\": 51.1,\n      \"weighted_non_users\": 8.1,\n      \"user_rate_pct\": 86.34,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Hawaii\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 65,\n      \"weighted_n\": 54.1,\n      \"weighted_users\": 47.1,\n      \"weighted_non_users\": 7.0,\n      \"user_rate_pct\": 87.07,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Hawaii\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 35,\n      \"weighted_n\": 42.4,\n      \"weighted_users\": 42.4,\n      \"weighted_non_users\": 0.0,\n      \"user_rate_pct\": 100.0,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Idaho\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 27,\n      \"weighted_n\": 39.5,\n      \"weighted_users\": 36.6,\n      \"weighted_non_users\": 2.9,\n      \"user_rate_pct\": 92.56,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Idaho\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 128,\n      \"weighted_n\": 101.7,\n      \"weighted_users\": 85.4,\n      \"weighted_non_users\": 16.3,\n      \"user_rate_pct\": 83.93,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Idaho\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 106,\n      \"weighted_n\": 91.1,\n      \"weighted_users\": 78.5,\n      \"weighted_non_users\": 12.6,\n      \"user_rate_pct\": 86.17,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Idaho\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 35,\n      \"weighted_n\": 64.1,\n      \"weighted_users\": 60.6,\n      \"weighted_non_users\": 3.5,\n      \"user_rate_pct\": 94.61,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Illinois\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 65,\n      \"weighted_n\": 74.0,\n      \"weighted_users\": 57.9,\n      \"weighted_non_users\": 16.1,\n      \"user_rate_pct\": 78.29,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Illinois\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 246,\n      \"weighted_n\": 214.3,\n      \"weighted_users\": 180.8,\n      \"weighted_non_users\": 33.6,\n      \"user_rate_pct\": 84.34,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Illinois\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 199,\n      \"weighted_n\": 204.4,\n      \"weighted_users\": 183.0,\n      \"weighted_non_users\": 21.4,\n      \"user_rate_pct\": 89.52,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Illinois\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 113,\n      \"weighted_n\": 130.4,\n      \"weighted_users\": 123.6,\n      \"weighted_non_users\": 6.8,\n      \"user_rate_pct\": 94.77,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Indiana\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 36,\n      \"weighted_n\": 57.6,\n      \"weighted_users\": 46.5,\n      \"weighted_non_users\": 11.1,\n      \"user_rate_pct\": 80.73,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Indiana\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 182,\n      \"weighted_n\": 157.5,\n      \"weighted_users\": 135.8,\n      \"weighted_non_users\": 21.7,\n      \"user_rate_pct\": 86.19,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Indiana\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 171,\n      \"weighted_n\": 155.4,\n      \"weighted_users\": 134.3,\n      \"weighted_non_users\": 21.1,\n      \"user_rate_pct\": 86.41,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Indiana\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 79,\n      \"weighted_n\": 97.6,\n      \"weighted_users\": 92.4,\n      \"weighted_non_users\": 5.2,\n      \"user_rate_pct\": 94.63,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Iowa\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 24,\n      \"weighted_n\": 54.9,\n      \"weighted_users\": 50.1,\n      \"weighted_non_users\": 4.9,\n      \"user_rate_pct\": 91.13,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Iowa\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 168,\n      \"weighted_n\": 145.4,\n      \"weighted_users\": 121.3,\n      \"weighted_non_users\": 24.1,\n      \"user_rate_pct\": 83.4,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Iowa\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 176,\n      \"weighted_n\": 145.4,\n      \"weighted_users\": 132.0,\n      \"weighted_non_users\": 13.4,\n      \"user_rate_pct\": 90.8,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Iowa\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 82,\n      \"weighted_n\": 104.3,\n      \"weighted_users\": 100.7,\n      \"weighted_non_users\": 3.6,\n      \"user_rate_pct\": 96.53,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Kansas\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 32,\n      \"weighted_n\": 53.5,\n      \"weighted_users\": 48.2,\n      \"weighted_non_users\": 5.3,\n      \"user_rate_pct\": 90.06,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Kansas\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 151,\n      \"weighted_n\": 129.6,\n      \"weighted_users\": 106.6,\n      \"weighted_non_users\": 23.0,\n      \"user_rate_pct\": 82.27,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Kansas\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 138,\n      \"weighted_n\": 122.0,\n      \"weighted_users\": 109.9,\n      \"weighted_non_users\": 12.2,\n      \"user_rate_pct\": 90.01,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Kansas\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 68,\n      \"weighted_n\": 84.2,\n      \"weighted_users\": 74.9,\n      \"weighted_non_users\": 9.3,\n      \"user_rate_pct\": 88.95,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Kentucky\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 35,\n      \"weighted_n\": 56.7,\n      \"weighted_users\": 45.0,\n      \"weighted_non_users\": 11.6,\n      \"user_rate_pct\": 79.48,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Kentucky\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 196,\n      \"weighted_n\": 160.3,\n      \"weighted_users\": 137.4,\n      \"weighted_non_users\": 22.9,\n      \"user_rate_pct\": 85.71,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Kentucky\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 163,\n      \"weighted_n\": 161.9,\n      \"weighted_users\": 142.7,\n      \"weighted_non_users\": 19.1,\n      \"user_rate_pct\": 88.19,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Kentucky\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 87,\n      \"weighted_n\": 102.3,\n      \"weighted_users\": 97.5,\n      \"weighted_non_users\": 4.8,\n      \"user_rate_pct\": 95.34,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Louisiana\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 48,\n      \"weighted_n\": 63.1,\n      \"weighted_users\": 54.7,\n      \"weighted_non_users\": 8.5,\n      \"user_rate_pct\": 86.59,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Louisiana\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 224,\n      \"weighted_n\": 179.1,\n      \"weighted_users\": 149.9,\n      \"weighted_non_users\": 29.2,\n      \"user_rate_pct\": 83.7,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Louisiana\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 181,\n      \"weighted_n\": 162.1,\n      \"weighted_users\": 146.3,\n      \"weighted_non_users\": 15.8,\n      \"user_rate_pct\": 90.24,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Louisiana\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 53,\n      \"weighted_n\": 101.5,\n      \"weighted_users\": 96.8,\n      \"weighted_non_users\": 4.8,\n      \"user_rate_pct\": 95.31,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Maine\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 22,\n      \"weighted_n\": 35.7,\n      \"weighted_users\": 29.4,\n      \"weighted_non_users\": 6.3,\n      \"user_rate_pct\": 82.38,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Maine\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 137,\n      \"weighted_n\": 106.2,\n      \"weighted_users\": 86.8,\n      \"weighted_non_users\": 19.4,\n      \"user_rate_pct\": 81.69,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Maine\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 130,\n      \"weighted_n\": 125.2,\n      \"weighted_users\": 110.3,\n      \"weighted_non_users\": 14.9,\n      \"user_rate_pct\": 88.07,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Maine\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 71,\n      \"weighted_n\": 92.9,\n      \"weighted_users\": 87.0,\n      \"weighted_non_users\": 5.9,\n      \"user_rate_pct\": 93.64,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Maryland\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 39,\n      \"weighted_n\": 54.8,\n      \"weighted_users\": 48.0,\n      \"weighted_non_users\": 6.9,\n      \"user_rate_pct\": 87.46,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Maryland\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 229,\n      \"weighted_n\": 179.7,\n      \"weighted_users\": 156.6,\n      \"weighted_non_users\": 23.1,\n      \"user_rate_pct\": 87.16,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Maryland\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 158,\n      \"weighted_n\": 172.5,\n      \"weighted_users\": 153.2,\n      \"weighted_non_users\": 19.3,\n      \"user_rate_pct\": 88.81,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Maryland\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 87,\n      \"weighted_n\": 106.5,\n      \"weighted_users\": 103.2,\n      \"weighted_non_users\": 3.4,\n      \"user_rate_pct\": 96.85,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Massachusetts\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 27,\n      \"weighted_n\": 51.9,\n      \"weighted_users\": 42.6,\n      \"weighted_non_users\": 9.3,\n      \"user_rate_pct\": 82.03,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Massachusetts\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 161,\n      \"weighted_n\": 145.3,\n      \"weighted_users\": 127.2,\n      \"weighted_non_users\": 18.1,\n      \"user_rate_pct\": 87.56,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Massachusetts\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 157,\n      \"weighted_n\": 147.0,\n      \"weighted_users\": 125.5,\n      \"weighted_non_users\": 21.5,\n      \"user_rate_pct\": 85.36,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Massachusetts\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 95,\n      \"weighted_n\": 94.6,\n      \"weighted_users\": 88.9,\n      \"weighted_non_users\": 5.7,\n      \"user_rate_pct\": 93.97,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Michigan\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 55,\n      \"weighted_n\": 92.9,\n      \"weighted_users\": 74.4,\n      \"weighted_non_users\": 18.5,\n      \"user_rate_pct\": 80.05,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Michigan\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 298,\n      \"weighted_n\": 242.9,\n      \"weighted_users\": 197.8,\n      \"weighted_non_users\": 45.1,\n      \"user_rate_pct\": 81.44,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Michigan\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 262,\n      \"weighted_n\": 255.2,\n      \"weighted_users\": 228.9,\n      \"weighted_non_users\": 26.2,\n      \"user_rate_pct\": 89.72,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Michigan\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 148,\n      \"weighted_n\": 172.5,\n      \"weighted_users\": 163.0,\n      \"weighted_non_users\": 9.5,\n      \"user_rate_pct\": 94.49,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Minnesota\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 22,\n      \"weighted_n\": 40.1,\n      \"weighted_users\": 34.9,\n      \"weighted_non_users\": 5.2,\n      \"user_rate_pct\": 87.01,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Minnesota\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 154,\n      \"weighted_n\": 140.8,\n      \"weighted_users\": 121.2,\n      \"weighted_non_users\": 19.6,\n      \"user_rate_pct\": 86.08,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Minnesota\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 138,\n      \"weighted_n\": 132.9,\n      \"weighted_users\": 120.2,\n      \"weighted_non_users\": 12.7,\n      \"user_rate_pct\": 90.44,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Minnesota\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 86,\n      \"weighted_n\": 86.4,\n      \"weighted_users\": 82.9,\n      \"weighted_non_users\": 3.6,\n      \"user_rate_pct\": 95.88,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Mississippi\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 45,\n      \"weighted_n\": 68.3,\n      \"weighted_users\": 48.4,\n      \"weighted_non_users\": 19.8,\n      \"user_rate_pct\": 70.93,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Mississippi\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 219,\n      \"weighted_n\": 170.9,\n      \"weighted_users\": 140.9,\n      \"weighted_non_users\": 30.0,\n      \"user_rate_pct\": 82.45,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Mississippi\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 194,\n      \"weighted_n\": 168.3,\n      \"weighted_users\": 144.4,\n      \"weighted_non_users\": 23.9,\n      \"user_rate_pct\": 85.81,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Mississippi\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 60,\n      \"weighted_n\": 110.7,\n      \"weighted_users\": 99.8,\n      \"weighted_non_users\": 10.9,\n      \"user_rate_pct\": 90.19,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Missouri\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 39,\n      \"weighted_n\": 64.5,\n      \"weighted_users\": 49.6,\n      \"weighted_non_users\": 14.9,\n      \"user_rate_pct\": 76.94,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Missouri\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 195,\n      \"weighted_n\": 182.1,\n      \"weighted_users\": 148.6,\n      \"weighted_non_users\": 33.6,\n      \"user_rate_pct\": 81.58,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Missouri\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 187,\n      \"weighted_n\": 177.5,\n      \"weighted_users\": 149.1,\n      \"weighted_non_users\": 28.4,\n      \"user_rate_pct\": 84.01,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Missouri\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 126,\n      \"weighted_n\": 123.0,\n      \"weighted_users\": 117.1,\n      \"weighted_non_users\": 5.9,\n      \"user_rate_pct\": 95.21,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Montana\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 21,\n      \"weighted_n\": 29.0,\n      \"weighted_users\": 18.4,\n      \"weighted_non_users\": 10.6,\n      \"user_rate_pct\": 63.52,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Montana\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 105,\n      \"weighted_n\": 77.7,\n      \"weighted_users\": 66.4,\n      \"weighted_non_users\": 11.3,\n      \"user_rate_pct\": 85.48,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Montana\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 78,\n      \"weighted_n\": 75.8,\n      \"weighted_users\": 59.9,\n      \"weighted_non_users\": 15.9,\n      \"user_rate_pct\": 79.02,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Montana\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 36,\n      \"weighted_n\": 57.5,\n      \"weighted_users\": 53.4,\n      \"weighted_non_users\": 4.1,\n      \"user_rate_pct\": 92.88,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Nebraska\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 18,\n      \"weighted_n\": 49.2,\n      \"weighted_users\": 40.1,\n      \"weighted_non_users\": 9.1,\n      \"user_rate_pct\": 81.57,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Nebraska\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 173,\n      \"weighted_n\": 138.2,\n      \"weighted_users\": 114.0,\n      \"weighted_non_users\": 24.2,\n      \"user_rate_pct\": 82.46,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Nebraska\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 141,\n      \"weighted_n\": 124.8,\n      \"weighted_users\": 103.0,\n      \"weighted_non_users\": 21.8,\n      \"user_rate_pct\": 82.53,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Nebraska\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 67,\n      \"weighted_n\": 86.9,\n      \"weighted_users\": 84.7,\n      \"weighted_non_users\": 2.2,\n      \"user_rate_pct\": 97.48,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Nevada\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 32,\n      \"weighted_n\": 44.2,\n      \"weighted_users\": 31.6,\n      \"weighted_non_users\": 12.6,\n      \"user_rate_pct\": 71.59,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Nevada\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 161,\n      \"weighted_n\": 152.8,\n      \"weighted_users\": 135.7,\n      \"weighted_non_users\": 17.1,\n      \"user_rate_pct\": 88.82,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Nevada\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 148,\n      \"weighted_n\": 138.7,\n      \"weighted_users\": 127.7,\n      \"weighted_non_users\": 11.0,\n      \"user_rate_pct\": 92.09,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Nevada\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 84,\n      \"weighted_n\": 89.3,\n      \"weighted_users\": 80.0,\n      \"weighted_non_users\": 9.4,\n      \"user_rate_pct\": 89.49,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New Hampshire\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 15,\n      \"weighted_n\": 26.5,\n      \"weighted_users\": 22.1,\n      \"weighted_non_users\": 4.4,\n      \"user_rate_pct\": 83.49,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New Hampshire\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 84,\n      \"weighted_n\": 77.7,\n      \"weighted_users\": 62.7,\n      \"weighted_non_users\": 14.9,\n      \"user_rate_pct\": 80.77,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New Hampshire\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 101,\n      \"weighted_n\": 90.9,\n      \"weighted_users\": 77.3,\n      \"weighted_non_users\": 13.6,\n      \"user_rate_pct\": 85.03,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New Hampshire\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 55,\n      \"weighted_n\": 59.9,\n      \"weighted_users\": 54.6,\n      \"weighted_non_users\": 5.4,\n      \"user_rate_pct\": 91.04,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New Jersey\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 21,\n      \"weighted_n\": 40.3,\n      \"weighted_users\": 31.3,\n      \"weighted_non_users\": 9.0,\n      \"user_rate_pct\": 77.63,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New Jersey\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 134,\n      \"weighted_n\": 124.0,\n      \"weighted_users\": 107.3,\n      \"weighted_non_users\": 16.7,\n      \"user_rate_pct\": 86.54,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New Jersey\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 115,\n      \"weighted_n\": 130.8,\n      \"weighted_users\": 114.6,\n      \"weighted_non_users\": 16.1,\n      \"user_rate_pct\": 87.68,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New Jersey\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 105,\n      \"weighted_n\": 80.2,\n      \"weighted_users\": 71.5,\n      \"weighted_non_users\": 8.7,\n      \"user_rate_pct\": 89.15,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New Mexico\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 23,\n      \"weighted_n\": 44.8,\n      \"weighted_users\": 37.2,\n      \"weighted_non_users\": 7.6,\n      \"user_rate_pct\": 82.99,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New Mexico\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 147,\n      \"weighted_n\": 124.4,\n      \"weighted_users\": 99.2,\n      \"weighted_non_users\": 25.2,\n      \"user_rate_pct\": 79.74,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New Mexico\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 136,\n      \"weighted_n\": 115.4,\n      \"weighted_users\": 96.5,\n      \"weighted_non_users\": 18.9,\n      \"user_rate_pct\": 83.63,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New Mexico\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 65,\n      \"weighted_n\": 87.0,\n      \"weighted_users\": 77.6,\n      \"weighted_non_users\": 9.4,\n      \"user_rate_pct\": 89.15,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New York\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 89,\n      \"weighted_n\": 101.9,\n      \"weighted_users\": 78.3,\n      \"weighted_non_users\": 23.6,\n      \"user_rate_pct\": 76.83,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New York\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 430,\n      \"weighted_n\": 302.6,\n      \"weighted_users\": 259.1,\n      \"weighted_non_users\": 43.4,\n      \"user_rate_pct\": 85.65,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New York\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 238,\n      \"weighted_n\": 288.5,\n      \"weighted_users\": 253.2,\n      \"weighted_non_users\": 35.3,\n      \"user_rate_pct\": 87.77,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"New York\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 125,\n      \"weighted_n\": 190.0,\n      \"weighted_users\": 180.3,\n      \"weighted_non_users\": 9.8,\n      \"user_rate_pct\": 94.85,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"North Carolina\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 80,\n      \"weighted_n\": 85.0,\n      \"weighted_users\": 76.9,\n      \"weighted_non_users\": 8.0,\n      \"user_rate_pct\": 90.53,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"North Carolina\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 252,\n      \"weighted_n\": 225.3,\n      \"weighted_users\": 181.6,\n      \"weighted_non_users\": 43.7,\n      \"user_rate_pct\": 80.61,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"North Carolina\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 233,\n      \"weighted_n\": 225.7,\n      \"weighted_users\": 199.6,\n      \"weighted_non_users\": 26.1,\n      \"user_rate_pct\": 88.45,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"North Carolina\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 115,\n      \"weighted_n\": 144.2,\n      \"weighted_users\": 140.4,\n      \"weighted_non_users\": 3.9,\n      \"user_rate_pct\": 97.33,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"North Dakota\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 15,\n      \"weighted_n\": 28.9,\n      \"weighted_users\": 26.0,\n      \"weighted_non_users\": 2.9,\n      \"user_rate_pct\": 89.96,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"North Dakota\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 90,\n      \"weighted_n\": 71.6,\n      \"weighted_users\": 58.1,\n      \"weighted_non_users\": 13.4,\n      \"user_rate_pct\": 81.26,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"North Dakota\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 76,\n      \"weighted_n\": 58.9,\n      \"weighted_users\": 53.3,\n      \"weighted_non_users\": 5.6,\n      \"user_rate_pct\": 90.55,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"North Dakota\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 18,\n      \"weighted_n\": 40.8,\n      \"weighted_users\": 39.4,\n      \"weighted_non_users\": 1.4,\n      \"user_rate_pct\": 96.46,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Ohio\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 59,\n      \"weighted_n\": 90.1,\n      \"weighted_users\": 65.5,\n      \"weighted_non_users\": 24.7,\n      \"user_rate_pct\": 72.62,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Ohio\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 275,\n      \"weighted_n\": 250.1,\n      \"weighted_users\": 213.5,\n      \"weighted_non_users\": 36.6,\n      \"user_rate_pct\": 85.36,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Ohio\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 295,\n      \"weighted_n\": 254.6,\n      \"weighted_users\": 217.7,\n      \"weighted_non_users\": 36.8,\n      \"user_rate_pct\": 85.53,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Ohio\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 138,\n      \"weighted_n\": 172.2,\n      \"weighted_users\": 163.2,\n      \"weighted_non_users\": 9.0,\n      \"user_rate_pct\": 94.78,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Oklahoma\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 31,\n      \"weighted_n\": 52.4,\n      \"weighted_users\": 46.2,\n      \"weighted_non_users\": 6.2,\n      \"user_rate_pct\": 88.14,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Oklahoma\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 152,\n      \"weighted_n\": 140.0,\n      \"weighted_users\": 115.9,\n      \"weighted_non_users\": 24.0,\n      \"user_rate_pct\": 82.82,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Oklahoma\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 151,\n      \"weighted_n\": 128.0,\n      \"weighted_users\": 109.9,\n      \"weighted_non_users\": 18.1,\n      \"user_rate_pct\": 85.84,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Oklahoma\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 72,\n      \"weighted_n\": 85.6,\n      \"weighted_users\": 80.6,\n      \"weighted_non_users\": 5.0,\n      \"user_rate_pct\": 94.2,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Oregon\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 31,\n      \"weighted_n\": 44.1,\n      \"weighted_users\": 37.9,\n      \"weighted_non_users\": 6.3,\n      \"user_rate_pct\": 85.83,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Oregon\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 170,\n      \"weighted_n\": 142.9,\n      \"weighted_users\": 122.9,\n      \"weighted_non_users\": 20.0,\n      \"user_rate_pct\": 85.98,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Oregon\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 128,\n      \"weighted_n\": 126.4,\n      \"weighted_users\": 110.5,\n      \"weighted_non_users\": 15.8,\n      \"user_rate_pct\": 87.48,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Oregon\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 75,\n      \"weighted_n\": 91.2,\n      \"weighted_users\": 82.0,\n      \"weighted_non_users\": 9.1,\n      \"user_rate_pct\": 89.99,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Pennsylvania\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 58,\n      \"weighted_n\": 75.7,\n      \"weighted_users\": 63.7,\n      \"weighted_non_users\": 12.0,\n      \"user_rate_pct\": 84.16,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Pennsylvania\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 213,\n      \"weighted_n\": 213.3,\n      \"weighted_users\": 177.4,\n      \"weighted_non_users\": 36.0,\n      \"user_rate_pct\": 83.14,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Pennsylvania\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 242,\n      \"weighted_n\": 223.6,\n      \"weighted_users\": 194.3,\n      \"weighted_non_users\": 29.3,\n      \"user_rate_pct\": 86.91,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Pennsylvania\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 158,\n      \"weighted_n\": 158.8,\n      \"weighted_users\": 151.1,\n      \"weighted_non_users\": 7.7,\n      \"user_rate_pct\": 95.16,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Rhode Island\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 11,\n      \"weighted_n\": 30.1,\n      \"weighted_users\": 22.3,\n      \"weighted_non_users\": 7.8,\n      \"user_rate_pct\": 74.01,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Rhode Island\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 108,\n      \"weighted_n\": 85.2,\n      \"weighted_users\": 76.9,\n      \"weighted_non_users\": 8.4,\n      \"user_rate_pct\": 90.19,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Rhode Island\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 93,\n      \"weighted_n\": 85.6,\n      \"weighted_users\": 77.0,\n      \"weighted_non_users\": 8.6,\n      \"user_rate_pct\": 89.98,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Rhode Island\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 46,\n      \"weighted_n\": 57.7,\n      \"weighted_users\": 51.1,\n      \"weighted_non_users\": 6.6,\n      \"user_rate_pct\": 88.52,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"South Carolina\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 42,\n      \"weighted_n\": 58.5,\n      \"weighted_users\": 44.8,\n      \"weighted_non_users\": 13.7,\n      \"user_rate_pct\": 76.54,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"South Carolina\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 176,\n      \"weighted_n\": 157.2,\n      \"weighted_users\": 129.2,\n      \"weighted_non_users\": 27.9,\n      \"user_rate_pct\": 82.22,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"South Carolina\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 163,\n      \"weighted_n\": 159.8,\n      \"weighted_users\": 141.0,\n      \"weighted_non_users\": 18.8,\n      \"user_rate_pct\": 88.23,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"South Carolina\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 106,\n      \"weighted_n\": 111.8,\n      \"weighted_users\": 105.1,\n      \"weighted_non_users\": 6.7,\n      \"user_rate_pct\": 94.03,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"South Dakota\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 22,\n      \"weighted_n\": 32.1,\n      \"weighted_users\": 25.5,\n      \"weighted_non_users\": 6.6,\n      \"user_rate_pct\": 79.43,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"South Dakota\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 118,\n      \"weighted_n\": 83.8,\n      \"weighted_users\": 68.8,\n      \"weighted_non_users\": 15.1,\n      \"user_rate_pct\": 82.03,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"South Dakota\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 72,\n      \"weighted_n\": 79.5,\n      \"weighted_users\": 70.7,\n      \"weighted_non_users\": 8.8,\n      \"user_rate_pct\": 88.98,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"South Dakota\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 38,\n      \"weighted_n\": 55.1,\n      \"weighted_users\": 52.2,\n      \"weighted_non_users\": 2.9,\n      \"user_rate_pct\": 94.78,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Tennessee\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 46,\n      \"weighted_n\": 61.4,\n      \"weighted_users\": 50.2,\n      \"weighted_non_users\": 11.2,\n      \"user_rate_pct\": 81.8,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Tennessee\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 192,\n      \"weighted_n\": 173.2,\n      \"weighted_users\": 138.5,\n      \"weighted_non_users\": 34.8,\n      \"user_rate_pct\": 79.94,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Tennessee\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 194,\n      \"weighted_n\": 171.1,\n      \"weighted_users\": 134.0,\n      \"weighted_non_users\": 37.1,\n      \"user_rate_pct\": 78.3,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Tennessee\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 83,\n      \"weighted_n\": 109.8,\n      \"weighted_users\": 107.7,\n      \"weighted_non_users\": 2.1,\n      \"user_rate_pct\": 98.09,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Texas\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 150,\n      \"weighted_n\": 173.6,\n      \"weighted_users\": 150.5,\n      \"weighted_non_users\": 23.2,\n      \"user_rate_pct\": 86.66,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Texas\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 512,\n      \"weighted_n\": 488.1,\n      \"weighted_users\": 410.4,\n      \"weighted_non_users\": 77.7,\n      \"user_rate_pct\": 84.07,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Texas\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 465,\n      \"weighted_n\": 406.2,\n      \"weighted_users\": 343.8,\n      \"weighted_non_users\": 62.4,\n      \"user_rate_pct\": 84.64,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Texas\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 161,\n      \"weighted_n\": 219.5,\n      \"weighted_users\": 203.1,\n      \"weighted_non_users\": 16.4,\n      \"user_rate_pct\": 92.55,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Utah\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 25,\n      \"weighted_n\": 53.8,\n      \"weighted_users\": 50.5,\n      \"weighted_non_users\": 3.3,\n      \"user_rate_pct\": 93.81,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Utah\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 164,\n      \"weighted_n\": 131.2,\n      \"weighted_users\": 116.8,\n      \"weighted_non_users\": 14.4,\n      \"user_rate_pct\": 89.04,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Utah\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 103,\n      \"weighted_n\": 90.9,\n      \"weighted_users\": 74.3,\n      \"weighted_non_users\": 16.6,\n      \"user_rate_pct\": 81.73,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Utah\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 36,\n      \"weighted_n\": 52.6,\n      \"weighted_users\": 44.1,\n      \"weighted_non_users\": 8.5,\n      \"user_rate_pct\": 83.84,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Vermont\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 10,\n      \"weighted_n\": 25.9,\n      \"weighted_users\": 14.7,\n      \"weighted_non_users\": 11.2,\n      \"user_rate_pct\": 56.82,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Vermont\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 97,\n      \"weighted_n\": 60.7,\n      \"weighted_users\": 49.5,\n      \"weighted_non_users\": 11.1,\n      \"user_rate_pct\": 81.68,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Vermont\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 60,\n      \"weighted_n\": 69.6,\n      \"weighted_users\": 63.3,\n      \"weighted_non_users\": 6.4,\n      \"user_rate_pct\": 90.87,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Vermont\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 41,\n      \"weighted_n\": 51.8,\n      \"weighted_users\": 48.0,\n      \"weighted_non_users\": 3.8,\n      \"user_rate_pct\": 92.65,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Virginia\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 50,\n      \"weighted_n\": 59.0,\n      \"weighted_users\": 45.1,\n      \"weighted_non_users\": 13.9,\n      \"user_rate_pct\": 76.41,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Virginia\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 175,\n      \"weighted_n\": 166.5,\n      \"weighted_users\": 147.0,\n      \"weighted_non_users\": 19.5,\n      \"user_rate_pct\": 88.3,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Virginia\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 170,\n      \"weighted_n\": 160.2,\n      \"weighted_users\": 139.5,\n      \"weighted_non_users\": 20.7,\n      \"user_rate_pct\": 87.07,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Virginia\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 90,\n      \"weighted_n\": 99.3,\n      \"weighted_users\": 89.3,\n      \"weighted_non_users\": 9.9,\n      \"user_rate_pct\": 89.98,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Washington\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 35,\n      \"weighted_n\": 56.7,\n      \"weighted_users\": 43.6,\n      \"weighted_non_users\": 13.1,\n      \"user_rate_pct\": 76.83,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Washington\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 241,\n      \"weighted_n\": 192.9,\n      \"weighted_users\": 172.6,\n      \"weighted_non_users\": 20.3,\n      \"user_rate_pct\": 89.48,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Washington\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 156,\n      \"weighted_n\": 162.3,\n      \"weighted_users\": 140.8,\n      \"weighted_non_users\": 21.5,\n      \"user_rate_pct\": 86.77,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Washington\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 86,\n      \"weighted_n\": 105.8,\n      \"weighted_users\": 101.2,\n      \"weighted_non_users\": 4.5,\n      \"user_rate_pct\": 95.73,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"West Virginia\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 22,\n      \"weighted_n\": 45.3,\n      \"weighted_users\": 36.1,\n      \"weighted_non_users\": 9.2,\n      \"user_rate_pct\": 79.69,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"West Virginia\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 156,\n      \"weighted_n\": 120.6,\n      \"weighted_users\": 95.0,\n      \"weighted_non_users\": 25.6,\n      \"user_rate_pct\": 78.77,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"West Virginia\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 175,\n      \"weighted_n\": 135.5,\n      \"weighted_users\": 108.3,\n      \"weighted_non_users\": 27.2,\n      \"user_rate_pct\": 79.94,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"West Virginia\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 50,\n      \"weighted_n\": 102.6,\n      \"weighted_users\": 88.4,\n      \"weighted_non_users\": 14.2,\n      \"user_rate_pct\": 86.12,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Wisconsin\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 36,\n      \"weighted_n\": 44.7,\n      \"weighted_users\": 38.1,\n      \"weighted_non_users\": 6.7,\n      \"user_rate_pct\": 85.08,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Wisconsin\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 110,\n      \"weighted_n\": 117.4,\n      \"weighted_users\": 94.2,\n      \"weighted_non_users\": 23.2,\n      \"user_rate_pct\": 80.26,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Wisconsin\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 128,\n      \"weighted_n\": 123.2,\n      \"weighted_users\": 107.6,\n      \"weighted_non_users\": 15.7,\n      \"user_rate_pct\": 87.27,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Wisconsin\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 94,\n      \"weighted_n\": 83.1,\n      \"weighted_users\": 76.8,\n      \"weighted_non_users\": 6.2,\n      \"user_rate_pct\": 92.49,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Wyoming\",\n      \"age_cat_4\": \"18 to 24\",\n      \"unweighted_n\": 13,\n      \"weighted_n\": 23.7,\n      \"weighted_users\": 21.4,\n      \"weighted_non_users\": 2.4,\n      \"user_rate_pct\": 89.98,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Wyoming\",\n      \"age_cat_4\": \"25 to 44\",\n      \"unweighted_n\": 91,\n      \"weighted_n\": 66.8,\n      \"weighted_users\": 50.4,\n      \"weighted_non_users\": 16.5,\n      \"user_rate_pct\": 75.35,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Wyoming\",\n      \"age_cat_4\": \"45 to 64\",\n      \"unweighted_n\": 70,\n      \"weighted_n\": 63.2,\n      \"weighted_users\": 51.3,\n      \"weighted_non_users\": 11.9,\n      \"user_rate_pct\": 81.18,\n      \"suppressed\": false\n    },\n    {\n      \"state\": \"Wyoming\",\n      \"age_cat_4\": \"65 and over\",\n      \"unweighted_n\": 24,\n      \"weighted_n\": 44.3,\n      \"weighted_users\": 44.3,\n      \"weighted_non_users\": 0.0,\n      \"user_rate_pct\": 100.0,\n      \"suppressed\": false\n    }\n  ],\n  \"data_source\": \"w39\"\n}"}
+{
+ "recoded_variables_used": {
+  "trust_some_doctors__5b761eafd6f9": {
+   "source_column": "pol_trust_doctors",
+   "binary": true,
+   "groups": {
+    "0": [
+     "1 Not at all",
+     "2 Not too much"
+    ],
+    "1": [
+     "3 Some",
+     "4 A lot"
+    ]
+   }
+  }
+ },
+ "variable": "trust_some_doctors__5b761eafd6f9",
+ "result_type": "adoption_rate",
+ "demographics": [
+  "state",
+  "age_cat_4"
+ ],
+ "wave_filter": "all",
+ "weight_used": "weight_state",
+ "weight_note": "No political item is measured and the query is broken down or filtered by state, so the rule picks weight_state (demographics, calibrated within each state).",
+ "n_cells": 204,
+ "n_suppressed": 0,
+ "suppression_note": "Cells with n<10 suppressed for privacy",
+ "scale_labels": null,
+ "note": "All rates/means/pct are WEIGHTED (population-representative). unweighted_n is raw headcount for reliability checks only — never use it to compute percentages.",
+ "interpretation_note": "Each row is one unique combination of all demographic variables. user_rate_pct = WEIGHTED share coded 1 (selected this option / flag set) for that subgroup intersection. unweighted_n = raw respondent headcount (reliability check only).",
+ "data": [
+  {
+   "state": "Alabama",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 44,
+   "weighted_n": 67.8,
+   "weighted_users": 59.5,
+   "weighted_non_users": 8.3,
+   "user_rate_pct": 87.75,
+   "suppressed": false
+  },
+  {
+   "state": "Alabama",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 223,
+   "weighted_n": 177.3,
+   "weighted_users": 148.0,
+   "weighted_non_users": 29.3,
+   "user_rate_pct": 83.5,
+   "suppressed": false
+  },
+  {
+   "state": "Alabama",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 202,
+   "weighted_n": 176.3,
+   "weighted_users": 151.2,
+   "weighted_non_users": 25.1,
+   "user_rate_pct": 85.78,
+   "suppressed": false
+  },
+  {
+   "state": "Alabama",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 75,
+   "weighted_n": 122.7,
+   "weighted_users": 105.2,
+   "weighted_non_users": 17.5,
+   "user_rate_pct": 85.75,
+   "suppressed": false
+  },
+  {
+   "state": "Alaska",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 22,
+   "weighted_n": 30.9,
+   "weighted_users": 29.6,
+   "weighted_non_users": 1.2,
+   "user_rate_pct": 95.99,
+   "suppressed": false
+  },
+  {
+   "state": "Alaska",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 120,
+   "weighted_n": 100.0,
+   "weighted_users": 89.6,
+   "weighted_non_users": 10.4,
+   "user_rate_pct": 89.63,
+   "suppressed": false
+  },
+  {
+   "state": "Alaska",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 95,
+   "weighted_n": 78.0,
+   "weighted_users": 69.8,
+   "weighted_non_users": 8.2,
+   "user_rate_pct": 89.5,
+   "suppressed": false
+  },
+  {
+   "state": "Alaska",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 18,
+   "weighted_n": 46.1,
+   "weighted_users": 46.1,
+   "weighted_non_users": 0.0,
+   "user_rate_pct": 100.0,
+   "suppressed": false
+  },
+  {
+   "state": "Arizona",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 41,
+   "weighted_n": 77.7,
+   "weighted_users": 51.5,
+   "weighted_non_users": 26.2,
+   "user_rate_pct": 66.32,
+   "suppressed": false
+  },
+  {
+   "state": "Arizona",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 260,
+   "weighted_n": 217.7,
+   "weighted_users": 188.2,
+   "weighted_non_users": 29.5,
+   "user_rate_pct": 86.43,
+   "suppressed": false
+  },
+  {
+   "state": "Arizona",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 215,
+   "weighted_n": 195.1,
+   "weighted_users": 170.4,
+   "weighted_non_users": 24.8,
+   "user_rate_pct": 87.31,
+   "suppressed": false
+  },
+  {
+   "state": "Arizona",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 130,
+   "weighted_n": 155.5,
+   "weighted_users": 144.6,
+   "weighted_non_users": 11.0,
+   "user_rate_pct": 92.95,
+   "suppressed": false
+  },
+  {
+   "state": "Arkansas",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 49,
+   "weighted_n": 59.4,
+   "weighted_users": 53.3,
+   "weighted_non_users": 6.0,
+   "user_rate_pct": 89.82,
+   "suppressed": false
+  },
+  {
+   "state": "Arkansas",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 186,
+   "weighted_n": 159.6,
+   "weighted_users": 127.2,
+   "weighted_non_users": 32.4,
+   "user_rate_pct": 79.69,
+   "suppressed": false
+  },
+  {
+   "state": "Arkansas",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 164,
+   "weighted_n": 152.3,
+   "weighted_users": 125.8,
+   "weighted_non_users": 26.5,
+   "user_rate_pct": 82.62,
+   "suppressed": false
+  },
+  {
+   "state": "Arkansas",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 81,
+   "weighted_n": 108.7,
+   "weighted_users": 102.4,
+   "weighted_non_users": 6.3,
+   "user_rate_pct": 94.19,
+   "suppressed": false
+  },
+  {
+   "state": "California",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 144,
+   "weighted_n": 144.0,
+   "weighted_users": 127.3,
+   "weighted_non_users": 16.7,
+   "user_rate_pct": 88.42,
+   "suppressed": false
+  },
+  {
+   "state": "California",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 580,
+   "weighted_n": 449.3,
+   "weighted_users": 373.5,
+   "weighted_non_users": 75.8,
+   "user_rate_pct": 83.13,
+   "suppressed": false
+  },
+  {
+   "state": "California",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 343,
+   "weighted_n": 386.3,
+   "weighted_users": 337.6,
+   "weighted_non_users": 48.7,
+   "user_rate_pct": 87.38,
+   "suppressed": false
+  },
+  {
+   "state": "California",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 157,
+   "weighted_n": 244.4,
+   "weighted_users": 238.2,
+   "weighted_non_users": 6.2,
+   "user_rate_pct": 97.47,
+   "suppressed": false
+  },
+  {
+   "state": "Colorado",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 25,
+   "weighted_n": 53.1,
+   "weighted_users": 44.2,
+   "weighted_non_users": 8.9,
+   "user_rate_pct": 83.2,
+   "suppressed": false
+  },
+  {
+   "state": "Colorado",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 192,
+   "weighted_n": 174.6,
+   "weighted_users": 153.5,
+   "weighted_non_users": 21.2,
+   "user_rate_pct": 87.89,
+   "suppressed": false
+  },
+  {
+   "state": "Colorado",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 170,
+   "weighted_n": 137.8,
+   "weighted_users": 114.4,
+   "weighted_non_users": 23.3,
+   "user_rate_pct": 83.06,
+   "suppressed": false
+  },
+  {
+   "state": "Colorado",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 67,
+   "weighted_n": 89.1,
+   "weighted_users": 84.3,
+   "weighted_non_users": 4.9,
+   "user_rate_pct": 94.54,
+   "suppressed": false
+  },
+  {
+   "state": "Connecticut",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 48,
+   "weighted_n": 61.6,
+   "weighted_users": 51.9,
+   "weighted_non_users": 9.7,
+   "user_rate_pct": 84.24,
+   "suppressed": false
+  },
+  {
+   "state": "Connecticut",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 177,
+   "weighted_n": 165.2,
+   "weighted_users": 140.0,
+   "weighted_non_users": 25.2,
+   "user_rate_pct": 84.74,
+   "suppressed": false
+  },
+  {
+   "state": "Connecticut",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 181,
+   "weighted_n": 175.2,
+   "weighted_users": 157.1,
+   "weighted_non_users": 18.1,
+   "user_rate_pct": 89.67,
+   "suppressed": false
+  },
+  {
+   "state": "Connecticut",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 115,
+   "weighted_n": 118.9,
+   "weighted_users": 112.1,
+   "weighted_non_users": 6.8,
+   "user_rate_pct": 94.25,
+   "suppressed": false
+  },
+  {
+   "state": "Delaware",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 23,
+   "weighted_n": 36.8,
+   "weighted_users": 33.2,
+   "weighted_non_users": 3.6,
+   "user_rate_pct": 90.18,
+   "suppressed": false
+  },
+  {
+   "state": "Delaware",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 167,
+   "weighted_n": 111.3,
+   "weighted_users": 89.9,
+   "weighted_non_users": 21.4,
+   "user_rate_pct": 80.8,
+   "suppressed": false
+  },
+  {
+   "state": "Delaware",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 113,
+   "weighted_n": 113.4,
+   "weighted_users": 97.2,
+   "weighted_non_users": 16.2,
+   "user_rate_pct": 85.73,
+   "suppressed": false
+  },
+  {
+   "state": "Delaware",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 50,
+   "weighted_n": 91.4,
+   "weighted_users": 84.9,
+   "weighted_non_users": 6.5,
+   "user_rate_pct": 92.9,
+   "suppressed": false
+  },
+  {
+   "state": "District of Columbia",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 42,
+   "weighted_n": 35.3,
+   "weighted_users": 26.5,
+   "weighted_non_users": 8.8,
+   "user_rate_pct": 75.0,
+   "suppressed": false
+  },
+  {
+   "state": "District of Columbia",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 151,
+   "weighted_n": 143.1,
+   "weighted_users": 126.2,
+   "weighted_non_users": 17.0,
+   "user_rate_pct": 88.13,
+   "suppressed": false
+  },
+  {
+   "state": "District of Columbia",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 93,
+   "weighted_n": 73.5,
+   "weighted_users": 68.8,
+   "weighted_non_users": 4.7,
+   "user_rate_pct": 93.57,
+   "suppressed": false
+  },
+  {
+   "state": "District of Columbia",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 12,
+   "weighted_n": 46.3,
+   "weighted_users": 46.3,
+   "weighted_non_users": 0.0,
+   "user_rate_pct": 100.0,
+   "suppressed": false
+  },
+  {
+   "state": "Florida",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 109,
+   "weighted_n": 124.2,
+   "weighted_users": 97.7,
+   "weighted_non_users": 26.5,
+   "user_rate_pct": 78.68,
+   "suppressed": false
+  },
+  {
+   "state": "Florida",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 508,
+   "weighted_n": 386.5,
+   "weighted_users": 312.7,
+   "weighted_non_users": 73.9,
+   "user_rate_pct": 80.89,
+   "suppressed": false
+  },
+  {
+   "state": "Florida",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 360,
+   "weighted_n": 394.3,
+   "weighted_users": 331.9,
+   "weighted_non_users": 62.4,
+   "user_rate_pct": 84.17,
+   "suppressed": false
+  },
+  {
+   "state": "Florida",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 250,
+   "weighted_n": 321.4,
+   "weighted_users": 305.4,
+   "weighted_non_users": 16.0,
+   "user_rate_pct": 95.01,
+   "suppressed": false
+  },
+  {
+   "state": "Georgia",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 87,
+   "weighted_n": 107.7,
+   "weighted_users": 87.5,
+   "weighted_non_users": 20.2,
+   "user_rate_pct": 81.22,
+   "suppressed": false
+  },
+  {
+   "state": "Georgia",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 350,
+   "weighted_n": 305.5,
+   "weighted_users": 251.1,
+   "weighted_non_users": 54.4,
+   "user_rate_pct": 82.21,
+   "suppressed": false
+  },
+  {
+   "state": "Georgia",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 314,
+   "weighted_n": 284.2,
+   "weighted_users": 240.9,
+   "weighted_non_users": 43.3,
+   "user_rate_pct": 84.76,
+   "suppressed": false
+  },
+  {
+   "state": "Georgia",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 114,
+   "weighted_n": 167.6,
+   "weighted_users": 154.2,
+   "weighted_non_users": 13.3,
+   "user_rate_pct": 92.05,
+   "suppressed": false
+  },
+  {
+   "state": "Hawaii",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 24,
+   "weighted_n": 29.4,
+   "weighted_users": 27.9,
+   "weighted_non_users": 1.4,
+   "user_rate_pct": 95.08,
+   "suppressed": false
+  },
+  {
+   "state": "Hawaii",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 121,
+   "weighted_n": 96.9,
+   "weighted_users": 80.1,
+   "weighted_non_users": 16.8,
+   "user_rate_pct": 82.66,
+   "suppressed": false
+  },
+  {
+   "state": "Hawaii",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 95,
+   "weighted_n": 88.5,
+   "weighted_users": 77.7,
+   "weighted_non_users": 10.8,
+   "user_rate_pct": 87.79,
+   "suppressed": false
+  },
+  {
+   "state": "Hawaii",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 48,
+   "weighted_n": 73.9,
+   "weighted_users": 72.4,
+   "weighted_non_users": 1.5,
+   "user_rate_pct": 97.92,
+   "suppressed": false
+  },
+  {
+   "state": "Idaho",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 36,
+   "weighted_n": 49.0,
+   "weighted_users": 44.2,
+   "weighted_non_users": 4.8,
+   "user_rate_pct": 90.18,
+   "suppressed": false
+  },
+  {
+   "state": "Idaho",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 161,
+   "weighted_n": 129.4,
+   "weighted_users": 110.4,
+   "weighted_non_users": 19.0,
+   "user_rate_pct": 85.34,
+   "suppressed": false
+  },
+  {
+   "state": "Idaho",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 128,
+   "weighted_n": 113.0,
+   "weighted_users": 93.0,
+   "weighted_non_users": 20.0,
+   "user_rate_pct": 82.34,
+   "suppressed": false
+  },
+  {
+   "state": "Idaho",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 50,
+   "weighted_n": 83.2,
+   "weighted_users": 80.8,
+   "weighted_non_users": 2.3,
+   "user_rate_pct": 97.23,
+   "suppressed": false
+  },
+  {
+   "state": "Illinois",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 80,
+   "weighted_n": 86.9,
+   "weighted_users": 71.8,
+   "weighted_non_users": 15.2,
+   "user_rate_pct": 82.57,
+   "suppressed": false
+  },
+  {
+   "state": "Illinois",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 297,
+   "weighted_n": 255.5,
+   "weighted_users": 213.7,
+   "weighted_non_users": 41.8,
+   "user_rate_pct": 83.64,
+   "suppressed": false
+  },
+  {
+   "state": "Illinois",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 228,
+   "weighted_n": 238.0,
+   "weighted_users": 209.6,
+   "weighted_non_users": 28.4,
+   "user_rate_pct": 88.07,
+   "suppressed": false
+  },
+  {
+   "state": "Illinois",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 133,
+   "weighted_n": 156.9,
+   "weighted_users": 149.2,
+   "weighted_non_users": 7.7,
+   "user_rate_pct": 95.09,
+   "suppressed": false
+  },
+  {
+   "state": "Indiana",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 42,
+   "weighted_n": 70.4,
+   "weighted_users": 56.2,
+   "weighted_non_users": 14.2,
+   "user_rate_pct": 79.87,
+   "suppressed": false
+  },
+  {
+   "state": "Indiana",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 217,
+   "weighted_n": 186.3,
+   "weighted_users": 161.3,
+   "weighted_non_users": 25.1,
+   "user_rate_pct": 86.55,
+   "suppressed": false
+  },
+  {
+   "state": "Indiana",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 202,
+   "weighted_n": 177.9,
+   "weighted_users": 158.9,
+   "weighted_non_users": 19.0,
+   "user_rate_pct": 89.34,
+   "suppressed": false
+  },
+  {
+   "state": "Indiana",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 90,
+   "weighted_n": 116.2,
+   "weighted_users": 110.0,
+   "weighted_non_users": 6.2,
+   "user_rate_pct": 94.64,
+   "suppressed": false
+  },
+  {
+   "state": "Iowa",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 27,
+   "weighted_n": 64.5,
+   "weighted_users": 58.0,
+   "weighted_non_users": 6.5,
+   "user_rate_pct": 89.99,
+   "suppressed": false
+  },
+  {
+   "state": "Iowa",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 180,
+   "weighted_n": 161.2,
+   "weighted_users": 138.2,
+   "weighted_non_users": 23.0,
+   "user_rate_pct": 85.74,
+   "suppressed": false
+  },
+  {
+   "state": "Iowa",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 195,
+   "weighted_n": 153.8,
+   "weighted_users": 136.7,
+   "weighted_non_users": 17.0,
+   "user_rate_pct": 88.92,
+   "suppressed": false
+  },
+  {
+   "state": "Iowa",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 90,
+   "weighted_n": 112.6,
+   "weighted_users": 108.6,
+   "weighted_non_users": 4.0,
+   "user_rate_pct": 96.45,
+   "suppressed": false
+  },
+  {
+   "state": "Kansas",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 34,
+   "weighted_n": 57.4,
+   "weighted_users": 55.5,
+   "weighted_non_users": 1.9,
+   "user_rate_pct": 96.68,
+   "suppressed": false
+  },
+  {
+   "state": "Kansas",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 170,
+   "weighted_n": 144.4,
+   "weighted_users": 113.8,
+   "weighted_non_users": 30.6,
+   "user_rate_pct": 78.8,
+   "suppressed": false
+  },
+  {
+   "state": "Kansas",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 146,
+   "weighted_n": 131.3,
+   "weighted_users": 118.0,
+   "weighted_non_users": 13.4,
+   "user_rate_pct": 89.83,
+   "suppressed": false
+  },
+  {
+   "state": "Kansas",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 76,
+   "weighted_n": 92.9,
+   "weighted_users": 85.0,
+   "weighted_non_users": 7.9,
+   "user_rate_pct": 91.52,
+   "suppressed": false
+  },
+  {
+   "state": "Kentucky",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 54,
+   "weighted_n": 67.0,
+   "weighted_users": 53.6,
+   "weighted_non_users": 13.4,
+   "user_rate_pct": 79.98,
+   "suppressed": false
+  },
+  {
+   "state": "Kentucky",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 235,
+   "weighted_n": 187.1,
+   "weighted_users": 159.8,
+   "weighted_non_users": 27.3,
+   "user_rate_pct": 85.41,
+   "suppressed": false
+  },
+  {
+   "state": "Kentucky",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 176,
+   "weighted_n": 185.8,
+   "weighted_users": 162.6,
+   "weighted_non_users": 23.2,
+   "user_rate_pct": 87.51,
+   "suppressed": false
+  },
+  {
+   "state": "Kentucky",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 98,
+   "weighted_n": 123.8,
+   "weighted_users": 115.7,
+   "weighted_non_users": 8.1,
+   "user_rate_pct": 93.48,
+   "suppressed": false
+  },
+  {
+   "state": "Louisiana",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 53,
+   "weighted_n": 67.4,
+   "weighted_users": 58.5,
+   "weighted_non_users": 8.9,
+   "user_rate_pct": 86.75,
+   "suppressed": false
+  },
+  {
+   "state": "Louisiana",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 255,
+   "weighted_n": 198.4,
+   "weighted_users": 166.2,
+   "weighted_non_users": 32.1,
+   "user_rate_pct": 83.79,
+   "suppressed": false
+  },
+  {
+   "state": "Louisiana",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 202,
+   "weighted_n": 178.6,
+   "weighted_users": 158.9,
+   "weighted_non_users": 19.6,
+   "user_rate_pct": 89.0,
+   "suppressed": false
+  },
+  {
+   "state": "Louisiana",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 57,
+   "weighted_n": 122.6,
+   "weighted_users": 111.5,
+   "weighted_non_users": 11.1,
+   "user_rate_pct": 90.95,
+   "suppressed": false
+  },
+  {
+   "state": "Maine",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 24,
+   "weighted_n": 40.6,
+   "weighted_users": 34.3,
+   "weighted_non_users": 6.3,
+   "user_rate_pct": 84.51,
+   "suppressed": false
+  },
+  {
+   "state": "Maine",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 146,
+   "weighted_n": 122.6,
+   "weighted_users": 102.0,
+   "weighted_non_users": 20.5,
+   "user_rate_pct": 83.24,
+   "suppressed": false
+  },
+  {
+   "state": "Maine",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 165,
+   "weighted_n": 138.5,
+   "weighted_users": 121.8,
+   "weighted_non_users": 16.7,
+   "user_rate_pct": 87.95,
+   "suppressed": false
+  },
+  {
+   "state": "Maine",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 77,
+   "weighted_n": 110.4,
+   "weighted_users": 103.2,
+   "weighted_non_users": 7.2,
+   "user_rate_pct": 93.47,
+   "suppressed": false
+  },
+  {
+   "state": "Maryland",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 49,
+   "weighted_n": 64.0,
+   "weighted_users": 57.0,
+   "weighted_non_users": 7.1,
+   "user_rate_pct": 88.92,
+   "suppressed": false
+  },
+  {
+   "state": "Maryland",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 254,
+   "weighted_n": 200.8,
+   "weighted_users": 173.5,
+   "weighted_non_users": 27.3,
+   "user_rate_pct": 86.41,
+   "suppressed": false
+  },
+  {
+   "state": "Maryland",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 178,
+   "weighted_n": 192.4,
+   "weighted_users": 168.0,
+   "weighted_non_users": 24.3,
+   "user_rate_pct": 87.34,
+   "suppressed": false
+  },
+  {
+   "state": "Maryland",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 99,
+   "weighted_n": 122.7,
+   "weighted_users": 118.3,
+   "weighted_non_users": 4.4,
+   "user_rate_pct": 96.42,
+   "suppressed": false
+  },
+  {
+   "state": "Massachusetts",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 33,
+   "weighted_n": 61.0,
+   "weighted_users": 52.6,
+   "weighted_non_users": 8.4,
+   "user_rate_pct": 86.18,
+   "suppressed": false
+  },
+  {
+   "state": "Massachusetts",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 186,
+   "weighted_n": 165.7,
+   "weighted_users": 144.1,
+   "weighted_non_users": 21.7,
+   "user_rate_pct": 86.93,
+   "suppressed": false
+  },
+  {
+   "state": "Massachusetts",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 173,
+   "weighted_n": 160.5,
+   "weighted_users": 137.7,
+   "weighted_non_users": 22.8,
+   "user_rate_pct": 85.78,
+   "suppressed": false
+  },
+  {
+   "state": "Massachusetts",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 104,
+   "weighted_n": 108.3,
+   "weighted_users": 100.1,
+   "weighted_non_users": 8.1,
+   "user_rate_pct": 92.49,
+   "suppressed": false
+  },
+  {
+   "state": "Michigan",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 79,
+   "weighted_n": 111.8,
+   "weighted_users": 94.5,
+   "weighted_non_users": 17.3,
+   "user_rate_pct": 84.55,
+   "suppressed": false
+  },
+  {
+   "state": "Michigan",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 365,
+   "weighted_n": 304.9,
+   "weighted_users": 252.2,
+   "weighted_non_users": 52.7,
+   "user_rate_pct": 82.71,
+   "suppressed": false
+  },
+  {
+   "state": "Michigan",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 329,
+   "weighted_n": 308.9,
+   "weighted_users": 267.4,
+   "weighted_non_users": 41.5,
+   "user_rate_pct": 86.56,
+   "suppressed": false
+  },
+  {
+   "state": "Michigan",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 174,
+   "weighted_n": 222.5,
+   "weighted_users": 204.1,
+   "weighted_non_users": 18.4,
+   "user_rate_pct": 91.73,
+   "suppressed": false
+  },
+  {
+   "state": "Minnesota",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 29,
+   "weighted_n": 56.8,
+   "weighted_users": 51.2,
+   "weighted_non_users": 5.5,
+   "user_rate_pct": 90.26,
+   "suppressed": false
+  },
+  {
+   "state": "Minnesota",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 195,
+   "weighted_n": 171.9,
+   "weighted_users": 154.8,
+   "weighted_non_users": 17.1,
+   "user_rate_pct": 90.06,
+   "suppressed": false
+  },
+  {
+   "state": "Minnesota",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 165,
+   "weighted_n": 157.9,
+   "weighted_users": 145.3,
+   "weighted_non_users": 12.6,
+   "user_rate_pct": 92.03,
+   "suppressed": false
+  },
+  {
+   "state": "Minnesota",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 105,
+   "weighted_n": 107.6,
+   "weighted_users": 100.0,
+   "weighted_non_users": 7.5,
+   "user_rate_pct": 93.01,
+   "suppressed": false
+  },
+  {
+   "state": "Mississippi",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 50,
+   "weighted_n": 72.9,
+   "weighted_users": 56.0,
+   "weighted_non_users": 16.9,
+   "user_rate_pct": 76.81,
+   "suppressed": false
+  },
+  {
+   "state": "Mississippi",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 240,
+   "weighted_n": 185.3,
+   "weighted_users": 149.5,
+   "weighted_non_users": 35.8,
+   "user_rate_pct": 80.67,
+   "suppressed": false
+  },
+  {
+   "state": "Mississippi",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 210,
+   "weighted_n": 182.1,
+   "weighted_users": 156.1,
+   "weighted_non_users": 26.0,
+   "user_rate_pct": 85.71,
+   "suppressed": false
+  },
+  {
+   "state": "Mississippi",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 66,
+   "weighted_n": 125.7,
+   "weighted_users": 113.9,
+   "weighted_non_users": 11.8,
+   "user_rate_pct": 90.6,
+   "suppressed": false
+  },
+  {
+   "state": "Missouri",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 48,
+   "weighted_n": 75.8,
+   "weighted_users": 60.2,
+   "weighted_non_users": 15.6,
+   "user_rate_pct": 79.39,
+   "suppressed": false
+  },
+  {
+   "state": "Missouri",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 247,
+   "weighted_n": 213.2,
+   "weighted_users": 183.6,
+   "weighted_non_users": 29.6,
+   "user_rate_pct": 86.13,
+   "suppressed": false
+  },
+  {
+   "state": "Missouri",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 207,
+   "weighted_n": 200.3,
+   "weighted_users": 171.2,
+   "weighted_non_users": 29.0,
+   "user_rate_pct": 85.51,
+   "suppressed": false
+  },
+  {
+   "state": "Missouri",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 131,
+   "weighted_n": 144.2,
+   "weighted_users": 137.2,
+   "weighted_non_users": 7.0,
+   "user_rate_pct": 95.16,
+   "suppressed": false
+  },
+  {
+   "state": "Montana",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 26,
+   "weighted_n": 35.2,
+   "weighted_users": 25.4,
+   "weighted_non_users": 9.8,
+   "user_rate_pct": 72.24,
+   "suppressed": false
+  },
+  {
+   "state": "Montana",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 129,
+   "weighted_n": 99.8,
+   "weighted_users": 86.0,
+   "weighted_non_users": 13.8,
+   "user_rate_pct": 86.15,
+   "suppressed": false
+  },
+  {
+   "state": "Montana",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 107,
+   "weighted_n": 93.7,
+   "weighted_users": 74.8,
+   "weighted_non_users": 18.9,
+   "user_rate_pct": 79.83,
+   "suppressed": false
+  },
+  {
+   "state": "Montana",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 44,
+   "weighted_n": 77.3,
+   "weighted_users": 68.9,
+   "weighted_non_users": 8.4,
+   "user_rate_pct": 89.08,
+   "suppressed": false
+  },
+  {
+   "state": "Nebraska",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 24,
+   "weighted_n": 65.3,
+   "weighted_users": 53.4,
+   "weighted_non_users": 11.9,
+   "user_rate_pct": 81.73,
+   "suppressed": false
+  },
+  {
+   "state": "Nebraska",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 214,
+   "weighted_n": 170.8,
+   "weighted_users": 141.3,
+   "weighted_non_users": 29.5,
+   "user_rate_pct": 82.73,
+   "suppressed": false
+  },
+  {
+   "state": "Nebraska",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 180,
+   "weighted_n": 151.4,
+   "weighted_users": 122.1,
+   "weighted_non_users": 29.4,
+   "user_rate_pct": 80.59,
+   "suppressed": false
+  },
+  {
+   "state": "Nebraska",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 77,
+   "weighted_n": 108.1,
+   "weighted_users": 103.6,
+   "weighted_non_users": 4.4,
+   "user_rate_pct": 95.9,
+   "suppressed": false
+  },
+  {
+   "state": "Nevada",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 35,
+   "weighted_n": 51.2,
+   "weighted_users": 32.8,
+   "weighted_non_users": 18.3,
+   "user_rate_pct": 64.15,
+   "suppressed": false
+  },
+  {
+   "state": "Nevada",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 187,
+   "weighted_n": 178.9,
+   "weighted_users": 153.9,
+   "weighted_non_users": 24.9,
+   "user_rate_pct": 86.06,
+   "suppressed": false
+  },
+  {
+   "state": "Nevada",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 177,
+   "weighted_n": 159.1,
+   "weighted_users": 145.4,
+   "weighted_non_users": 13.7,
+   "user_rate_pct": 91.41,
+   "suppressed": false
+  },
+  {
+   "state": "Nevada",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 98,
+   "weighted_n": 107.9,
+   "weighted_users": 101.1,
+   "weighted_non_users": 6.8,
+   "user_rate_pct": 93.69,
+   "suppressed": false
+  },
+  {
+   "state": "New Hampshire",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 26,
+   "weighted_n": 36.7,
+   "weighted_users": 34.3,
+   "weighted_non_users": 2.4,
+   "user_rate_pct": 93.38,
+   "suppressed": false
+  },
+  {
+   "state": "New Hampshire",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 115,
+   "weighted_n": 105.9,
+   "weighted_users": 85.7,
+   "weighted_non_users": 20.2,
+   "user_rate_pct": 80.92,
+   "suppressed": false
+  },
+  {
+   "state": "New Hampshire",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 132,
+   "weighted_n": 117.6,
+   "weighted_users": 102.6,
+   "weighted_non_users": 15.0,
+   "user_rate_pct": 87.23,
+   "suppressed": false
+  },
+  {
+   "state": "New Hampshire",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 70,
+   "weighted_n": 82.8,
+   "weighted_users": 71.9,
+   "weighted_non_users": 10.9,
+   "user_rate_pct": 86.81,
+   "suppressed": false
+  },
+  {
+   "state": "New Jersey",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 32,
+   "weighted_n": 50.0,
+   "weighted_users": 41.2,
+   "weighted_non_users": 8.7,
+   "user_rate_pct": 82.56,
+   "suppressed": false
+  },
+  {
+   "state": "New Jersey",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 165,
+   "weighted_n": 155.2,
+   "weighted_users": 135.7,
+   "weighted_non_users": 19.5,
+   "user_rate_pct": 87.46,
+   "suppressed": false
+  },
+  {
+   "state": "New Jersey",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 145,
+   "weighted_n": 157.7,
+   "weighted_users": 137.9,
+   "weighted_non_users": 19.8,
+   "user_rate_pct": 87.44,
+   "suppressed": false
+  },
+  {
+   "state": "New Jersey",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 121,
+   "weighted_n": 100.8,
+   "weighted_users": 90.1,
+   "weighted_non_users": 10.6,
+   "user_rate_pct": 89.46,
+   "suppressed": false
+  },
+  {
+   "state": "New Mexico",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 31,
+   "weighted_n": 52.0,
+   "weighted_users": 43.0,
+   "weighted_non_users": 8.9,
+   "user_rate_pct": 82.86,
+   "suppressed": false
+  },
+  {
+   "state": "New Mexico",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 175,
+   "weighted_n": 143.6,
+   "weighted_users": 118.1,
+   "weighted_non_users": 25.5,
+   "user_rate_pct": 82.24,
+   "suppressed": false
+  },
+  {
+   "state": "New Mexico",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 154,
+   "weighted_n": 131.9,
+   "weighted_users": 110.7,
+   "weighted_non_users": 21.2,
+   "user_rate_pct": 83.94,
+   "suppressed": false
+  },
+  {
+   "state": "New Mexico",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 74,
+   "weighted_n": 107.1,
+   "weighted_users": 92.8,
+   "weighted_non_users": 14.3,
+   "user_rate_pct": 86.64,
+   "suppressed": false
+  },
+  {
+   "state": "New York",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 120,
+   "weighted_n": 123.6,
+   "weighted_users": 97.1,
+   "weighted_non_users": 26.5,
+   "user_rate_pct": 78.58,
+   "suppressed": false
+  },
+  {
+   "state": "New York",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 540,
+   "weighted_n": 376.1,
+   "weighted_users": 317.6,
+   "weighted_non_users": 58.5,
+   "user_rate_pct": 84.44,
+   "suppressed": false
+  },
+  {
+   "state": "New York",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 290,
+   "weighted_n": 349.9,
+   "weighted_users": 308.2,
+   "weighted_non_users": 41.6,
+   "user_rate_pct": 88.1,
+   "suppressed": false
+  },
+  {
+   "state": "New York",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 144,
+   "weighted_n": 243.6,
+   "weighted_users": 229.9,
+   "weighted_non_users": 13.6,
+   "user_rate_pct": 94.41,
+   "suppressed": false
+  },
+  {
+   "state": "North Carolina",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 102,
+   "weighted_n": 100.5,
+   "weighted_users": 88.1,
+   "weighted_non_users": 12.4,
+   "user_rate_pct": 87.7,
+   "suppressed": false
+  },
+  {
+   "state": "North Carolina",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 324,
+   "weighted_n": 276.1,
+   "weighted_users": 221.8,
+   "weighted_non_users": 54.3,
+   "user_rate_pct": 80.33,
+   "suppressed": false
+  },
+  {
+   "state": "North Carolina",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 268,
+   "weighted_n": 268.0,
+   "weighted_users": 242.0,
+   "weighted_non_users": 26.1,
+   "user_rate_pct": 90.27,
+   "suppressed": false
+  },
+  {
+   "state": "North Carolina",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 129,
+   "weighted_n": 179.4,
+   "weighted_users": 174.3,
+   "weighted_non_users": 5.1,
+   "user_rate_pct": 97.14,
+   "suppressed": false
+  },
+  {
+   "state": "North Dakota",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 24,
+   "weighted_n": 44.4,
+   "weighted_users": 39.5,
+   "weighted_non_users": 4.9,
+   "user_rate_pct": 88.99,
+   "suppressed": false
+  },
+  {
+   "state": "North Dakota",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 134,
+   "weighted_n": 106.9,
+   "weighted_users": 88.3,
+   "weighted_non_users": 18.5,
+   "user_rate_pct": 82.65,
+   "suppressed": false
+  },
+  {
+   "state": "North Dakota",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 112,
+   "weighted_n": 83.9,
+   "weighted_users": 75.8,
+   "weighted_non_users": 8.0,
+   "user_rate_pct": 90.41,
+   "suppressed": false
+  },
+  {
+   "state": "North Dakota",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 26,
+   "weighted_n": 61.1,
+   "weighted_users": 60.0,
+   "weighted_non_users": 1.0,
+   "user_rate_pct": 98.31,
+   "suppressed": false
+  },
+  {
+   "state": "Ohio",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 79,
+   "weighted_n": 106.1,
+   "weighted_users": 85.4,
+   "weighted_non_users": 20.7,
+   "user_rate_pct": 80.52,
+   "suppressed": false
+  },
+  {
+   "state": "Ohio",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 341,
+   "weighted_n": 305.4,
+   "weighted_users": 262.0,
+   "weighted_non_users": 43.4,
+   "user_rate_pct": 85.79,
+   "suppressed": false
+  },
+  {
+   "state": "Ohio",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 347,
+   "weighted_n": 299.2,
+   "weighted_users": 256.3,
+   "weighted_non_users": 42.9,
+   "user_rate_pct": 85.65,
+   "suppressed": false
+  },
+  {
+   "state": "Ohio",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 156,
+   "weighted_n": 212.3,
+   "weighted_users": 200.8,
+   "weighted_non_users": 11.5,
+   "user_rate_pct": 94.57,
+   "suppressed": false
+  },
+  {
+   "state": "Oklahoma",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 38,
+   "weighted_n": 63.6,
+   "weighted_users": 54.8,
+   "weighted_non_users": 8.8,
+   "user_rate_pct": 86.19,
+   "suppressed": false
+  },
+  {
+   "state": "Oklahoma",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 183,
+   "weighted_n": 169.9,
+   "weighted_users": 143.2,
+   "weighted_non_users": 26.7,
+   "user_rate_pct": 84.3,
+   "suppressed": false
+  },
+  {
+   "state": "Oklahoma",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 174,
+   "weighted_n": 149.9,
+   "weighted_users": 126.5,
+   "weighted_non_users": 23.4,
+   "user_rate_pct": 84.37,
+   "suppressed": false
+  },
+  {
+   "state": "Oklahoma",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 92,
+   "weighted_n": 103.8,
+   "weighted_users": 95.8,
+   "weighted_non_users": 8.0,
+   "user_rate_pct": 92.32,
+   "suppressed": false
+  },
+  {
+   "state": "Oregon",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 38,
+   "weighted_n": 53.1,
+   "weighted_users": 42.6,
+   "weighted_non_users": 10.5,
+   "user_rate_pct": 80.2,
+   "suppressed": false
+  },
+  {
+   "state": "Oregon",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 217,
+   "weighted_n": 173.5,
+   "weighted_users": 149.7,
+   "weighted_non_users": 23.8,
+   "user_rate_pct": 86.3,
+   "suppressed": false
+  },
+  {
+   "state": "Oregon",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 155,
+   "weighted_n": 150.6,
+   "weighted_users": 130.9,
+   "weighted_non_users": 19.7,
+   "user_rate_pct": 86.92,
+   "suppressed": false
+  },
+  {
+   "state": "Oregon",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 83,
+   "weighted_n": 116.5,
+   "weighted_users": 108.4,
+   "weighted_non_users": 8.1,
+   "user_rate_pct": 93.03,
+   "suppressed": false
+  },
+  {
+   "state": "Pennsylvania",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 69,
+   "weighted_n": 89.5,
+   "weighted_users": 75.9,
+   "weighted_non_users": 13.6,
+   "user_rate_pct": 84.75,
+   "suppressed": false
+  },
+  {
+   "state": "Pennsylvania",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 261,
+   "weighted_n": 255.1,
+   "weighted_users": 213.1,
+   "weighted_non_users": 42.0,
+   "user_rate_pct": 83.53,
+   "suppressed": false
+  },
+  {
+   "state": "Pennsylvania",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 286,
+   "weighted_n": 256.8,
+   "weighted_users": 226.6,
+   "weighted_non_users": 30.2,
+   "user_rate_pct": 88.25,
+   "suppressed": false
+  },
+  {
+   "state": "Pennsylvania",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 175,
+   "weighted_n": 190.3,
+   "weighted_users": 179.6,
+   "weighted_non_users": 10.7,
+   "user_rate_pct": 94.39,
+   "suppressed": false
+  },
+  {
+   "state": "Rhode Island",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 19,
+   "weighted_n": 39.8,
+   "weighted_users": 29.7,
+   "weighted_non_users": 10.1,
+   "user_rate_pct": 74.71,
+   "suppressed": false
+  },
+  {
+   "state": "Rhode Island",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 124,
+   "weighted_n": 104.0,
+   "weighted_users": 94.7,
+   "weighted_non_users": 9.2,
+   "user_rate_pct": 91.12,
+   "suppressed": false
+  },
+  {
+   "state": "Rhode Island",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 117,
+   "weighted_n": 99.8,
+   "weighted_users": 92.4,
+   "weighted_non_users": 7.4,
+   "user_rate_pct": 92.57,
+   "suppressed": false
+  },
+  {
+   "state": "Rhode Island",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 55,
+   "weighted_n": 71.6,
+   "weighted_users": 64.1,
+   "weighted_non_users": 7.6,
+   "user_rate_pct": 89.45,
+   "suppressed": false
+  },
+  {
+   "state": "South Carolina",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 50,
+   "weighted_n": 65.0,
+   "weighted_users": 48.6,
+   "weighted_non_users": 16.4,
+   "user_rate_pct": 74.73,
+   "suppressed": false
+  },
+  {
+   "state": "South Carolina",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 205,
+   "weighted_n": 179.3,
+   "weighted_users": 148.9,
+   "weighted_non_users": 30.4,
+   "user_rate_pct": 83.02,
+   "suppressed": false
+  },
+  {
+   "state": "South Carolina",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 184,
+   "weighted_n": 178.8,
+   "weighted_users": 158.7,
+   "weighted_non_users": 20.1,
+   "user_rate_pct": 88.77,
+   "suppressed": false
+  },
+  {
+   "state": "South Carolina",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 115,
+   "weighted_n": 130.5,
+   "weighted_users": 122.5,
+   "weighted_non_users": 8.0,
+   "user_rate_pct": 93.89,
+   "suppressed": false
+  },
+  {
+   "state": "South Dakota",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 32,
+   "weighted_n": 39.4,
+   "weighted_users": 33.1,
+   "weighted_non_users": 6.3,
+   "user_rate_pct": 84.01,
+   "suppressed": false
+  },
+  {
+   "state": "South Dakota",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 151,
+   "weighted_n": 106.9,
+   "weighted_users": 87.8,
+   "weighted_non_users": 19.1,
+   "user_rate_pct": 82.14,
+   "suppressed": false
+  },
+  {
+   "state": "South Dakota",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 92,
+   "weighted_n": 98.5,
+   "weighted_users": 85.6,
+   "weighted_non_users": 12.9,
+   "user_rate_pct": 86.92,
+   "suppressed": false
+  },
+  {
+   "state": "South Dakota",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 44,
+   "weighted_n": 74.4,
+   "weighted_users": 69.8,
+   "weighted_non_users": 4.6,
+   "user_rate_pct": 93.84,
+   "suppressed": false
+  },
+  {
+   "state": "Tennessee",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 52,
+   "weighted_n": 69.4,
+   "weighted_users": 57.5,
+   "weighted_non_users": 11.8,
+   "user_rate_pct": 82.96,
+   "suppressed": false
+  },
+  {
+   "state": "Tennessee",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 229,
+   "weighted_n": 206.5,
+   "weighted_users": 164.1,
+   "weighted_non_users": 42.4,
+   "user_rate_pct": 79.48,
+   "suppressed": false
+  },
+  {
+   "state": "Tennessee",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 217,
+   "weighted_n": 195.7,
+   "weighted_users": 154.4,
+   "weighted_non_users": 41.3,
+   "user_rate_pct": 78.88,
+   "suppressed": false
+  },
+  {
+   "state": "Tennessee",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 104,
+   "weighted_n": 131.0,
+   "weighted_users": 125.3,
+   "weighted_non_users": 5.7,
+   "user_rate_pct": 95.63,
+   "suppressed": false
+  },
+  {
+   "state": "Texas",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 179,
+   "weighted_n": 187.0,
+   "weighted_users": 161.7,
+   "weighted_non_users": 25.3,
+   "user_rate_pct": 86.47,
+   "suppressed": false
+  },
+  {
+   "state": "Texas",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 579,
+   "weighted_n": 545.0,
+   "weighted_users": 458.0,
+   "weighted_non_users": 87.0,
+   "user_rate_pct": 84.04,
+   "suppressed": false
+  },
+  {
+   "state": "Texas",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 497,
+   "weighted_n": 448.1,
+   "weighted_users": 375.5,
+   "weighted_non_users": 72.6,
+   "user_rate_pct": 83.79,
+   "suppressed": false
+  },
+  {
+   "state": "Texas",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 179,
+   "weighted_n": 253.8,
+   "weighted_users": 240.1,
+   "weighted_non_users": 13.6,
+   "user_rate_pct": 94.63,
+   "suppressed": false
+  },
+  {
+   "state": "Utah",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 39,
+   "weighted_n": 72.5,
+   "weighted_users": 67.7,
+   "weighted_non_users": 4.8,
+   "user_rate_pct": 93.36,
+   "suppressed": false
+  },
+  {
+   "state": "Utah",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 222,
+   "weighted_n": 176.8,
+   "weighted_users": 156.5,
+   "weighted_non_users": 20.3,
+   "user_rate_pct": 88.54,
+   "suppressed": false
+  },
+  {
+   "state": "Utah",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 131,
+   "weighted_n": 124.3,
+   "weighted_users": 102.6,
+   "weighted_non_users": 21.6,
+   "user_rate_pct": 82.58,
+   "suppressed": false
+  },
+  {
+   "state": "Utah",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 54,
+   "weighted_n": 72.8,
+   "weighted_users": 65.1,
+   "weighted_non_users": 7.7,
+   "user_rate_pct": 89.38,
+   "suppressed": false
+  },
+  {
+   "state": "Vermont",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 20,
+   "weighted_n": 32.9,
+   "weighted_users": 18.5,
+   "weighted_non_users": 14.3,
+   "user_rate_pct": 56.36,
+   "suppressed": false
+  },
+  {
+   "state": "Vermont",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 124,
+   "weighted_n": 79.3,
+   "weighted_users": 68.6,
+   "weighted_non_users": 10.7,
+   "user_rate_pct": 86.48,
+   "suppressed": false
+  },
+  {
+   "state": "Vermont",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 76,
+   "weighted_n": 87.0,
+   "weighted_users": 81.7,
+   "weighted_non_users": 5.3,
+   "user_rate_pct": 93.91,
+   "suppressed": false
+  },
+  {
+   "state": "Vermont",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 48,
+   "weighted_n": 68.9,
+   "weighted_users": 62.7,
+   "weighted_non_users": 6.1,
+   "user_rate_pct": 91.08,
+   "suppressed": false
+  },
+  {
+   "state": "Virginia",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 54,
+   "weighted_n": 68.9,
+   "weighted_users": 54.0,
+   "weighted_non_users": 14.9,
+   "user_rate_pct": 78.35,
+   "suppressed": false
+  },
+  {
+   "state": "Virginia",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 224,
+   "weighted_n": 199.5,
+   "weighted_users": 173.7,
+   "weighted_non_users": 25.8,
+   "user_rate_pct": 87.04,
+   "suppressed": false
+  },
+  {
+   "state": "Virginia",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 194,
+   "weighted_n": 187.2,
+   "weighted_users": 164.5,
+   "weighted_non_users": 22.7,
+   "user_rate_pct": 87.87,
+   "suppressed": false
+  },
+  {
+   "state": "Virginia",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 106,
+   "weighted_n": 122.4,
+   "weighted_users": 111.9,
+   "weighted_non_users": 10.5,
+   "user_rate_pct": 91.41,
+   "suppressed": false
+  },
+  {
+   "state": "Washington",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 42,
+   "weighted_n": 61.2,
+   "weighted_users": 46.3,
+   "weighted_non_users": 14.9,
+   "user_rate_pct": 75.7,
+   "suppressed": false
+  },
+  {
+   "state": "Washington",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 259,
+   "weighted_n": 210.9,
+   "weighted_users": 188.6,
+   "weighted_non_users": 22.2,
+   "user_rate_pct": 89.45,
+   "suppressed": false
+  },
+  {
+   "state": "Washington",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 171,
+   "weighted_n": 171.5,
+   "weighted_users": 150.5,
+   "weighted_non_users": 21.0,
+   "user_rate_pct": 87.76,
+   "suppressed": false
+  },
+  {
+   "state": "Washington",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 89,
+   "weighted_n": 117.9,
+   "weighted_users": 110.8,
+   "weighted_non_users": 7.2,
+   "user_rate_pct": 93.92,
+   "suppressed": false
+  },
+  {
+   "state": "West Virginia",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 27,
+   "weighted_n": 51.0,
+   "weighted_users": 46.4,
+   "weighted_non_users": 4.7,
+   "user_rate_pct": 90.84,
+   "suppressed": false
+  },
+  {
+   "state": "West Virginia",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 175,
+   "weighted_n": 135.0,
+   "weighted_users": 108.2,
+   "weighted_non_users": 26.8,
+   "user_rate_pct": 80.14,
+   "suppressed": false
+  },
+  {
+   "state": "West Virginia",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 195,
+   "weighted_n": 150.9,
+   "weighted_users": 127.6,
+   "weighted_non_users": 23.3,
+   "user_rate_pct": 84.55,
+   "suppressed": false
+  },
+  {
+   "state": "West Virginia",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 59,
+   "weighted_n": 120.0,
+   "weighted_users": 109.3,
+   "weighted_non_users": 10.7,
+   "user_rate_pct": 91.09,
+   "suppressed": false
+  },
+  {
+   "state": "Wisconsin",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 45,
+   "weighted_n": 55.2,
+   "weighted_users": 48.4,
+   "weighted_non_users": 6.7,
+   "user_rate_pct": 87.78,
+   "suppressed": false
+  },
+  {
+   "state": "Wisconsin",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 150,
+   "weighted_n": 148.8,
+   "weighted_users": 124.7,
+   "weighted_non_users": 24.1,
+   "user_rate_pct": 83.81,
+   "suppressed": false
+  },
+  {
+   "state": "Wisconsin",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 157,
+   "weighted_n": 149.7,
+   "weighted_users": 132.0,
+   "weighted_non_users": 17.6,
+   "user_rate_pct": 88.22,
+   "suppressed": false
+  },
+  {
+   "state": "Wisconsin",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 109,
+   "weighted_n": 107.6,
+   "weighted_users": 102.0,
+   "weighted_non_users": 5.6,
+   "user_rate_pct": 94.79,
+   "suppressed": false
+  },
+  {
+   "state": "Wyoming",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 21,
+   "weighted_n": 31.0,
+   "weighted_users": 27.8,
+   "weighted_non_users": 3.2,
+   "user_rate_pct": 89.61,
+   "suppressed": false
+  },
+  {
+   "state": "Wyoming",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 125,
+   "weighted_n": 88.8,
+   "weighted_users": 71.6,
+   "weighted_non_users": 17.2,
+   "user_rate_pct": 80.66,
+   "suppressed": false
+  },
+  {
+   "state": "Wyoming",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 90,
+   "weighted_n": 82.4,
+   "weighted_users": 72.5,
+   "weighted_non_users": 9.9,
+   "user_rate_pct": 88.02,
+   "suppressed": false
+  },
+  {
+   "state": "Wyoming",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 29,
+   "weighted_n": 62.8,
+   "weighted_users": 61.5,
+   "weighted_non_users": 1.3,
+   "user_rate_pct": 97.96,
+   "suppressed": false
+  }
+ ],
+ "data_source": "w39"
+}
