@@ -601,16 +601,17 @@ dl.notes code{white-space:normal;font-size:11.5px;display:inline-block;margin-bo
       /* the spread column: a count, then a strip of every place's gap from the U.S. */
       const a = G.sx + 34, b = G.sx + G.SPW - 6, t = (x, s, anchor) => o.push('<text x="' + x + '" y="' + hy + '" text-anchor="' + anchor +
         '" font-size="10.5" pointer-events="none" style="fill:var(--muted)">' + s + '</text>');
-      t(G.sx + 24, 'Differ', 'end'); t(a, '−' + REACH, 'start'); t((a + b) / 2, 'U.S.', 'middle'); t(b, '+' + REACH, 'end');
+      t(G.sx + 24, 'Differ', 'end'); t(a, '+' + REACH, 'start'); t((a + b) / 2, 'U.S.', 'middle'); t(b, '−' + REACH, 'end');
       if (CORR) CTX.forEach((c, j) => t(G.rx + 6 + j * 46 + 21, c.id === 'vote24' ? 'r vote' : 'r party', 'middle'));
       return o.join('');
     }
     /* a row's spread: how many places differ from the U.S. beyond their
        margin, and a dot per place at its gap (above blue, below orange,
-       inside the margin grey), the selected place ringed */
+       inside the margin grey), the selected place ringed. Highest on the
+       left, as the ranked columns run */
     function spreadCell(G, q, r, y) {
       const cy = y + G.rh / 2, a = G.sx + 34, b = G.sx + G.SPW - 6, mid = (a + b) / 2;
-      const X = g => (mid + Math.max(-1, Math.min(1, g / REACH)) * (b - a) / 2).toFixed(1);
+      const X = g => (mid - Math.max(-1, Math.min(1, g / REACH)) * (b - a) / 2).toFixed(1);
       const o = ['<rect data-c="spread" data-r="' + r + '" x="' + G.sx + '" y="' + (y + G.padY) + '" width="' + G.SPW + '" height="' + (G.rh - 2 * G.padY) +
         '" rx="3" style="fill:' + (r === G.selRow ? 'var(--soft)' : 'transparent') + '"/>',
         '<text x="' + (G.sx + 24) + '" y="' + (cy + 4.5) + '" text-anchor="end" font-size="13" font-weight="650" pointer-events="none" style="fill:var(--ink)">' + q.spread.n + '</text>',
