@@ -1,0 +1,244 @@
+{
+ "set": "news-w39",
+ "site": "techandsociety.ai",
+ "by": {
+  "column": "age_cat_4",
+  "name": "age",
+  "order": [
+   "18 to 24",
+   "25 to 44",
+   "45 to 64",
+   "65 and over"
+  ]
+ },
+ "wave": "Wave 39",
+ "fielded": "Oct 1 to Nov 2, 2026",
+ "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 × √(p(1 − p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on {nLo} to {nHi} respondents each, an age group within a state on as few as {cellMin}. Groups under 100 are starred: interpret with caution.",
+ "pulled": "Nov 3, 2026",
+ "weight": {
+  "us": "weight_vote: demographics plus presidential vote and turnout",
+  "state": "weight_vote_state: demographics plus vote and turnout, calibrated within each state"
+ },
+ "suppression": "Groups under 10 respondents are withheld",
+ "set_text": {
+  "title": "Where adults got political news, in every state",
+  "subtitle": "Share of adults who got news about politics and current affairs from each source in the last 24 hours",
+  "answer": "got political news from {phrase}",
+  "noun": "sources",
+  "item": "Source",
+  "base": "adults",
+  "across": {
+   "us_title": "Where U.S. adults got political news",
+   "state_title": "{place} across {count} news sources",
+   "subtitle": "Share of {place} adults who got political news from each source in the last 24 hours, fall 2026"
+  },
+  "note": "Wave 39 from the survey team's cleaned release of Nov. 3, 2026, which may still change before the final file. Not for publication.",
+  "note_label": "Preliminary",
+  "context": "context-w39"
+ },
+ "template": {
+  "topic": "News",
+  "question": "In the last 24 hours, did you get news about politics from {phrase}?",
+  "dek": "{usPct} of U.S. adults got news about politics from {phrase} in the last 24 hours.",
+  "wording": "In the last 24 hours, did you get any news or information about politics and current affairs from … (Please select all that apply) — {option}. The cleaned release cuts the question's text short in the middle; its end asks anyone who read a news outlet on social media to select both “A news website or app” and “A social media website or app”.",
+  "provenance": [
+   "generate_crosstab(platform=\"{column}\", demographic=\"age_cat_4\", data_source=\"w39\")",
+   "generate_crosstab(platform=\"{column}\", demographic=\"state\", data_source=\"w39\")",
+   "generate_crosstab_multi(variable=\"{column}\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+  ],
+  "text": {
+   "age": {
+    "us": {
+     "title": "Who got political news from {phrase}, by age",
+     "subtitle": "Share of U.S. adults who got news about politics from {phrase} in the last 24 hours, by age, fall 2026",
+     "source": "CHIP50 survey, {wave}, {fielded}. {usN} U.S. adults, weighted to the adult population."
+    },
+    "state": {
+     "title": "{value} of {state} adults got political news from {phrase}",
+     "subtitle": "Share who got news about politics from {phrase} in the last 24 hours, by age, fall 2026. Ticks mark the U.S.",
+     "source": "CHIP50 survey, {wave}, {fielded}. {n} adults in {state}, weighted within the state; U.S. ticks from all {usN}."
+    }
+   },
+   "states": {
+    "title": "{label}: {lo} to {hi} across states",
+    "subtitle": "Share of adults who got news about politics from {phrase} in the last 24 hours, by state, fall 2026. U.S.: {us}",
+    "source": "CHIP50 survey, {wave}, {fielded}. {usN} adults, {nLo} to {nHi} per state, weighted within each state."
+   },
+   "radio": {
+    "us": "{usWords} of American adults say they got news about politics from {phrase} in the last 24 hours, according to a CHIP50 survey this fall.",
+    "state": "In {state}, {words} of adults say they got news about politics from {phrase} in the last 24 hours, compared with {usWords} nationally. That's from the CHIP50 survey, which reached {n} adults in {state} this fall."
+   }
+  }
+ },
+ "questions": [
+  {
+   "id": "news-social-w39",
+   "column": "pol_news_social",
+   "label": "Social media",
+   "phrase": "social media",
+   "option": "A social media website or app (e.g. Facebook, Twitter, Snapchat)",
+   "raw": {
+    "us_by": "raw/news-social-w39/us_by_age.json",
+    "states_by": "raw/news-social-w39/states_by_age.json",
+    "states": "raw/news-social-w39/states.json"
+   }
+  },
+  {
+   "id": "news-website-w39",
+   "column": "pol_news_news_website",
+   "label": "News websites and apps",
+   "phrase": "a news website or app",
+   "option": "A news website or app (e.g. the New York Times or Fox News websites or apps)",
+   "raw": {
+    "us_by": "raw/news-website-w39/us_by_age.json",
+    "states_by": "raw/news-website-w39/states_by_age.json",
+    "states": "raw/news-website-w39/states.json"
+   }
+  },
+  {
+   "id": "news-cable-tv-w39",
+   "column": "pol_news_cable_tv",
+   "label": "Cable TV",
+   "phrase": "cable television",
+   "option": "Cable television (e.g. CNN, Fox News, or MSNBC)",
+   "raw": {
+    "us_by": "raw/news-cable-tv-w39/us_by_age.json",
+    "states_by": "raw/news-cable-tv-w39/states_by_age.json",
+    "states": "raw/news-cable-tv-w39/states.json"
+   }
+  },
+  {
+   "id": "news-network-tv-w39",
+   "column": "pol_news_network_tv",
+   "label": "Network TV",
+   "phrase": "network television",
+   "option": "Network television (e.g. ABC, CBS, or NBC)",
+   "raw": {
+    "us_by": "raw/news-network-tv-w39/us_by_age.json",
+    "states_by": "raw/news-network-tv-w39/states_by_age.json",
+    "states": "raw/news-network-tv-w39/states.json"
+   }
+  },
+  {
+   "id": "news-local-tv-w39",
+   "column": "pol_news_local_tv",
+   "label": "Local TV",
+   "phrase": "local television",
+   "option": "Local television",
+   "raw": {
+    "us_by": "raw/news-local-tv-w39/us_by_age.json",
+    "states_by": "raw/news-local-tv-w39/states_by_age.json",
+    "states": "raw/news-local-tv-w39/states.json"
+   }
+  },
+  {
+   "id": "news-friends-family-w39",
+   "column": "pol_news_friends_family",
+   "label": "Friends and family",
+   "phrase": "friends and family",
+   "option": "Friends and family",
+   "raw": {
+    "us_by": "raw/news-friends-family-w39/us_by_age.json",
+    "states_by": "raw/news-friends-family-w39/states_by_age.json",
+    "states": "raw/news-friends-family-w39/states.json"
+   }
+  },
+  {
+   "id": "news-search-w39",
+   "column": "pol_news_search",
+   "label": "Search engines",
+   "phrase": "a search engine",
+   "option": "A search engine website or app (e.g. Google, Bing)",
+   "raw": {
+    "us_by": "raw/news-search-w39/us_by_age.json",
+    "states_by": "raw/news-search-w39/states_by_age.json",
+    "states": "raw/news-search-w39/states.json"
+   }
+  },
+  {
+   "id": "news-radio-w39",
+   "column": "pol_news_radio_news",
+   "label": "Radio news",
+   "phrase": "radio news",
+   "option": "Radio news",
+   "raw": {
+    "us_by": "raw/news-radio-w39/us_by_age.json",
+    "states_by": "raw/news-radio-w39/states_by_age.json",
+    "states": "raw/news-radio-w39/states.json"
+   }
+  },
+  {
+   "id": "news-podcasts-w39",
+   "column": "pol_news_podcasts",
+   "label": "Podcasts",
+   "phrase": "podcasts",
+   "option": "Podcasts",
+   "raw": {
+    "us_by": "raw/news-podcasts-w39/us_by_age.json",
+    "states_by": "raw/news-podcasts-w39/states_by_age.json",
+    "states": "raw/news-podcasts-w39/states.json"
+   }
+  },
+  {
+   "id": "news-print-w39",
+   "column": "pol_news_print",
+   "label": "Print newspapers",
+   "phrase": "a print newspaper",
+   "option": "Print newspapers (e.g. the New York Times or the Wall Street Journal print edition)",
+   "raw": {
+    "us_by": "raw/news-print-w39/us_by_age.json",
+    "states_by": "raw/news-print-w39/states_by_age.json",
+    "states": "raw/news-print-w39/states.json"
+   }
+  },
+  {
+   "id": "news-community-w39",
+   "column": "pol_news_community_news",
+   "label": "Community news",
+   "phrase": "a community newspaper or website",
+   "option": "A community newspaper or website",
+   "raw": {
+    "us_by": "raw/news-community-w39/us_by_age.json",
+    "states_by": "raw/news-community-w39/states_by_age.json",
+    "states": "raw/news-community-w39/states.json"
+   }
+  },
+  {
+   "id": "news-messaging-w39",
+   "column": "pol_news_im_app",
+   "label": "Messaging apps",
+   "phrase": "a messaging app",
+   "option": "A mobile instant message app (e.g. Facebook Messenger or WhatsApp)",
+   "raw": {
+    "us_by": "raw/news-messaging-w39/us_by_age.json",
+    "states_by": "raw/news-messaging-w39/states_by_age.json",
+    "states": "raw/news-messaging-w39/states.json"
+   }
+  },
+  {
+   "id": "news-comedy-w39",
+   "column": "pol_news_comedy",
+   "label": "Late-night comedy",
+   "phrase": "late-night comedy shows",
+   "option": "Late-night comedy shows (e.g. The Late Show with Stephen Colbert or The Daily Show)",
+   "raw": {
+    "us_by": "raw/news-comedy-w39/us_by_age.json",
+    "states_by": "raw/news-comedy-w39/states_by_age.json",
+    "states": "raw/news-comedy-w39/states.json"
+   }
+  },
+  {
+   "id": "news-ai-w39",
+   "column": "pol_news_ai",
+   "label": "AI chatbots",
+   "phrase": "an AI chatbot",
+   "option": "Artificial Intelligence chatbots (e.g. ChatGPT, Gemini, Copilot)",
+   "raw": {
+    "us_by": "raw/news-ai-w39/us_by_age.json",
+    "states_by": "raw/news-ai-w39/states_by_age.json",
+    "states": "raw/news-ai-w39/states.json"
+   }
+  }
+ ],
+ "state_n": "raw/news-social-w39/states.json"
+}

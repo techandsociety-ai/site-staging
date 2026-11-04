@@ -1,0 +1,167 @@
+{
+ "set": "activity-w39",
+ "site": "techandsociety.ai",
+ "by": {
+  "column": "age_cat_4",
+  "name": "age",
+  "order": [
+   "18 to 24",
+   "25 to 44",
+   "45 to 64",
+   "65 and over"
+  ]
+ },
+ "wave": "Wave 39",
+ "fielded": "Oct 1 to Nov 2, 2026",
+ "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 × √(p(1 − p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on {nLo} to {nHi} respondents each, an age group within a state on as few as {cellMin}. Groups under 100 are starred: interpret with caution.",
+ "pulled": "Nov 3, 2026",
+ "weight": {
+  "us": "weight_vote: demographics plus presidential vote and turnout",
+  "state": "weight_vote_state: demographics plus vote and turnout, calibrated within each state"
+ },
+ "suppression": "Groups under 10 respondents are withheld",
+ "set_text": {
+  "title": "Political activity in every state",
+  "subtitle": "Share of adults who say they did each in the last 6 months",
+  "answer": "say they {phrase} in the last 6 months",
+  "noun": "activities",
+  "item": "Activity",
+  "base": "adults",
+  "across": {
+   "us_title": "What U.S. adults did in politics in the last 6 months",
+   "state_title": "{place} across {count} political activities",
+   "subtitle": "Share of {place} adults who say they did each in the last 6 months, fall 2026"
+  },
+  "note": "Wave 39 from the survey team's cleaned release of Nov. 3, 2026, which may still change before the final file. Not for publication.",
+  "note_label": "Preliminary",
+  "context": "context-w39"
+ },
+ "template": {
+  "topic": "Political activity",
+  "question": "In the last 6 months, have you done this? {label}",
+  "dek": "{usPct} of U.S. adults say they {phrase} in the last 6 months.",
+  "wording": "Which of the following, if any, have you done in the last 6 months? (Please select all that apply) — {option}",
+  "provenance": [
+   "generate_crosstab(platform=\"{column}\", demographic=\"age_cat_4\", data_source=\"w39\")",
+   "generate_crosstab(platform=\"{column}\", demographic=\"state\", data_source=\"w39\")",
+   "generate_crosstab_multi(variable=\"{column}\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+  ],
+  "text": {
+   "age": {
+    "us": {
+     "title": "Who {phrase}, by age",
+     "subtitle": "Share of U.S. adults who say they {phrase} in the last 6 months, by age, fall 2026",
+     "source": "CHIP50 survey, {wave}, {fielded}. {usN} U.S. adults, weighted to the adult population."
+    },
+    "state": {
+     "title": "{value} of {state} adults {phrase}",
+     "subtitle": "Share who say they {phrase} in the last 6 months, by age, fall 2026. Ticks mark the U.S.",
+     "source": "CHIP50 survey, {wave}, {fielded}. {n} adults in {state}, weighted within the state; U.S. ticks from all {usN}."
+    }
+   },
+   "states": {
+    "title": "{label}: {lo} to {hi} across states",
+    "subtitle": "Share of adults who say they {phrase} in the last 6 months, by state, fall 2026. U.S.: {us}",
+    "source": "CHIP50 survey, {wave}, {fielded}. {usN} adults, {nLo} to {nHi} per state, weighted within each state."
+   },
+   "radio": {
+    "us": "{usWords} of American adults say they {phrase} in the last 6 months, according to a CHIP50 survey this fall.",
+    "state": "In {state}, {words} of adults say they {phrase} in the last 6 months, compared with {usWords} nationally. That's from the CHIP50 survey, which reached {n} adults in {state} this fall."
+   }
+  }
+ },
+ "questions": [
+  {
+   "id": "act-posted-w39",
+   "column": "pol_par_5",
+   "label": "Posted about politics",
+   "phrase": "posted about politics on social media",
+   "option": "Posted about politics on social media",
+   "raw": {
+    "us_by": "raw/act-posted-w39/us_by_age.json",
+    "states_by": "raw/act-posted-w39/states_by_age.json",
+    "states": "raw/act-posted-w39/states.json"
+   },
+   "question": "In the last 6 months, have you posted about politics on social media?"
+  },
+  {
+   "id": "act-boycott-w39",
+   "column": "pol_par_9",
+   "label": "Boycotted a company",
+   "phrase": "boycotted a product or company",
+   "option": "Boycotted a product or company",
+   "raw": {
+    "us_by": "raw/act-boycott-w39/us_by_age.json",
+    "states_by": "raw/act-boycott-w39/states_by_age.json",
+    "states": "raw/act-boycott-w39/states.json"
+   },
+   "question": "In the last 6 months, have you boycotted a product or company?"
+  },
+  {
+   "id": "act-donated-w39",
+   "column": "pol_par_6",
+   "label": "Donated",
+   "phrase": "donated to a candidate, party or political group",
+   "option": "Made a donation to a candidate, party, or other political organization",
+   "raw": {
+    "us_by": "raw/act-donated-w39/us_by_age.json",
+    "states_by": "raw/act-donated-w39/states_by_age.json",
+    "states": "raw/act-donated-w39/states.json"
+   },
+   "question": "In the last 6 months, have you donated to a candidate, party or political group?"
+  },
+  {
+   "id": "act-contacted-w39",
+   "column": "pol_par_3",
+   "label": "Contacted an official",
+   "phrase": "called or wrote to an elected official",
+   "option": "Called or wrote to an elected official",
+   "raw": {
+    "us_by": "raw/act-contacted-w39/us_by_age.json",
+    "states_by": "raw/act-contacted-w39/states_by_age.json",
+    "states": "raw/act-contacted-w39/states.json"
+   },
+   "question": "In the last 6 months, have you called or written to an elected official?"
+  },
+  {
+   "id": "act-rally-w39",
+   "column": "pol_par_2",
+   "label": "Rally or protest",
+   "phrase": "attended a rally or protest",
+   "option": "Attended a rally or protest",
+   "raw": {
+    "us_by": "raw/act-rally-w39/us_by_age.json",
+    "states_by": "raw/act-rally-w39/states_by_age.json",
+    "states": "raw/act-rally-w39/states.json"
+   },
+   "question": "In the last 6 months, have you attended a rally or protest?"
+  },
+  {
+   "id": "act-volunteered-w39",
+   "column": "pol_par_1",
+   "label": "Volunteered",
+   "phrase": "volunteered for a candidate, party or political group",
+   "option": "Volunteered for a candidate, political party, or other political organization",
+   "raw": {
+    "us_by": "raw/act-volunteered-w39/us_by_age.json",
+    "states_by": "raw/act-volunteered-w39/states_by_age.json",
+    "states": "raw/act-volunteered-w39/states.json"
+   },
+   "question": "In the last 6 months, have you volunteered for a candidate, party or political group?"
+  },
+  {
+   "id": "act-town-hall-w39",
+   "column": "pol_par_4",
+   "label": "Town hall",
+   "phrase": "attended a town hall held by an elected official",
+   "option": "Attended a town hall held by an elected official",
+   "raw": {
+    "us_by": "raw/act-town-hall-w39/us_by_age.json",
+    "states_by": "raw/act-town-hall-w39/states_by_age.json",
+    "states": "raw/act-town-hall-w39/states.json"
+   },
+   "question": "In the last 6 months, have you attended a town hall held by an elected official?"
+  }
+ ],
+ "state_n": "raw/act-posted-w39/states.json"
+}

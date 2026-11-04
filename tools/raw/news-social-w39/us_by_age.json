@@ -1,0 +1,49 @@
+{
+ "platform": "pol_news_social",
+ "demographic": "age_cat_4",
+ "wave_filter": "all",
+ "weight_used": "weight_vote",
+ "weight_note": "pol_news_social is a political item, so the rule picks weight_vote (demographics plus presidential vote and turnout).",
+ "suppression_note": "Cells with n<10 suppressed for privacy",
+ "note": "All rates/means/pct are WEIGHTED (population-representative). unweighted_n is raw headcount for reliability checks only — never use it to compute percentages.",
+ "interpretation_note": "unweighted_n = raw respondent headcount — for reliability checks only, NOT a population estimate. user_rate_pct = WEIGHTED share coded 1 (selected this option / flag set) — population-representative. When presenting a table, label the N column as 'Unweighted N' and the rate column as '% (weighted)'.",
+ "data": [
+  {
+   "demographic_value": "18 to 24",
+   "unweighted_n": 2525,
+   "weighted_n": 3396.4,
+   "weighted_users": 1796.0,
+   "weighted_non_users": 1600.4,
+   "user_rate_pct": 52.88,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "25 to 44",
+   "unweighted_n": 11755,
+   "weighted_n": 9920.1,
+   "weighted_users": 4970.6,
+   "weighted_non_users": 4949.6,
+   "user_rate_pct": 50.11,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "45 to 64",
+   "unweighted_n": 9738,
+   "weighted_n": 9190.6,
+   "weighted_users": 3390.6,
+   "weighted_non_users": 5800.0,
+   "user_rate_pct": 36.89,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "65 and over",
+   "unweighted_n": 4763,
+   "weighted_n": 6273.8,
+   "weighted_users": 1713.3,
+   "weighted_non_users": 4560.5,
+   "user_rate_pct": 27.31,
+   "suppressed": false
+  }
+ ],
+ "data_source": "w39"
+}

@@ -1,0 +1,196 @@
+{
+ "set": "ai-tools-w39",
+ "site": "techandsociety.ai",
+ "by": {
+  "column": "age_cat_4",
+  "name": "age",
+  "order": [
+   "18 to 24",
+   "25 to 44",
+   "45 to 64",
+   "65 and over"
+  ]
+ },
+ "wave": "Wave 39",
+ "fielded": "Oct 1 to Nov 2, 2026",
+ "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 × √(p(1 − p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on {nLo} to {nHi} respondents each, an age group within a state on as few as {cellMin}. Groups under 100 are starred: interpret with caution.",
+ "pulled": "Nov 3, 2026",
+ "weight": {
+  "us": "weight: the survey team's demographic weight",
+  "state": "weight_state: demographics, calibrated within each state"
+ },
+ "suppression": "Groups under 10 respondents are withheld",
+ "set_text": {
+  "title": "Which AI tools adults have heard of, in every state",
+  "subtitle": "Share of adults who say they have heard of each tool",
+  "answer": "say they have heard of {phrase}",
+  "noun": "AI tools",
+  "item": "Tool",
+  "base": "adults",
+  "note": "Wave 39 from the survey team's cleaned release of Nov. 3, 2026, which may still change before the final file. Not for publication. The list also held a made-up product, Calciron AI, which this set leaves out.",
+  "across": {
+   "us_title": "Which AI tools U.S. adults have heard of",
+   "state_title": "{place} across {count} AI tools",
+   "subtitle": "Share of {place} adults who say they have heard of each, fall 2026"
+  },
+  "note_label": "Preliminary",
+  "context": "context-w39"
+ },
+ "template": {
+  "topic": "AI",
+  "question": "Have you heard of {label}?",
+  "dek": "{usPct} of U.S. adults say they have heard of {phrase}.",
+  "wording": "Have you heard of any of the following tools or technologies? (Please select all that apply) — {option}",
+  "provenance": [
+   "generate_crosstab(platform=\"{column}\", demographic=\"age_cat_4\", data_source=\"w39\")",
+   "generate_crosstab(platform=\"{column}\", demographic=\"state\", data_source=\"w39\")",
+   "generate_crosstab_multi(variable=\"{column}\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+  ],
+  "text": {
+   "age": {
+    "us": {
+     "title": "Who has heard of {phrase}, by age",
+     "subtitle": "Share of U.S. adults who say they have heard of {phrase}, by age, fall 2026",
+     "source": "CHIP50 survey, {wave}, {fielded}. {usN} U.S. adults, weighted to the adult population."
+    },
+    "state": {
+     "title": "{value} of {state} adults have heard of {phrase}",
+     "subtitle": "Share who say they have heard of {phrase}, by age, fall 2026. Ticks mark the U.S.",
+     "source": "CHIP50 survey, {wave}, {fielded}. {n} adults in {state}, weighted within the state; U.S. ticks from all {usN}."
+    }
+   },
+   "states": {
+    "title": "{label}: {lo} to {hi} have heard of it across states",
+    "subtitle": "Share of adults who say they have heard of {phrase}, by state, fall 2026. U.S.: {us}",
+    "source": "CHIP50 survey, {wave}, {fielded}. {usN} adults, {nLo} to {nHi} per state, weighted within each state."
+   },
+   "radio": {
+    "us": "{usWords} of American adults say they have heard of {phrase}, according to a CHIP50 survey this fall.",
+    "state": "In {state}, {words} of adults say they have heard of {phrase}, compared with {usWords} nationally. That's from the CHIP50 survey, which reached {n} adults in {state} this fall."
+   }
+  }
+ },
+ "questions": [
+  {
+   "id": "ai-chatgpt-w39",
+   "column": "ai_know_chatgpt",
+   "label": "ChatGPT",
+   "phrase": "ChatGPT",
+   "option": "ChatGPT",
+   "raw": {
+    "us_by": "raw/ai-chatgpt-w39/us_by_age.json",
+    "states_by": "raw/ai-chatgpt-w39/states_by_age.json",
+    "states": "raw/ai-chatgpt-w39/states.json"
+   }
+  },
+  {
+   "id": "ai-gemini-w39",
+   "column": "ai_know_gemini",
+   "label": "Google Gemini",
+   "phrase": "Google Gemini",
+   "option": "Google Gemini",
+   "raw": {
+    "us_by": "raw/ai-gemini-w39/us_by_age.json",
+    "states_by": "raw/ai-gemini-w39/states_by_age.json",
+    "states": "raw/ai-gemini-w39/states.json"
+   }
+  },
+  {
+   "id": "ai-copilot-w39",
+   "column": "ai_know_copilot",
+   "label": "Microsoft Copilot",
+   "phrase": "Microsoft Copilot",
+   "option": "Microsoft Copilot",
+   "raw": {
+    "us_by": "raw/ai-copilot-w39/us_by_age.json",
+    "states_by": "raw/ai-copilot-w39/states_by_age.json",
+    "states": "raw/ai-copilot-w39/states.json"
+   }
+  },
+  {
+   "id": "ai-meta-w39",
+   "column": "ai_know_meta",
+   "label": "Meta AI",
+   "phrase": "Meta AI",
+   "option": "Meta AI",
+   "raw": {
+    "us_by": "raw/ai-meta-w39/us_by_age.json",
+    "states_by": "raw/ai-meta-w39/states_by_age.json",
+    "states": "raw/ai-meta-w39/states.json"
+   }
+  },
+  {
+   "id": "ai-claude-w39",
+   "column": "ai_know_claude",
+   "label": "Claude",
+   "phrase": "Anthropic's Claude",
+   "option": "Anthropic Claude",
+   "raw": {
+    "us_by": "raw/ai-claude-w39/us_by_age.json",
+    "states_by": "raw/ai-claude-w39/states_by_age.json",
+    "states": "raw/ai-claude-w39/states.json"
+   }
+  },
+  {
+   "id": "ai-grok-w39",
+   "column": "ai_know_grok",
+   "label": "Grok",
+   "phrase": "Grok",
+   "option": "Grok (xAI)",
+   "raw": {
+    "us_by": "raw/ai-grok-w39/us_by_age.json",
+    "states_by": "raw/ai-grok-w39/states_by_age.json",
+    "states": "raw/ai-grok-w39/states.json"
+   }
+  },
+  {
+   "id": "ai-deepseek-w39",
+   "column": "ai_know_deepseek",
+   "label": "DeepSeek",
+   "phrase": "DeepSeek",
+   "option": "DeepSeek",
+   "raw": {
+    "us_by": "raw/ai-deepseek-w39/us_by_age.json",
+    "states_by": "raw/ai-deepseek-w39/states_by_age.json",
+    "states": "raw/ai-deepseek-w39/states.json"
+   }
+  },
+  {
+   "id": "ai-perplexity-w39",
+   "column": "ai_know_perplexity",
+   "label": "Perplexity",
+   "phrase": "Perplexity",
+   "option": "Perplexity AI",
+   "raw": {
+    "us_by": "raw/ai-perplexity-w39/us_by_age.json",
+    "states_by": "raw/ai-perplexity-w39/states_by_age.json",
+    "states": "raw/ai-perplexity-w39/states.json"
+   }
+  },
+  {
+   "id": "ai-character-w39",
+   "column": "ai_know_character",
+   "label": "Character.AI",
+   "phrase": "Character.AI",
+   "option": "Character.AI",
+   "raw": {
+    "us_by": "raw/ai-character-w39/us_by_age.json",
+    "states_by": "raw/ai-character-w39/states_by_age.json",
+    "states": "raw/ai-character-w39/states.json"
+   }
+  },
+  {
+   "id": "ai-huggingface-w39",
+   "column": "ai_know_huggingface",
+   "label": "Hugging Face",
+   "phrase": "Hugging Face",
+   "option": "Hugging Face",
+   "raw": {
+    "us_by": "raw/ai-huggingface-w39/us_by_age.json",
+    "states_by": "raw/ai-huggingface-w39/states_by_age.json",
+    "states": "raw/ai-huggingface-w39/states.json"
+   }
+  }
+ ],
+ "state_n": "raw/ai-chatgpt-w39/states.json"
+}
