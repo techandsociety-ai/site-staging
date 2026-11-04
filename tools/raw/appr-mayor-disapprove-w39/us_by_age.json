@@ -1,0 +1,66 @@
+{
+ "recoded_variables_used": {
+  "disappr_mayor__335c4350c813": {
+   "source_column": "mayor_gen",
+   "binary": true,
+   "groups": {
+    "1": [
+     "1 Strongly disapprove",
+     "2 Disapprove"
+    ],
+    "0": [
+     "3 Neither approve nor disapprove",
+     "4 Approve",
+     "5 Strongly approve"
+    ]
+   }
+  }
+ },
+ "platform": "disappr_mayor__335c4350c813",
+ "demographic": "age_cat_4",
+ "wave_filter": "all",
+ "weight_used": "weight_vote",
+ "weight_note": "disappr_mayor__335c4350c813 is a political item, so the rule picks weight_vote (demographics plus presidential vote and turnout).",
+ "suppression_note": "Cells with n<10 suppressed for privacy",
+ "note": "All rates/means/pct are WEIGHTED (population-representative). unweighted_n is raw headcount for reliability checks only — never use it to compute percentages.",
+ "interpretation_note": "unweighted_n = raw respondent headcount — for reliability checks only, NOT a population estimate. user_rate_pct = WEIGHTED share coded 1 (selected this option / flag set) — population-representative. When presenting a table, label the N column as 'Unweighted N' and the rate column as '% (weighted)'.",
+ "data": [
+  {
+   "demographic_value": "18 to 24",
+   "unweighted_n": 42,
+   "weighted_n": 11.7,
+   "weighted_users": 4.3,
+   "weighted_non_users": 7.4,
+   "user_rate_pct": 36.55,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "25 to 44",
+   "unweighted_n": 151,
+   "weighted_n": 27.8,
+   "weighted_users": 9.3,
+   "weighted_non_users": 18.5,
+   "user_rate_pct": 33.35,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "45 to 64",
+   "unweighted_n": 94,
+   "weighted_n": 18.8,
+   "weighted_users": 7.4,
+   "weighted_non_users": 11.5,
+   "user_rate_pct": 39.07,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "65 and over",
+   "unweighted_n": 12,
+   "weighted_n": 3.0,
+   "weighted_users": 0.8,
+   "weighted_non_users": 2.1,
+   "user_rate_pct": 27.82,
+   "suppressed": false
+  }
+ ],
+ "data_source": "w39"
+}

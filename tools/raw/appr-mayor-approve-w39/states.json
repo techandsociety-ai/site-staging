@@ -1,0 +1,39 @@
+{
+ "recoded_variables_used": {
+  "appr_mayor__21df0d30bad7": {
+   "source_column": "mayor_gen",
+   "binary": true,
+   "groups": {
+    "0": [
+     "1 Strongly disapprove",
+     "2 Disapprove",
+     "3 Neither approve nor disapprove"
+    ],
+    "1": [
+     "4 Approve",
+     "5 Strongly approve"
+    ]
+   }
+  }
+ },
+ "platform": "appr_mayor__21df0d30bad7",
+ "demographic": "state",
+ "wave_filter": "all",
+ "weight_used": "weight_vote_state",
+ "weight_note": "appr_mayor__21df0d30bad7 is a political item and the query is broken down or filtered by state, so the rule picks weight_vote_state (demographics plus vote and turnout, calibrated within each state).",
+ "suppression_note": "Cells with n<10 suppressed for privacy",
+ "note": "All rates/means/pct are WEIGHTED (population-representative). unweighted_n is raw headcount for reliability checks only — never use it to compute percentages.",
+ "interpretation_note": "unweighted_n = raw respondent headcount — for reliability checks only, NOT a population estimate. user_rate_pct = WEIGHTED share coded 1 (selected this option / flag set) — population-representative. When presenting a table, label the N column as 'Unweighted N' and the rate column as '% (weighted)'.",
+ "data": [
+  {
+   "demographic_value": "District of Columbia",
+   "unweighted_n": 299,
+   "weighted_n": 299.0,
+   "weighted_users": 119.3,
+   "weighted_non_users": 179.7,
+   "user_rate_pct": 39.89,
+   "suppressed": false
+  }
+ ],
+ "data_source": "w39"
+}

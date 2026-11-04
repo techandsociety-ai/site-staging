@@ -1,0 +1,586 @@
+{
+ "recoded_variables_used": {
+  "therm_warm_maga__bfc4cc0eb3a9": {
+   "source_column": "therm_maga",
+   "binary": true,
+   "note": "101 source values; labels left out for length.",
+   "groups": {
+    "0": [
+     "0",
+     "1",
+     "10",
+     "11",
+     "12",
+     "13",
+     "14",
+     "15",
+     "16",
+     "17",
+     "18",
+     "19",
+     "2",
+     "20",
+     "21",
+     "22",
+     "23",
+     "24",
+     "25",
+     "26",
+     "27",
+     "28",
+     "29",
+     "3",
+     "30",
+     "31",
+     "32",
+     "33",
+     "34",
+     "35",
+     "36",
+     "37",
+     "38",
+     "39",
+     "4",
+     "40",
+     "41",
+     "42",
+     "43",
+     "44",
+     "45",
+     "46",
+     "47",
+     "48",
+     "49",
+     "5",
+     "50",
+     "6",
+     "7",
+     "8",
+     "9"
+    ],
+    "1": [
+     "100",
+     "51",
+     "52",
+     "53",
+     "54",
+     "55",
+     "56",
+     "57",
+     "58",
+     "59",
+     "60",
+     "61",
+     "62",
+     "63",
+     "64",
+     "65",
+     "66",
+     "67",
+     "68",
+     "69",
+     "70",
+     "71",
+     "72",
+     "73",
+     "74",
+     "75",
+     "76",
+     "77",
+     "78",
+     "79",
+     "80",
+     "81",
+     "82",
+     "83",
+     "84",
+     "85",
+     "86",
+     "87",
+     "88",
+     "89",
+     "90",
+     "91",
+     "92",
+     "93",
+     "94",
+     "95",
+     "96",
+     "97",
+     "98",
+     "99"
+    ]
+   }
+  }
+ },
+ "platform": "therm_warm_maga__bfc4cc0eb3a9",
+ "demographic": "state",
+ "wave_filter": "all",
+ "weight_used": "weight_vote_state",
+ "weight_note": "therm_warm_maga__bfc4cc0eb3a9 is a political item and the query is broken down or filtered by state, so the rule picks weight_vote_state (demographics plus vote and turnout, calibrated within each state).",
+ "suppression_note": "Cells with n<10 suppressed for privacy",
+ "note": "All rates/means/pct are WEIGHTED (population-representative). unweighted_n is raw headcount for reliability checks only — never use it to compute percentages.",
+ "interpretation_note": "unweighted_n = raw respondent headcount — for reliability checks only, NOT a population estimate. user_rate_pct = WEIGHTED share coded 1 (selected this option / flag set) — population-representative. When presenting a table, label the N column as 'Unweighted N' and the rate column as '% (weighted)'.",
+ "data": [
+  {
+   "demographic_value": "Alabama",
+   "unweighted_n": 519,
+   "weighted_n": 522.1,
+   "weighted_users": 217.0,
+   "weighted_non_users": 305.1,
+   "user_rate_pct": 41.56,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Alaska",
+   "unweighted_n": 238,
+   "weighted_n": 237.5,
+   "weighted_users": 89.5,
+   "weighted_non_users": 148.0,
+   "user_rate_pct": 37.68,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Arizona",
+   "unweighted_n": 629,
+   "weighted_n": 627.1,
+   "weighted_users": 192.0,
+   "weighted_non_users": 435.1,
+   "user_rate_pct": 30.62,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Arkansas",
+   "unweighted_n": 459,
+   "weighted_n": 451.6,
+   "weighted_users": 153.0,
+   "weighted_non_users": 298.5,
+   "user_rate_pct": 33.89,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "California",
+   "unweighted_n": 1184,
+   "weighted_n": 1168.9,
+   "weighted_users": 299.3,
+   "weighted_non_users": 869.6,
+   "user_rate_pct": 25.6,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Colorado",
+   "unweighted_n": 444,
+   "weighted_n": 442.9,
+   "weighted_users": 129.3,
+   "weighted_non_users": 313.6,
+   "user_rate_pct": 29.2,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Connecticut",
+   "unweighted_n": 506,
+   "weighted_n": 508.3,
+   "weighted_users": 124.0,
+   "weighted_non_users": 384.3,
+   "user_rate_pct": 24.39,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Delaware",
+   "unweighted_n": 329,
+   "weighted_n": 332.5,
+   "weighted_users": 90.5,
+   "weighted_non_users": 241.9,
+   "user_rate_pct": 27.23,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "District of Columbia",
+   "unweighted_n": 288,
+   "weighted_n": 283.0,
+   "weighted_users": 41.3,
+   "weighted_non_users": 241.7,
+   "user_rate_pct": 14.58,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Florida",
+   "unweighted_n": 1200,
+   "weighted_n": 1194.4,
+   "weighted_users": 425.0,
+   "weighted_non_users": 769.3,
+   "user_rate_pct": 35.59,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Georgia",
+   "unweighted_n": 834,
+   "weighted_n": 838.6,
+   "weighted_users": 272.8,
+   "weighted_non_users": 565.8,
+   "user_rate_pct": 32.53,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Hawaii",
+   "unweighted_n": 264,
+   "weighted_n": 260.2,
+   "weighted_users": 63.9,
+   "weighted_non_users": 196.2,
+   "user_rate_pct": 24.57,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Idaho",
+   "unweighted_n": 355,
+   "weighted_n": 357.6,
+   "weighted_users": 147.4,
+   "weighted_non_users": 210.2,
+   "user_rate_pct": 41.23,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Illinois",
+   "unweighted_n": 721,
+   "weighted_n": 720.8,
+   "weighted_users": 209.1,
+   "weighted_non_users": 511.7,
+   "user_rate_pct": 29.0,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Indiana",
+   "unweighted_n": 525,
+   "weighted_n": 526.9,
+   "weighted_users": 184.7,
+   "weighted_non_users": 342.2,
+   "user_rate_pct": 35.05,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Iowa",
+   "unweighted_n": 471,
+   "weighted_n": 477.0,
+   "weighted_users": 150.7,
+   "weighted_non_users": 326.3,
+   "user_rate_pct": 31.6,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Kansas",
+   "unweighted_n": 407,
+   "weighted_n": 401.4,
+   "weighted_users": 135.1,
+   "weighted_non_users": 266.4,
+   "user_rate_pct": 33.65,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Kentucky",
+   "unweighted_n": 539,
+   "weighted_n": 540.8,
+   "weighted_users": 193.3,
+   "weighted_non_users": 347.4,
+   "user_rate_pct": 35.75,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Louisiana",
+   "unweighted_n": 545,
+   "weighted_n": 549.4,
+   "weighted_users": 209.5,
+   "weighted_non_users": 339.8,
+   "user_rate_pct": 38.14,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Maine",
+   "unweighted_n": 396,
+   "weighted_n": 396.4,
+   "weighted_users": 101.4,
+   "weighted_non_users": 295.0,
+   "user_rate_pct": 25.58,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Maryland",
+   "unweighted_n": 555,
+   "weighted_n": 554.2,
+   "weighted_users": 148.9,
+   "weighted_non_users": 405.4,
+   "user_rate_pct": 26.86,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Massachusetts",
+   "unweighted_n": 474,
+   "weighted_n": 470.4,
+   "weighted_users": 121.1,
+   "weighted_non_users": 349.3,
+   "user_rate_pct": 25.75,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Michigan",
+   "unweighted_n": 930,
+   "weighted_n": 932.8,
+   "weighted_users": 286.6,
+   "weighted_non_users": 646.2,
+   "user_rate_pct": 30.72,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Minnesota",
+   "unweighted_n": 471,
+   "weighted_n": 474.6,
+   "weighted_users": 120.8,
+   "weighted_non_users": 353.8,
+   "user_rate_pct": 25.46,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Mississippi",
+   "unweighted_n": 535,
+   "weighted_n": 541.3,
+   "weighted_users": 198.2,
+   "weighted_non_users": 343.0,
+   "user_rate_pct": 36.62,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Missouri",
+   "unweighted_n": 612,
+   "weighted_n": 606.8,
+   "weighted_users": 215.2,
+   "weighted_non_users": 391.6,
+   "user_rate_pct": 35.46,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Montana",
+   "unweighted_n": 292,
+   "weighted_n": 292.2,
+   "weighted_users": 111.7,
+   "weighted_non_users": 180.5,
+   "user_rate_pct": 38.23,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Nebraska",
+   "unweighted_n": 469,
+   "weighted_n": 468.9,
+   "weighted_users": 163.9,
+   "weighted_non_users": 305.0,
+   "user_rate_pct": 34.95,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Nevada",
+   "unweighted_n": 481,
+   "weighted_n": 483.3,
+   "weighted_users": 141.6,
+   "weighted_non_users": 341.7,
+   "user_rate_pct": 29.3,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "New Hampshire",
+   "unweighted_n": 329,
+   "weighted_n": 327.0,
+   "weighted_users": 86.1,
+   "weighted_non_users": 240.9,
+   "user_rate_pct": 26.33,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "New Jersey",
+   "unweighted_n": 452,
+   "weighted_n": 454.2,
+   "weighted_users": 134.0,
+   "weighted_non_users": 320.2,
+   "user_rate_pct": 29.5,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "New Mexico",
+   "unweighted_n": 405,
+   "weighted_n": 407.2,
+   "weighted_users": 123.3,
+   "weighted_non_users": 283.9,
+   "user_rate_pct": 30.29,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "New York",
+   "unweighted_n": 1060,
+   "weighted_n": 1055.3,
+   "weighted_users": 264.8,
+   "weighted_non_users": 790.4,
+   "user_rate_pct": 25.1,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "North Carolina",
+   "unweighted_n": 797,
+   "weighted_n": 793.3,
+   "weighted_users": 244.1,
+   "weighted_non_users": 549.2,
+   "user_rate_pct": 30.77,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "North Dakota",
+   "unweighted_n": 281,
+   "weighted_n": 283.5,
+   "weighted_users": 109.1,
+   "weighted_non_users": 174.5,
+   "user_rate_pct": 38.46,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Ohio",
+   "unweighted_n": 893,
+   "weighted_n": 888.0,
+   "weighted_users": 291.2,
+   "weighted_non_users": 596.9,
+   "user_rate_pct": 32.79,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Oklahoma",
+   "unweighted_n": 466,
+   "weighted_n": 468.3,
+   "weighted_users": 169.9,
+   "weighted_non_users": 298.4,
+   "user_rate_pct": 36.28,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Oregon",
+   "unweighted_n": 476,
+   "weighted_n": 477.9,
+   "weighted_users": 136.1,
+   "weighted_non_users": 341.8,
+   "user_rate_pct": 28.48,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Pennsylvania",
+   "unweighted_n": 782,
+   "weighted_n": 780.6,
+   "weighted_users": 248.9,
+   "weighted_non_users": 531.8,
+   "user_rate_pct": 31.88,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Rhode Island",
+   "unweighted_n": 301,
+   "weighted_n": 300.6,
+   "weighted_users": 74.2,
+   "weighted_non_users": 226.4,
+   "user_rate_pct": 24.67,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "South Carolina",
+   "unweighted_n": 535,
+   "weighted_n": 533.9,
+   "weighted_users": 197.3,
+   "weighted_non_users": 336.7,
+   "user_rate_pct": 36.95,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "South Dakota",
+   "unweighted_n": 308,
+   "weighted_n": 311.1,
+   "weighted_users": 115.1,
+   "weighted_non_users": 196.0,
+   "user_rate_pct": 37.0,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Tennessee",
+   "unweighted_n": 583,
+   "weighted_n": 586.8,
+   "weighted_users": 237.9,
+   "weighted_non_users": 348.9,
+   "user_rate_pct": 40.54,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Texas",
+   "unweighted_n": 1393,
+   "weighted_n": 1392.5,
+   "weighted_users": 482.0,
+   "weighted_non_users": 910.5,
+   "user_rate_pct": 34.62,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Utah",
+   "unweighted_n": 424,
+   "weighted_n": 426.2,
+   "weighted_users": 141.4,
+   "weighted_non_users": 284.7,
+   "user_rate_pct": 33.19,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Vermont",
+   "unweighted_n": 252,
+   "weighted_n": 256.1,
+   "weighted_users": 62.0,
+   "weighted_non_users": 194.1,
+   "user_rate_pct": 24.22,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Virginia",
+   "unweighted_n": 550,
+   "weighted_n": 553.1,
+   "weighted_users": 193.8,
+   "weighted_non_users": 359.3,
+   "user_rate_pct": 35.04,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Washington",
+   "unweighted_n": 538,
+   "weighted_n": 536.2,
+   "weighted_users": 128.5,
+   "weighted_non_users": 407.7,
+   "user_rate_pct": 23.96,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "West Virginia",
+   "unweighted_n": 443,
+   "weighted_n": 439.1,
+   "weighted_users": 178.7,
+   "weighted_non_users": 260.4,
+   "user_rate_pct": 40.69,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Wisconsin",
+   "unweighted_n": 440,
+   "weighted_n": 446.9,
+   "weighted_users": 138.0,
+   "weighted_non_users": 308.9,
+   "user_rate_pct": 30.89,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "Wyoming",
+   "unweighted_n": 253,
+   "weighted_n": 254.0,
+   "weighted_users": 93.8,
+   "weighted_non_users": 160.2,
+   "user_rate_pct": 36.94,
+   "suppressed": false
+  }
+ ],
+ "data_source": "w39"
+}

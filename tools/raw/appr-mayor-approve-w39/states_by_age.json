@@ -1,0 +1,77 @@
+{
+ "recoded_variables_used": {
+  "appr_mayor__21df0d30bad7": {
+   "source_column": "mayor_gen",
+   "binary": true,
+   "groups": {
+    "0": [
+     "1 Strongly disapprove",
+     "2 Disapprove",
+     "3 Neither approve nor disapprove"
+    ],
+    "1": [
+     "4 Approve",
+     "5 Strongly approve"
+    ]
+   }
+  }
+ },
+ "variable": "appr_mayor__21df0d30bad7",
+ "result_type": "adoption_rate",
+ "demographics": [
+  "state",
+  "age_cat_4"
+ ],
+ "wave_filter": "all",
+ "weight_used": "weight_vote_state",
+ "weight_note": "appr_mayor__21df0d30bad7 is a political item and the query is broken down or filtered by state, so the rule picks weight_vote_state (demographics plus vote and turnout, calibrated within each state).",
+ "n_cells": 4,
+ "n_suppressed": 0,
+ "suppression_note": "Cells with n<10 suppressed for privacy",
+ "scale_labels": null,
+ "note": "All rates/means/pct are WEIGHTED (population-representative). unweighted_n is raw headcount for reliability checks only — never use it to compute percentages.",
+ "interpretation_note": "Each row is one unique combination of all demographic variables. user_rate_pct = WEIGHTED share coded 1 (selected this option / flag set) for that subgroup intersection. unweighted_n = raw respondent headcount (reliability check only).",
+ "data": [
+  {
+   "state": "District of Columbia",
+   "age_cat_4": "18 to 24",
+   "unweighted_n": 42,
+   "weighted_n": 35.3,
+   "weighted_users": 6.5,
+   "weighted_non_users": 28.9,
+   "user_rate_pct": 18.31,
+   "suppressed": false
+  },
+  {
+   "state": "District of Columbia",
+   "age_cat_4": "25 to 44",
+   "unweighted_n": 151,
+   "weighted_n": 143.1,
+   "weighted_users": 56.2,
+   "weighted_non_users": 86.9,
+   "user_rate_pct": 39.26,
+   "suppressed": false
+  },
+  {
+   "state": "District of Columbia",
+   "age_cat_4": "45 to 64",
+   "unweighted_n": 94,
+   "weighted_n": 74.2,
+   "weighted_users": 22.5,
+   "weighted_non_users": 51.7,
+   "user_rate_pct": 30.27,
+   "suppressed": false
+  },
+  {
+   "state": "District of Columbia",
+   "age_cat_4": "65 and over",
+   "unweighted_n": 12,
+   "weighted_n": 46.3,
+   "weighted_users": 34.1,
+   "weighted_non_users": 12.2,
+   "user_rate_pct": 73.71,
+   "suppressed": false
+  }
+ ],
+ "data_source": "w39"
+}

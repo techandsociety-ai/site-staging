@@ -1,0 +1,467 @@
+{
+ "set": "therm-w39",
+ "base_tolerance": 0.2,
+ "site": "techandsociety.ai",
+ "by": {
+  "column": "age_cat_4",
+  "name": "age",
+  "order": [
+   "18 to 24",
+   "25 to 44",
+   "45 to 64",
+   "65 and over"
+  ]
+ },
+ "wave": "Wave 39",
+ "fielded": "Oct 1 to Nov 2, 2026",
+ "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 × √(p(1 − p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on {nLo} to {nHi} respondents each, an age group within a state on as few as {cellMin}. Groups under 100 are starred: interpret with caution.",
+ "pulled": "Nov 3, 2026",
+ "weight": {
+  "us": "weight_vote: demographics plus presidential vote and turnout",
+  "state": "weight_vote_state: demographics plus vote and turnout, calibrated within each state"
+ },
+ "suppression": "Groups under 10 respondents are withheld",
+ "set_text": {
+  "title": "Feeling thermometers in every state",
+  "subtitle": "Share of adults who rate each above 50 on a feeling thermometer that runs from 0 to 100",
+  "answer": "rate {phrase} above 50",
+  "noun": "thermometers",
+  "item": "Thermometer",
+  "base": "adults",
+  "note": "Wave 39 from the survey team's cleaned release of Nov. 3, 2026, which may still change before the final file. Not for publication. Above 50 means 51 to 100: a rating of exactly 50, the scale's midpoint, is not counted. Every adult was shown each thermometer; those who skipped one (2.6% to 7.1% nationally, up to 17% in a state) are left out of its share.",
+  "across": {
+   "us_title": "Whom U.S. adults rate above 50",
+   "state_title": "{place} across {count} thermometers",
+   "subtitle": "Share of {place} adults who rate each above 50 on the 0-to-100 thermometer, fall 2026"
+  },
+  "note_label": "Preliminary",
+  "context": "context-w39"
+ },
+ "template": {
+  "topic": "Feeling thermometers",
+  "question": "How would you rate {phrase} on the feeling thermometer?",
+  "dek": "{usPct} of U.S. adults rate {phrase} above 50 on a 0-to-100 feeling thermometer.",
+  "text": {
+   "age": {
+    "us": {
+     "title": "Who rates {phrase} above 50, by age",
+     "subtitle": "Share of U.S. adults who rate {phrase} above 50 on the 0-to-100 thermometer, by age, fall 2026",
+     "source": "CHIP50 survey, {wave}, {fielded}. {usN} U.S. adults, weighted to the adult population."
+    },
+    "state": {
+     "title": "{value} of {state} adults rate {phrase} above 50",
+     "subtitle": "Share who rate {phrase} above 50 on the 0-to-100 thermometer, by age, fall 2026. Ticks mark the U.S.",
+     "source": "CHIP50 survey, {wave}, {fielded}. {n} adults in {state}, weighted within the state; U.S. ticks from all {usN}."
+    }
+   },
+   "states": {
+    "title": "{label}: {lo} to {hi} rate it above 50 across states",
+    "subtitle": "Share of adults who rate {phrase} above 50 on the 0-to-100 thermometer, by state, fall 2026. U.S.: {us}",
+    "source": "CHIP50 survey, {wave}, {fielded}. {usN} adults, {nLo} to {nHi} per state, weighted within each state."
+   },
+   "radio": {
+    "us": "{usWords} of American adults rate {phrase} above 50 on a 0-to-100 feeling thermometer, according to a CHIP50 survey this fall.",
+    "state": "In {state}, {words} of adults rate {phrase} above 50 on a 0-to-100 feeling thermometer, compared with {usWords} nationally. That's from the CHIP50 survey, which reached {n} adults in {state} this fall."
+   }
+  }
+ },
+ "questions": [
+  {
+   "id": "therm-republicans-w39",
+   "column": "therm_republicans",
+   "label": "Republicans",
+   "phrase": "Republicans",
+   "raw": {
+    "us_by": "raw/therm-republicans-w39/us_by_age.json",
+    "states_by": "raw/therm-republicans-w39/states_by_age.json",
+    "states": "raw/therm-republicans-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Republicans (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_republicans\", source_column=\"therm_republicans\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_republicans__87a0a40bf8b5",
+    "generate_crosstab(platform=\"therm_warm_republicans__87a0a40bf8b5\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_republicans__87a0a40bf8b5\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_republicans__87a0a40bf8b5\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-democrats-w39",
+   "column": "therm_democrats",
+   "label": "Democrats",
+   "phrase": "Democrats",
+   "raw": {
+    "us_by": "raw/therm-democrats-w39/us_by_age.json",
+    "states_by": "raw/therm-democrats-w39/states_by_age.json",
+    "states": "raw/therm-democrats-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Democrats (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_democrats\", source_column=\"therm_democrats\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_democrats__97c12343a57f",
+    "generate_crosstab(platform=\"therm_warm_democrats__97c12343a57f\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_democrats__97c12343a57f\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_democrats__97c12343a57f\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-democratic-socialists-w39",
+   "column": "therm_democratic_socialists",
+   "label": "Democratic socialists",
+   "phrase": "democratic socialists",
+   "raw": {
+    "us_by": "raw/therm-democratic-socialists-w39/us_by_age.json",
+    "states_by": "raw/therm-democratic-socialists-w39/states_by_age.json",
+    "states": "raw/therm-democratic-socialists-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Democratic socialists (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_democratic_socialists\", source_column=\"therm_democratic_socialists\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_democratic_socialists__da66d7f3b73f",
+    "generate_crosstab(platform=\"therm_warm_democratic_socialists__da66d7f3b73f\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_democratic_socialists__da66d7f3b73f\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_democratic_socialists__da66d7f3b73f\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-maga-w39",
+   "column": "therm_maga",
+   "label": "MAGA supporters",
+   "phrase": "MAGA supporters",
+   "raw": {
+    "us_by": "raw/therm-maga-w39/us_by_age.json",
+    "states_by": "raw/therm-maga-w39/states_by_age.json",
+    "states": "raw/therm-maga-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — MAGA supporters (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_maga\", source_column=\"therm_maga\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_maga__bfc4cc0eb3a9",
+    "generate_crosstab(platform=\"therm_warm_maga__bfc4cc0eb3a9\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_maga__bfc4cc0eb3a9\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_maga__bfc4cc0eb3a9\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-trump-w39",
+   "column": "therm_trump",
+   "label": "Donald Trump",
+   "phrase": "Donald Trump",
+   "raw": {
+    "us_by": "raw/therm-trump-w39/us_by_age.json",
+    "states_by": "raw/therm-trump-w39/states_by_age.json",
+    "states": "raw/therm-trump-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Donald Trump (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_trump\", source_column=\"therm_trump\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_trump__b90ec0625cc9",
+    "generate_crosstab(platform=\"therm_warm_trump__b90ec0625cc9\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_trump__b90ec0625cc9\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_trump__b90ec0625cc9\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-musk-w39",
+   "column": "therm_musk",
+   "label": "Elon Musk",
+   "phrase": "Elon Musk",
+   "raw": {
+    "us_by": "raw/therm-musk-w39/us_by_age.json",
+    "states_by": "raw/therm-musk-w39/states_by_age.json",
+    "states": "raw/therm-musk-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Elon Musk (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_musk\", source_column=\"therm_musk\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_musk__546c12ee6e86",
+    "generate_crosstab(platform=\"therm_warm_musk__546c12ee6e86\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_musk__546c12ee6e86\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_musk__546c12ee6e86\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-rfk-w39",
+   "column": "therm_rfk",
+   "label": "Robert F. Kennedy Jr.",
+   "phrase": "Robert F. Kennedy Jr.",
+   "raw": {
+    "us_by": "raw/therm-rfk-w39/us_by_age.json",
+    "states_by": "raw/therm-rfk-w39/states_by_age.json",
+    "states": "raw/therm-rfk-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Robert F. Kennedy Jr. (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_rfk\", source_column=\"therm_rfk\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_rfk__535b3edc33f7",
+    "generate_crosstab(platform=\"therm_warm_rfk__535b3edc33f7\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_rfk__535b3edc33f7\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_rfk__535b3edc33f7\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-asian-w39",
+   "column": "therm_asian",
+   "label": "Asian people",
+   "phrase": "Asian people",
+   "raw": {
+    "us_by": "raw/therm-asian-w39/us_by_age.json",
+    "states_by": "raw/therm-asian-w39/states_by_age.json",
+    "states": "raw/therm-asian-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Asian people (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_asian\", source_column=\"therm_asian\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_asian__8d536839f053",
+    "generate_crosstab(platform=\"therm_warm_asian__8d536839f053\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_asian__8d536839f053\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_asian__8d536839f053\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-black-w39",
+   "column": "therm_black",
+   "label": "Black people",
+   "phrase": "Black people",
+   "raw": {
+    "us_by": "raw/therm-black-w39/us_by_age.json",
+    "states_by": "raw/therm-black-w39/states_by_age.json",
+    "states": "raw/therm-black-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Black people (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_black\", source_column=\"therm_black\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_black__71e2c10a7c8e",
+    "generate_crosstab(platform=\"therm_warm_black__71e2c10a7c8e\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_black__71e2c10a7c8e\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_black__71e2c10a7c8e\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-hispanic-w39",
+   "column": "therm_hispanic",
+   "label": "Hispanic people",
+   "phrase": "Hispanic people",
+   "raw": {
+    "us_by": "raw/therm-hispanic-w39/us_by_age.json",
+    "states_by": "raw/therm-hispanic-w39/states_by_age.json",
+    "states": "raw/therm-hispanic-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Hispanic people (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_hispanic\", source_column=\"therm_hispanic\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_hispanic__648eeb7cd404",
+    "generate_crosstab(platform=\"therm_warm_hispanic__648eeb7cd404\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_hispanic__648eeb7cd404\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_hispanic__648eeb7cd404\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-white-w39",
+   "column": "therm_white",
+   "label": "White people",
+   "phrase": "White people",
+   "raw": {
+    "us_by": "raw/therm-white-w39/us_by_age.json",
+    "states_by": "raw/therm-white-w39/states_by_age.json",
+    "states": "raw/therm-white-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — White people (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_white\", source_column=\"therm_white\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_white__d29316a9a226",
+    "generate_crosstab(platform=\"therm_warm_white__d29316a9a226\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_white__d29316a9a226\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_white__d29316a9a226\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-immigrants-w39",
+   "column": "therm_immigrants",
+   "label": "Immigrants",
+   "phrase": "immigrants",
+   "raw": {
+    "us_by": "raw/therm-immigrants-w39/us_by_age.json",
+    "states_by": "raw/therm-immigrants-w39/states_by_age.json",
+    "states": "raw/therm-immigrants-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Immigrants (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_immigrants\", source_column=\"therm_immigrants\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_immigrants__fab0a29a0c78",
+    "generate_crosstab(platform=\"therm_warm_immigrants__fab0a29a0c78\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_immigrants__fab0a29a0c78\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_immigrants__fab0a29a0c78\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-jews-w39",
+   "column": "therm_jews",
+   "label": "Jews",
+   "phrase": "Jews",
+   "raw": {
+    "us_by": "raw/therm-jews-w39/us_by_age.json",
+    "states_by": "raw/therm-jews-w39/states_by_age.json",
+    "states": "raw/therm-jews-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Jews (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_jews\", source_column=\"therm_jews\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_jews__b713f262dcae",
+    "generate_crosstab(platform=\"therm_warm_jews__b713f262dcae\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_jews__b713f262dcae\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_jews__b713f262dcae\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-muslims-w39",
+   "column": "therm_muslims",
+   "label": "Muslims",
+   "phrase": "Muslims",
+   "raw": {
+    "us_by": "raw/therm-muslims-w39/us_by_age.json",
+    "states_by": "raw/therm-muslims-w39/states_by_age.json",
+    "states": "raw/therm-muslims-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Muslims (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_muslims\", source_column=\"therm_muslims\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_muslims__55d694519a2d",
+    "generate_crosstab(platform=\"therm_warm_muslims__55d694519a2d\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_muslims__55d694519a2d\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_muslims__55d694519a2d\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-scientists-w39",
+   "column": "therm_scientists",
+   "label": "Scientists",
+   "phrase": "scientists",
+   "raw": {
+    "us_by": "raw/therm-scientists-w39/us_by_age.json",
+    "states_by": "raw/therm-scientists-w39/states_by_age.json",
+    "states": "raw/therm-scientists-w39/states.json"
+   },
+   "wording": "How would you rate each of the following groups on the feeling thermometer? — Scientists (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_scientists\", source_column=\"therm_scientists\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_scientists__36f373b2bf89",
+    "generate_crosstab(platform=\"therm_warm_scientists__36f373b2bf89\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_scientists__36f373b2bf89\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_scientists__36f373b2bf89\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-usa-w39",
+   "column": "therm_usa",
+   "label": "USA",
+   "phrase": "the USA",
+   "raw": {
+    "us_by": "raw/therm-usa-w39/us_by_age.json",
+    "states_by": "raw/therm-usa-w39/states_by_age.json",
+    "states": "raw/therm-usa-w39/states.json"
+   },
+   "wording": "How would you rate each of the following on the feeling thermometer? — USA (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_usa\", source_column=\"therm_usa\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_usa__53779f6aee36",
+    "generate_crosstab(platform=\"therm_warm_usa__53779f6aee36\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_usa__53779f6aee36\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_usa__53779f6aee36\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-canada-w39",
+   "column": "therm_canada",
+   "label": "Canada",
+   "phrase": "Canada",
+   "raw": {
+    "us_by": "raw/therm-canada-w39/us_by_age.json",
+    "states_by": "raw/therm-canada-w39/states_by_age.json",
+    "states": "raw/therm-canada-w39/states.json"
+   },
+   "wording": "How would you rate each of the following on the feeling thermometer? — Canada (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_canada\", source_column=\"therm_canada\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_canada__ab6e1710b12d",
+    "generate_crosstab(platform=\"therm_warm_canada__ab6e1710b12d\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_canada__ab6e1710b12d\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_canada__ab6e1710b12d\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-china-w39",
+   "column": "therm_china",
+   "label": "China",
+   "phrase": "China",
+   "raw": {
+    "us_by": "raw/therm-china-w39/us_by_age.json",
+    "states_by": "raw/therm-china-w39/states_by_age.json",
+    "states": "raw/therm-china-w39/states.json"
+   },
+   "wording": "How would you rate each of the following on the feeling thermometer? — China (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_china\", source_column=\"therm_china\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_china__365eaba00ad2",
+    "generate_crosstab(platform=\"therm_warm_china__365eaba00ad2\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_china__365eaba00ad2\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_china__365eaba00ad2\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-russia-w39",
+   "column": "therm_russia",
+   "label": "Russia",
+   "phrase": "Russia",
+   "raw": {
+    "us_by": "raw/therm-russia-w39/us_by_age.json",
+    "states_by": "raw/therm-russia-w39/states_by_age.json",
+    "states": "raw/therm-russia-w39/states.json"
+   },
+   "wording": "How would you rate each of the following on the feeling thermometer? — Russia (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_russia\", source_column=\"therm_russia\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_russia__792f56233958",
+    "generate_crosstab(platform=\"therm_warm_russia__792f56233958\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_russia__792f56233958\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_russia__792f56233958\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-ukraine-w39",
+   "column": "therm_ukraine",
+   "label": "Ukraine",
+   "phrase": "Ukraine",
+   "raw": {
+    "us_by": "raw/therm-ukraine-w39/us_by_age.json",
+    "states_by": "raw/therm-ukraine-w39/states_by_age.json",
+    "states": "raw/therm-ukraine-w39/states.json"
+   },
+   "wording": "How would you rate each of the following on the feeling thermometer? — Ukraine (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_ukraine\", source_column=\"therm_ukraine\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_ukraine__ca735397cbb5",
+    "generate_crosstab(platform=\"therm_warm_ukraine__ca735397cbb5\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_ukraine__ca735397cbb5\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_ukraine__ca735397cbb5\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-iran-w39",
+   "column": "therm_iran",
+   "label": "Iran",
+   "phrase": "Iran",
+   "raw": {
+    "us_by": "raw/therm-iran-w39/us_by_age.json",
+    "states_by": "raw/therm-iran-w39/states_by_age.json",
+    "states": "raw/therm-iran-w39/states.json"
+   },
+   "wording": "How would you rate each of the following on the feeling thermometer? — Iran (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_iran\", source_column=\"therm_iran\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_iran__53a1f2ac5354",
+    "generate_crosstab(platform=\"therm_warm_iran__53a1f2ac5354\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_iran__53a1f2ac5354\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_iran__53a1f2ac5354\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "therm-israel-w39",
+   "column": "therm_israel",
+   "label": "Israel",
+   "phrase": "Israel",
+   "raw": {
+    "us_by": "raw/therm-israel-w39/us_by_age.json",
+    "states_by": "raw/therm-israel-w39/states_by_age.json",
+    "states": "raw/therm-israel-w39/states.json"
+   },
+   "wording": "How would you rate each of the following on the feeling thermometer? — Israel (0 to 100; shown here: above 50)",
+   "provenance": [
+    "create_recoded_variable(name=\"therm_warm_israel\", source_column=\"therm_israel\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_israel__c5ab849e989f",
+    "generate_crosstab(platform=\"therm_warm_israel__c5ab849e989f\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_israel__c5ab849e989f\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_israel__c5ab849e989f\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  }
+ ],
+ "state_n": "raw/therm-republicans-w39/states.json"
+}

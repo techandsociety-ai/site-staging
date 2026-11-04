@@ -44,7 +44,11 @@ SHORT = {"District of Columbia": "D.C."}
 
 
 def rows(path):
-    """The data rows of a saved MCP result, wrapped or not."""
+    """The data rows of a saved MCP result, wrapped or not. A list of paths
+    joins results that split the places between them, as the governor
+    question (asked outside D.C.) and the mayor question (asked in D.C.) do."""
+    if isinstance(path, list):
+        return [r for p in path for r in rows(p)]
     d = json.loads((TOOLS / path).read_text())
     if isinstance(d, dict) and isinstance(d.get("result"), str):
         d = json.loads(d["result"])
@@ -60,7 +64,11 @@ WEIGHT_TEXT = {
 
 
 def meta(path, key):
-    """A top-level field of a saved MCP result (weight_used, platform, ...), if it has one."""
+    """A top-level field of a saved MCP result (weight_used, platform, ...), if it has one;
+    of a list of results, the field if they all agree on it."""
+    if isinstance(path, list):
+        got = {meta(p, key) for p in path}
+        return got.pop() if len(got) == 1 else None
     d = json.loads((TOOLS / path).read_text())
     if isinstance(d, dict) and isinstance(d.get("result"), str):
         d = json.loads(d["result"])
@@ -70,6 +78,24 @@ def meta(path, key):
 def cell(r):
     """One group: the weighted rate, or None when the MCP withheld it."""
     return None if r.get("suppressed") else r["user_rate_pct"], r["unweighted_n"]
+
+
+def pool(rs):
+    """Rows for the same group from results that split the places between
+    them (see rows), summed into one: they partition the group under one weight."""
+    by = {}
+    for r in rs:
+        by.setdefault(r["demographic_value"], []).append(r)
+    out = []
+    for g, parts in by.items():
+        if len(parts) == 1:
+            out.append(parts[0])
+            continue
+        if any(r.get("suppressed") for r in parts):
+            sys.exit(f"{g}: a part of the pooled group is withheld, so the pool can't be summed")
+        s = {k: sum(r[k] for r in parts) for k in ("unweighted_n", "weighted_n", "weighted_users")}
+        out.append({"demographic_value": g, **s, "user_rate_pct": round(100 * s["weighted_users"] / s["weighted_n"], 2), "suppressed": False})
+    return out
 
 
 def partition(cells):
@@ -85,7 +111,7 @@ def build_one(cfg, state_n=None):
     totals wherever both exist, and against state_n headcounts otherwise)."""
     by, order = cfg["by"]["column"], cfg["by"]["order"]
     raw = cfg["raw"]
-    us_rows = rows(raw["us_by"])
+    us_rows = pool(rows(raw["us_by"]))
     us_by = {r["demographic_value"]: cell(r) for r in us_rows}
     if "us" in raw:
         (us_value, us_n), = [cell(r) for r in rows(raw["us"])]
@@ -210,7 +236,10 @@ def build_set(cfg):
     way every question in a set must rest on the same respondents in each
     state, since the explorer compares them side by side."""
     state_n = {r["demographic_value"]: r["unweighted_n"] for r in rows(cfg["state_n"])} if "state_n" in cfg else None
-    shared = {k: v for k, v in cfg.items() if k not in ("set", "questions", "template", "state_n", "set_text")}
+    # a set whose items each lose some skips can allow more (W39's thermometers, shown to every
+    # adult: 2.6 to 7.1 percent skipped each nationally, up to 17 percent in a state of 288)
+    tol = cfg.get("base_tolerance", 0.05)
+    shared = {k: v for k, v in cfg.items() if k not in ("set", "questions", "template", "state_n", "set_text", "base_tolerance")}
     index, base = [], None
     for q in cfg["questions"]:
         one = json.loads(json.dumps({**shared, **cfg["template"]}))
@@ -224,9 +253,9 @@ def build_set(cfg):
         heads = {s["name"]: s["n"] for s in built["states"]}
         base = base or heads
         off = max(abs(heads[k] - base[k]) / base[k] for k in heads)
-        if off > 0.05:
-            odd = sorted(k for k in heads if abs(heads[k] - base[k]) / base[k] > 0.05)[:3]
-            sys.exit(f"{built['id']}: respondents per state differ by more than 5% from the set's first question ({', '.join(odd)}...)")
+        if off > tol:
+            odd = sorted(k for k in heads if abs(heads[k] - base[k]) / base[k] > tol)[:3]
+            sys.exit(f"{built['id']}: respondents per state differ by more than {tol:.0%} from the set's first question ({', '.join(odd)}...)")
         index.append({"id": built["id"], "label": built["label"], "topic": built["topic"],
                       "question": built["question"], "us": built["us"]["value"]})
     dest = OUT / f"set-{cfg['set']}.json"

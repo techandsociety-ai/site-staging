@@ -540,7 +540,8 @@
   /* the topics the pages offer, in order; the W38 sets still open with ?set= */
   var SETS = [['issues-w39', 'Midterm issues · W39'], ['platforms-w39', 'Social media platforms · W39'],
     ['trust-w39', 'Trust in institutions · W39'], ['news-w39', 'Political news sources · W39'],
-    ['activity-w39', 'Political activity · W39'], ['ai-tools-w39', 'AI tools heard of · W39']];
+    ['activity-w39', 'Political activity · W39'], ['ai-tools-w39', 'AI tools heard of · W39'],
+    ['therm-w39', 'Feeling thermometers · W39'], ['approval-w39', 'Approval · W39']];
   /* a topic picker: fills sel, and on a change reloads with the new set, keeping
      the place (another topic has other items, so the item goes) */
   function topicPicker(sel, current) {

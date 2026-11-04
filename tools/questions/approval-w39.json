@@ -1,0 +1,170 @@
+{
+ "set": "approval-w39",
+ "site": "techandsociety.ai",
+ "by": {
+  "column": "age_cat_4",
+  "name": "age",
+  "order": [
+   "18 to 24",
+   "25 to 44",
+   "45 to 64",
+   "65 and over"
+  ]
+ },
+ "wave": "Wave 39",
+ "fielded": "Oct 1 to Nov 2, 2026",
+ "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 × √(p(1 − p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on {nLo} to {nHi} respondents each, an age group within a state on as few as {cellMin}. Groups under 100 are starred: interpret with caution.",
+ "pulled": "Nov 3, 2026",
+ "weight": {
+  "us": "weight_vote: demographics plus presidential vote and turnout",
+  "state": "weight_vote_state: demographics plus vote and turnout, calibrated within each state"
+ },
+ "suppression": "Groups under 10 respondents are withheld",
+ "set_text": {
+  "title": "Approval of Trump and of each state's governor",
+  "subtitle": "Share of adults who approve, and who disapprove, of the way each is handling the job (of strongly disapprove, disapprove, neither, approve, strongly approve)",
+  "answer": "{phrase}",
+  "noun": "measures",
+  "item": "Measure",
+  "base": "adults",
+  "note": "Wave 39 from the survey team's cleaned release of Nov. 3, 2026, which may still change before the final file. Not for publication. D.C. has no governor: there the survey asked the same question about the mayor, which the governor rows show.",
+  "across": {
+   "us_title": "How U.S. adults rate Trump and their governors",
+   "state_title": "{place} across {count} approval measures",
+   "subtitle": "Share of {place} adults who approve or disapprove of each, fall 2026"
+  },
+  "note_label": "Preliminary",
+  "context": "context-w39"
+ },
+ "template": {
+  "topic": "Approval",
+  "question": "Do you approve or disapprove?",
+  "dek": "{usPct} of U.S. adults {phrase}.",
+  "wording": "",
+  "provenance": [],
+  "text": {
+   "age": {
+    "us": {
+     "title": "{label}, by age",
+     "subtitle": "Share of U.S. adults who {phrase}, by age, fall 2026",
+     "source": "CHIP50 survey, {wave}, {fielded}. {usN} U.S. adults, weighted to the adult population."
+    },
+    "state": {
+     "title": "{value} of {state} adults {phrase}",
+     "subtitle": "Share who {phrase}, by age, fall 2026. Ticks mark the U.S.",
+     "source": "CHIP50 survey, {wave}, {fielded}. {n} adults in {state}, weighted within the state; U.S. ticks from all {usN}."
+    }
+   },
+   "states": {
+    "title": "{label}: {lo} to {hi} across states",
+    "subtitle": "Share of adults who {phrase}, by state, fall 2026. U.S.: {us}",
+    "source": "CHIP50 survey, {wave}, {fielded}. {usN} adults, {nLo} to {nHi} per state, weighted within each state."
+   },
+   "radio": {
+    "us": "{usWords} of American adults {phrase}, according to a CHIP50 survey this fall.",
+    "state": "In {state}, {words} of adults {phrase}, compared with {usWords} nationally. That's from the CHIP50 survey, which reached {n} adults in {state} this fall."
+   }
+  }
+ },
+ "questions": [
+  {
+   "id": "appr-trump-approve-w39",
+   "column": "trump_gen",
+   "label": "Approve of Trump",
+   "phrase": "approve of how Donald Trump is handling his job as president",
+   "question": "Do you approve or disapprove of the way Donald Trump is handling his job as president?",
+   "raw": {
+    "us_by": "raw/appr-trump-approve-w39/us_by_age.json",
+    "states_by": "raw/appr-trump-approve-w39/states_by_age.json",
+    "states": "raw/appr-trump-approve-w39/states.json"
+   },
+   "wording": "Do you approve or disapprove of the way Donald Trump is handling his job as president? (Strongly disapprove, Disapprove, Neither approve nor disapprove, Approve, Strongly approve; shown here: Approve or Strongly approve)",
+   "provenance": [
+    "create_recoded_variable(name=\"appr_trump\", source_column=\"trump_gen\", mapping Approve and Strongly approve → 1, the rest → 0, binary=true) → appr_trump__9b19c818adad",
+    "generate_crosstab(platform=\"appr_trump__9b19c818adad\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"appr_trump__9b19c818adad\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"appr_trump__9b19c818adad\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "appr-trump-disapprove-w39",
+   "column": "trump_gen",
+   "label": "Disapprove of Trump",
+   "phrase": "disapprove of how Donald Trump is handling his job as president",
+   "question": "Do you approve or disapprove of the way Donald Trump is handling his job as president?",
+   "raw": {
+    "us_by": "raw/appr-trump-disapprove-w39/us_by_age.json",
+    "states_by": "raw/appr-trump-disapprove-w39/states_by_age.json",
+    "states": "raw/appr-trump-disapprove-w39/states.json"
+   },
+   "wording": "Do you approve or disapprove of the way Donald Trump is handling his job as president? (Strongly disapprove, Disapprove, Neither approve nor disapprove, Approve, Strongly approve; shown here: Disapprove or Strongly disapprove)",
+   "provenance": [
+    "create_recoded_variable(name=\"disappr_trump\", source_column=\"trump_gen\", mapping Disapprove and Strongly disapprove → 1, the rest → 0, binary=true) → disappr_trump__7b7dd6eca272",
+    "generate_crosstab(platform=\"disappr_trump__7b7dd6eca272\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"disappr_trump__7b7dd6eca272\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"disappr_trump__7b7dd6eca272\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+   ]
+  },
+  {
+   "id": "appr-gov-approve-w39",
+   "column": "gov_gen",
+   "label": "Approve of governor",
+   "phrase": "approve of how their governor (in D.C., the mayor) is handling the job",
+   "question": "Do you approve or disapprove of the way your governor is handling their job? (In D.C.: your mayor)",
+   "raw": {
+    "us_by": [
+     "raw/appr-gov-approve-w39/us_by_age.json",
+     "raw/appr-mayor-approve-w39/us_by_age.json"
+    ],
+    "states_by": [
+     "raw/appr-gov-approve-w39/states_by_age.json",
+     "raw/appr-mayor-approve-w39/states_by_age.json"
+    ],
+    "states": [
+     "raw/appr-gov-approve-w39/states.json",
+     "raw/appr-mayor-approve-w39/states.json"
+    ]
+   },
+   "wording": "Do you approve or disapprove of the way your governor is handling their job? Asked outside D.C.; in D.C., which has no governor: Do you approve or disapprove of the way your mayor is handling their job? (Strongly disapprove, Disapprove, Neither approve nor disapprove, Approve, Strongly approve; shown here: Approve or Strongly approve)",
+   "provenance": [
+    "create_recoded_variable(name=\"appr_gov\", source_column=\"gov_gen\", mapping Approve and Strongly approve → 1, the rest → 0, binary=true) → appr_gov__f29b5d652719",
+    "create_recoded_variable(name=\"appr_mayor\", source_column=\"mayor_gen\", mapping Approve and Strongly approve → 1, the rest → 0, binary=true) → appr_mayor__21df0d30bad7",
+    "generate_crosstab(platform=\"appr_gov__f29b5d652719 and appr_mayor__21df0d30bad7\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"appr_gov__f29b5d652719 and appr_mayor__21df0d30bad7\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"appr_gov__f29b5d652719 and appr_mayor__21df0d30bad7\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells",
+    "The governor results cover the 50 states, the mayor results D.C.; the U.S. by age adds the two."
+   ]
+  },
+  {
+   "id": "appr-gov-disapprove-w39",
+   "column": "gov_gen",
+   "label": "Disapprove of governor",
+   "phrase": "disapprove of how their governor (in D.C., the mayor) is handling the job",
+   "question": "Do you approve or disapprove of the way your governor is handling their job? (In D.C.: your mayor)",
+   "raw": {
+    "us_by": [
+     "raw/appr-gov-disapprove-w39/us_by_age.json",
+     "raw/appr-mayor-disapprove-w39/us_by_age.json"
+    ],
+    "states_by": [
+     "raw/appr-gov-disapprove-w39/states_by_age.json",
+     "raw/appr-mayor-disapprove-w39/states_by_age.json"
+    ],
+    "states": [
+     "raw/appr-gov-disapprove-w39/states.json",
+     "raw/appr-mayor-disapprove-w39/states.json"
+    ]
+   },
+   "wording": "Do you approve or disapprove of the way your governor is handling their job? Asked outside D.C.; in D.C., which has no governor: Do you approve or disapprove of the way your mayor is handling their job? (Strongly disapprove, Disapprove, Neither approve nor disapprove, Approve, Strongly approve; shown here: Disapprove or Strongly disapprove)",
+   "provenance": [
+    "create_recoded_variable(name=\"disappr_gov\", source_column=\"gov_gen\", mapping Disapprove and Strongly disapprove → 1, the rest → 0, binary=true) → disappr_gov__26a2ac563ab4",
+    "create_recoded_variable(name=\"disappr_mayor\", source_column=\"mayor_gen\", mapping Disapprove and Strongly disapprove → 1, the rest → 0, binary=true) → disappr_mayor__335c4350c813",
+    "generate_crosstab(platform=\"disappr_gov__26a2ac563ab4 and disappr_mayor__335c4350c813\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"disappr_gov__26a2ac563ab4 and disappr_mayor__335c4350c813\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"disappr_gov__26a2ac563ab4 and disappr_mayor__335c4350c813\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells",
+    "The governor results cover the 50 states, the mayor results D.C.; the U.S. by age adds the two."
+   ]
+  }
+ ],
+ "state_n": "raw/appr-trump-approve-w39/states.json"
+}

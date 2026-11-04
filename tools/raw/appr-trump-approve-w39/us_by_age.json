@@ -1,0 +1,66 @@
+{
+ "recoded_variables_used": {
+  "appr_trump__9b19c818adad": {
+   "source_column": "trump_gen",
+   "binary": true,
+   "groups": {
+    "0": [
+     "1 Strongly disapprove",
+     "2 Disapprove",
+     "3 Neither approve nor disapprove"
+    ],
+    "1": [
+     "4 Approve",
+     "5 Strongly approve"
+    ]
+   }
+  }
+ },
+ "platform": "appr_trump__9b19c818adad",
+ "demographic": "age_cat_4",
+ "wave_filter": "all",
+ "weight_used": "weight_vote",
+ "weight_note": "appr_trump__9b19c818adad is a political item, so the rule picks weight_vote (demographics plus presidential vote and turnout).",
+ "suppression_note": "Cells with n<10 suppressed for privacy",
+ "note": "All rates/means/pct are WEIGHTED (population-representative). unweighted_n is raw headcount for reliability checks only — never use it to compute percentages.",
+ "interpretation_note": "unweighted_n = raw respondent headcount — for reliability checks only, NOT a population estimate. user_rate_pct = WEIGHTED share coded 1 (selected this option / flag set) — population-representative. When presenting a table, label the N column as 'Unweighted N' and the rate column as '% (weighted)'.",
+ "data": [
+  {
+   "demographic_value": "18 to 24",
+   "unweighted_n": 2524,
+   "weighted_n": 3393.0,
+   "weighted_users": 541.7,
+   "weighted_non_users": 2851.2,
+   "user_rate_pct": 15.97,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "25 to 44",
+   "unweighted_n": 11746,
+   "weighted_n": 9913.1,
+   "weighted_users": 2838.5,
+   "weighted_non_users": 7074.6,
+   "user_rate_pct": 28.63,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "45 to 64",
+   "unweighted_n": 9730,
+   "weighted_n": 9183.7,
+   "weighted_users": 2679.3,
+   "weighted_non_users": 6504.4,
+   "user_rate_pct": 29.17,
+   "suppressed": false
+  },
+  {
+   "demographic_value": "65 and over",
+   "unweighted_n": 4762,
+   "weighted_n": 6273.2,
+   "weighted_users": 2283.9,
+   "weighted_non_users": 3989.2,
+   "user_rate_pct": 36.41,
+   "suppressed": false
+  }
+ ],
+ "data_source": "w39"
+}
