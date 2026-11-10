@@ -2,23 +2,23 @@
  "id": "therm-black-w39",
  "site": "techandsociety.ai",
  "question": "How would you rate Black people on the feeling thermometer?",
- "dek": "78% of U.S. adults rate Black people above 50 on a 0-to-100 feeling thermometer.",
+ "dek": "79% of U.S. adults rate Black people above 50 on a 0-to-100 feeling thermometer.",
  "wording": "How would you rate each of the following groups on the feeling thermometer? \u2014 Black people (0 to 100; shown here: above 50)",
  "wave": "Wave 39",
- "fielded": "Oct 1 to Nov 2, 2026",
+ "fielded": "Oct 1 to Nov 3, 2026",
  "weight": {
   "us": "weight: the survey team's demographic weight",
   "state": "weight_state: demographics, calibrated within each state"
  },
  "suppression": "Groups under 10 respondents are withheld",
- "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 \u00d7 \u221a(p(1 \u2212 p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on 222 to 1,387 respondents each, an age group within a state on as few as 12. Groups under 100 are starred: interpret with caution.",
+ "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 \u00d7 \u221a(p(1 \u2212 p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on 231 to 1,355 respondents each, an age group within a state on as few as 12. Groups under 100 are starred: interpret with caution.",
  "provenance": [
   "create_recoded_variable(name=\"therm_warm_black\", source_column=\"therm_black\", mapping 0\u201350 \u2192 0, 51\u2013100 \u2192 1, binary=true) \u2192 therm_warm_black__71e2c10a7c8e",
   "generate_crosstab(platform=\"therm_warm_black__71e2c10a7c8e\", demographic=\"age_cat_4\", data_source=\"w39\")",
   "generate_crosstab(platform=\"therm_warm_black__71e2c10a7c8e\", demographic=\"state\", data_source=\"w39\")",
   "generate_crosstab_multi(variable=\"therm_warm_black__71e2c10a7c8e\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
  ],
- "pulled": "Nov 3, 2026",
+ "pulled": "Nov 10, 2026",
  "text": {
   "age": {
    "us": {
@@ -33,9 +33,9 @@
    }
   },
   "states": {
-   "title": "Black people: 69% to 84% rate it above 50 across states",
+   "title": "Black people: 69% to 85% rate it above 50 across states",
    "subtitle": "Share of adults who rate Black people above 50 on the 0-to-100 thermometer, by state, fall 2026. U.S.: {us}",
-   "source": "CHIP50 survey, {wave}, {fielded}. {usN} adults, 222 to 1,387 per state, weighted within each state."
+   "source": "CHIP50 survey, {wave}, {fielded}. {usN} adults, 231 to 1,355 per state, weighted within each state."
   },
   "radio": {
    "us": "{usWords} of American adults rate Black people above 50 on a 0-to-100 feeling thermometer, according to a CHIP50 survey this fall.",
@@ -49,29 +49,29 @@
  "column": "therm_black",
  "byName": "age",
  "us": {
-  "value": 78.47,
-  "n": 27143
+  "value": 78.82,
+  "n": 26787
  },
  "by": [
   {
    "label": "18 to 24",
-   "value": 83.51,
-   "n": 2411
+   "value": 83.96,
+   "n": 2365
   },
   {
    "label": "25 to 44",
-   "value": 75.91,
-   "n": 10943
+   "value": 76.35,
+   "n": 10733
   },
   {
    "label": "45 to 64",
-   "value": 76.9,
-   "n": 9168
+   "value": 77.13,
+   "n": 9087
   },
   {
    "label": "65 and over",
-   "value": 81.98,
-   "n": 4621
+   "value": 82.31,
+   "n": 4602
   }
  ],
  "states": [
@@ -80,27 +80,27 @@
    "label": "Alabama",
    "abbr": "AL",
    "slug": "alabama",
-   "value": 80.02,
-   "n": 514,
+   "value": 79.91,
+   "n": 504,
    "by": [
     {
      "label": "18 to 24",
-     "value": 85.31,
+     "value": 85.24,
      "n": 43
     },
     {
      "label": "25 to 44",
-     "value": 75.86,
-     "n": 207
+     "value": 75.93,
+     "n": 201
     },
     {
      "label": "45 to 64",
-     "value": 78.53,
-     "n": 191
+     "value": 78.13,
+     "n": 187
     },
     {
      "label": "65 and over",
-     "value": 84.95,
+     "value": 84.91,
      "n": 73
     }
    ]
@@ -110,27 +110,27 @@
    "label": "Alaska",
    "abbr": "AK",
    "slug": "alaska",
-   "value": 76.03,
-   "n": 222,
+   "value": 75.59,
+   "n": 231,
    "by": [
     {
      "label": "18 to 24",
-     "value": 93.92,
-     "n": 18
+     "value": 94.29,
+     "n": 17
     },
     {
      "label": "25 to 44",
-     "value": 71.17,
-     "n": 102
+     "value": 70.6,
+     "n": 110
     },
     {
      "label": "45 to 64",
-     "value": 75.21,
-     "n": 85
+     "value": 73.34,
+     "n": 87
     },
     {
      "label": "65 and over",
-     "value": 76.55,
+     "value": 77.44,
      "n": 17
     }
    ]
@@ -140,28 +140,28 @@
    "label": "Arizona",
    "abbr": "AZ",
    "slug": "arizona",
-   "value": 75.32,
-   "n": 617,
+   "value": 75.47,
+   "n": 600,
    "by": [
     {
      "label": "18 to 24",
-     "value": 70.16,
-     "n": 40
+     "value": 69.28,
+     "n": 39
     },
     {
      "label": "25 to 44",
-     "value": 71.41,
-     "n": 243
+     "value": 71.16,
+     "n": 231
     },
     {
      "label": "45 to 64",
-     "value": 74.26,
-     "n": 205
+     "value": 74.01,
+     "n": 204
     },
     {
      "label": "65 and over",
-     "value": 84.28,
-     "n": 129
+     "value": 85.89,
+     "n": 126
     }
    ]
   },
@@ -170,27 +170,27 @@
    "label": "Arkansas",
    "abbr": "AR",
    "slug": "arkansas",
-   "value": 77.34,
-   "n": 450,
+   "value": 77.43,
+   "n": 444,
    "by": [
     {
      "label": "18 to 24",
-     "value": 86.09,
-     "n": 47
+     "value": 85.71,
+     "n": 46
     },
     {
      "label": "25 to 44",
-     "value": 71.91,
-     "n": 171
+     "value": 72.33,
+     "n": 168
     },
     {
      "label": "45 to 64",
-     "value": 76.29,
-     "n": 157
+     "value": 76.3,
+     "n": 155
     },
     {
      "label": "65 and over",
-     "value": 81.85,
+     "value": 81.82,
      "n": 75
     }
    ]
@@ -200,28 +200,28 @@
    "label": "California",
    "abbr": "CA",
    "slug": "california",
-   "value": 73.87,
-   "n": 1178,
+   "value": 74.56,
+   "n": 1155,
    "by": [
     {
      "label": "18 to 24",
-     "value": 89.53,
-     "n": 134
+     "value": 89.65,
+     "n": 131
     },
     {
      "label": "25 to 44",
-     "value": 71.52,
-     "n": 556
+     "value": 72.45,
+     "n": 544
     },
     {
      "label": "45 to 64",
-     "value": 68.56,
-     "n": 333
+     "value": 69.34,
+     "n": 327
     },
     {
      "label": "65 and over",
-     "value": 77.59,
-     "n": 155
+     "value": 77.99,
+     "n": 153
     }
    ]
   },
@@ -230,27 +230,27 @@
    "label": "Colorado",
    "abbr": "CO",
    "slug": "colorado",
-   "value": 81.97,
-   "n": 442,
+   "value": 81.88,
+   "n": 443,
    "by": [
     {
      "label": "18 to 24",
-     "value": 78.21,
+     "value": 78.02,
      "n": 23
     },
     {
      "label": "25 to 44",
-     "value": 79.43,
+     "value": 79.99,
      "n": 189
     },
     {
      "label": "45 to 64",
-     "value": 85.37,
-     "n": 164
+     "value": 84.51,
+     "n": 165
     },
     {
      "label": "65 and over",
-     "value": 83.88,
+     "value": 83.77,
      "n": 66
     }
    ]
@@ -260,8 +260,8 @@
    "label": "Connecticut",
    "abbr": "CT",
    "slug": "connecticut",
-   "value": 83.09,
-   "n": 501,
+   "value": 83.37,
+   "n": 496,
    "by": [
     {
      "label": "18 to 24",
@@ -270,18 +270,18 @@
     },
     {
      "label": "25 to 44",
-     "value": 81.53,
-     "n": 165
+     "value": 81.48,
+     "n": 164
     },
     {
      "label": "45 to 64",
-     "value": 78.26,
-     "n": 173
+     "value": 79.28,
+     "n": 170
     },
     {
      "label": "65 and over",
-     "value": 87.27,
-     "n": 115
+     "value": 87.08,
+     "n": 114
     }
    ]
   },
@@ -290,27 +290,27 @@
    "label": "Delaware",
    "abbr": "DE",
    "slug": "delaware",
-   "value": 81.97,
-   "n": 332,
+   "value": 82.16,
+   "n": 330,
    "by": [
     {
      "label": "18 to 24",
-     "value": 88.67,
+     "value": 88.77,
      "n": 24
     },
     {
      "label": "25 to 44",
-     "value": 76.41,
-     "n": 153
+     "value": 76.87,
+     "n": 151
     },
     {
      "label": "45 to 64",
-     "value": 81.92,
+     "value": 82.0,
      "n": 107
     },
     {
      "label": "65 and over",
-     "value": 85.66,
+     "value": 85.7,
      "n": 48
     }
    ]
@@ -320,23 +320,23 @@
    "label": "D.C.",
    "abbr": "DC",
    "slug": "district-of-columbia",
-   "value": 82.46,
-   "n": 280,
+   "value": 82.0,
+   "n": 267,
    "by": [
     {
      "label": "18 to 24",
-     "value": 84.5,
-     "n": 42
+     "value": 86.19,
+     "n": 41
     },
     {
      "label": "25 to 44",
-     "value": 82.52,
-     "n": 140
+     "value": 81.53,
+     "n": 130
     },
     {
      "label": "45 to 64",
-     "value": 82.3,
-     "n": 86
+     "value": 81.47,
+     "n": 84
     },
     {
      "label": "65 and over",
@@ -350,28 +350,28 @@
    "label": "Florida",
    "abbr": "FL",
    "slug": "florida",
-   "value": 78.71,
-   "n": 1189,
+   "value": 78.88,
+   "n": 1163,
    "by": [
     {
      "label": "18 to 24",
-     "value": 78.04,
-     "n": 106
+     "value": 77.55,
+     "n": 103
     },
     {
      "label": "25 to 44",
-     "value": 73.72,
-     "n": 489
+     "value": 74.33,
+     "n": 474
     },
     {
      "label": "45 to 64",
-     "value": 80.07,
-     "n": 352
+     "value": 80.06,
+     "n": 343
     },
     {
      "label": "65 and over",
-     "value": 83.28,
-     "n": 242
+     "value": 83.39,
+     "n": 243
     }
    ]
   },
@@ -380,27 +380,27 @@
    "label": "Georgia",
    "abbr": "GA",
    "slug": "georgia",
-   "value": 81.83,
-   "n": 834,
+   "value": 82.58,
+   "n": 817,
    "by": [
     {
      "label": "18 to 24",
-     "value": 86.63,
-     "n": 84
+     "value": 89.46,
+     "n": 82
     },
     {
      "label": "25 to 44",
-     "value": 79.78,
-     "n": 331
+     "value": 79.88,
+     "n": 320
     },
     {
      "label": "45 to 64",
-     "value": 82.01,
-     "n": 311
+     "value": 83.07,
+     "n": 307
     },
     {
      "label": "65 and over",
-     "value": 82.11,
+     "value": 82.14,
      "n": 108
     }
    ]
@@ -410,28 +410,28 @@
    "label": "Hawaii",
    "abbr": "HI",
    "slug": "hawaii",
-   "value": 79.91,
-   "n": 257,
+   "value": 80.83,
+   "n": 255,
    "by": [
     {
      "label": "18 to 24",
-     "value": 69.46,
-     "n": 21
+     "value": 71.34,
+     "n": 22
     },
     {
      "label": "25 to 44",
-     "value": 67.64,
-     "n": 107
+     "value": 67.76,
+     "n": 106
     },
     {
      "label": "45 to 64",
-     "value": 88.47,
-     "n": 82
+     "value": 92.19,
+     "n": 81
     },
     {
      "label": "65 and over",
-     "value": 88.83,
-     "n": 47
+     "value": 88.18,
+     "n": 46
     }
    ]
   },
@@ -440,27 +440,27 @@
    "label": "Idaho",
    "abbr": "ID",
    "slug": "idaho",
-   "value": 75.18,
-   "n": 351,
+   "value": 75.36,
+   "n": 358,
    "by": [
     {
      "label": "18 to 24",
-     "value": 72.65,
-     "n": 34
+     "value": 70.81,
+     "n": 35
     },
     {
      "label": "25 to 44",
-     "value": 74.23,
-     "n": 152
+     "value": 75.49,
+     "n": 156
     },
     {
      "label": "45 to 64",
-     "value": 75.86,
-     "n": 116
+     "value": 75.73,
+     "n": 118
     },
     {
      "label": "65 and over",
-     "value": 77.15,
+     "value": 77.35,
      "n": 49
     }
    ]
@@ -470,28 +470,28 @@
    "label": "Illinois",
    "abbr": "IL",
    "slug": "illinois",
-   "value": 78.32,
-   "n": 713,
+   "value": 78.62,
+   "n": 703,
    "by": [
     {
      "label": "18 to 24",
-     "value": 83.16,
-     "n": 78
+     "value": 85.25,
+     "n": 76
     },
     {
      "label": "25 to 44",
-     "value": 74.71,
-     "n": 290
+     "value": 74.5,
+     "n": 288
     },
     {
      "label": "45 to 64",
-     "value": 79.0,
-     "n": 214
+     "value": 79.11,
+     "n": 209
     },
     {
      "label": "65 and over",
-     "value": 80.56,
-     "n": 131
+     "value": 81.04,
+     "n": 130
     }
    ]
   },
@@ -500,27 +500,27 @@
    "label": "Indiana",
    "abbr": "IN",
    "slug": "indiana",
-   "value": 73.95,
-   "n": 509,
+   "value": 73.69,
+   "n": 500,
    "by": [
     {
      "label": "18 to 24",
-     "value": 72.42,
-     "n": 38
+     "value": 71.31,
+     "n": 36
     },
     {
      "label": "25 to 44",
-     "value": 74.37,
-     "n": 193
+     "value": 74.08,
+     "n": 187
     },
     {
      "label": "45 to 64",
-     "value": 70.57,
-     "n": 190
+     "value": 70.4,
+     "n": 189
     },
     {
      "label": "65 and over",
-     "value": 79.18,
+     "value": 79.27,
      "n": 88
     }
    ]
@@ -530,27 +530,27 @@
    "label": "Iowa",
    "abbr": "IA",
    "slug": "iowa",
-   "value": 75.19,
-   "n": 465,
+   "value": 75.64,
+   "n": 461,
    "by": [
     {
      "label": "18 to 24",
-     "value": 64.05,
+     "value": 63.86,
      "n": 26
     },
     {
      "label": "25 to 44",
-     "value": 67.96,
-     "n": 167
+     "value": 69.08,
+     "n": 164
     },
     {
      "label": "45 to 64",
-     "value": 77.0,
-     "n": 182
+     "value": 77.44,
+     "n": 181
     },
     {
      "label": "65 and over",
-     "value": 88.95,
+     "value": 88.9,
      "n": 90
     }
    ]
@@ -560,27 +560,27 @@
    "label": "Kansas",
    "abbr": "KS",
    "slug": "kansas",
-   "value": 77.65,
-   "n": 390,
+   "value": 77.77,
+   "n": 386,
    "by": [
     {
      "label": "18 to 24",
-     "value": 79.34,
+     "value": 79.38,
      "n": 33
     },
     {
      "label": "25 to 44",
-     "value": 74.32,
-     "n": 155
+     "value": 74.81,
+     "n": 152
     },
     {
      "label": "45 to 64",
-     "value": 82.54,
-     "n": 132
+     "value": 82.4,
+     "n": 131
     },
     {
      "label": "65 and over",
-     "value": 75.0,
+     "value": 74.96,
      "n": 70
     }
    ]
@@ -590,27 +590,27 @@
    "label": "Kentucky",
    "abbr": "KY",
    "slug": "kentucky",
-   "value": 78.54,
-   "n": 530,
+   "value": 78.33,
+   "n": 521,
    "by": [
     {
      "label": "18 to 24",
-     "value": 84.43,
-     "n": 50
+     "value": 84.23,
+     "n": 49
     },
     {
      "label": "25 to 44",
-     "value": 73.8,
-     "n": 219
+     "value": 73.64,
+     "n": 214
     },
     {
      "label": "45 to 64",
-     "value": 79.61,
-     "n": 165
+     "value": 79.27,
+     "n": 162
     },
     {
      "label": "65 and over",
-     "value": 80.84,
+     "value": 80.77,
      "n": 96
     }
    ]
@@ -620,27 +620,27 @@
    "label": "Louisiana",
    "abbr": "LA",
    "slug": "louisiana",
-   "value": 81.43,
-   "n": 538,
+   "value": 81.3,
+   "n": 528,
    "by": [
     {
      "label": "18 to 24",
-     "value": 86.24,
-     "n": 53
+     "value": 86.03,
+     "n": 52
     },
     {
      "label": "25 to 44",
-     "value": 76.77,
-     "n": 236
+     "value": 76.53,
+     "n": 228
     },
     {
      "label": "45 to 64",
-     "value": 77.61,
-     "n": 195
+     "value": 77.57,
+     "n": 194
     },
     {
      "label": "65 and over",
-     "value": 91.78,
+     "value": 91.68,
      "n": 54
     }
    ]
@@ -650,27 +650,27 @@
    "label": "Maine",
    "abbr": "ME",
    "slug": "maine",
-   "value": 78.47,
-   "n": 387,
+   "value": 78.98,
+   "n": 381,
    "by": [
     {
      "label": "18 to 24",
-     "value": 90.34,
+     "value": 90.3,
      "n": 24
     },
     {
      "label": "25 to 44",
-     "value": 72.86,
-     "n": 135
+     "value": 74.89,
+     "n": 130
     },
     {
      "label": "45 to 64",
-     "value": 77.96,
-     "n": 156
+     "value": 77.79,
+     "n": 155
     },
     {
      "label": "65 and over",
-     "value": 80.72,
+     "value": 80.56,
      "n": 72
     }
    ]
@@ -680,28 +680,28 @@
    "label": "Maryland",
    "abbr": "MD",
    "slug": "maryland",
-   "value": 80.04,
-   "n": 549,
+   "value": 80.39,
+   "n": 539,
    "by": [
     {
      "label": "18 to 24",
-     "value": 77.56,
-     "n": 47
+     "value": 80.08,
+     "n": 46
     },
     {
      "label": "25 to 44",
-     "value": 79.6,
-     "n": 240
+     "value": 80.16,
+     "n": 234
     },
     {
      "label": "45 to 64",
-     "value": 78.28,
-     "n": 166
+     "value": 77.98,
+     "n": 164
     },
     {
      "label": "65 and over",
-     "value": 84.76,
-     "n": 96
+     "value": 84.65,
+     "n": 95
     }
    ]
   },
@@ -710,28 +710,28 @@
    "label": "Massachusetts",
    "abbr": "MA",
    "slug": "massachusetts",
-   "value": 79.8,
-   "n": 467,
+   "value": 80.07,
+   "n": 461,
    "by": [
     {
      "label": "18 to 24",
-     "value": 92.12,
+     "value": 92.1,
      "n": 31
     },
     {
      "label": "25 to 44",
-     "value": 70.67,
-     "n": 170
+     "value": 71.56,
+     "n": 165
     },
     {
      "label": "45 to 64",
-     "value": 79.31,
+     "value": 79.33,
      "n": 165
     },
     {
      "label": "65 and over",
-     "value": 86.8,
-     "n": 101
+     "value": 86.78,
+     "n": 100
     }
    ]
   },
@@ -740,27 +740,27 @@
    "label": "Michigan",
    "abbr": "MI",
    "slug": "michigan",
-   "value": 80.86,
-   "n": 915,
+   "value": 80.97,
+   "n": 905,
    "by": [
     {
      "label": "18 to 24",
-     "value": 84.51,
-     "n": 75
+     "value": 83.99,
+     "n": 73
     },
     {
      "label": "25 to 44",
-     "value": 73.42,
-     "n": 348
+     "value": 73.54,
+     "n": 340
     },
     {
      "label": "45 to 64",
-     "value": 79.3,
+     "value": 79.28,
      "n": 320
     },
     {
      "label": "65 and over",
-     "value": 91.0,
+     "value": 91.54,
      "n": 172
     }
    ]
@@ -770,27 +770,27 @@
    "label": "Minnesota",
    "abbr": "MN",
    "slug": "minnesota",
-   "value": 80.76,
-   "n": 457,
+   "value": 80.83,
+   "n": 455,
    "by": [
     {
      "label": "18 to 24",
-     "value": 86.98,
+     "value": 87.4,
      "n": 28
     },
     {
      "label": "25 to 44",
-     "value": 74.27,
-     "n": 175
+     "value": 74.16,
+     "n": 174
     },
     {
      "label": "45 to 64",
-     "value": 82.55,
-     "n": 152
+     "value": 82.67,
+     "n": 151
     },
     {
      "label": "65 and over",
-     "value": 84.67,
+     "value": 84.75,
      "n": 102
     }
    ]
@@ -800,28 +800,28 @@
    "label": "Mississippi",
    "abbr": "MS",
    "slug": "mississippi",
-   "value": 84.28,
-   "n": 530,
+   "value": 85.32,
+   "n": 514,
    "by": [
     {
      "label": "18 to 24",
-     "value": 81.01,
-     "n": 47
+     "value": 82.79,
+     "n": 46
     },
     {
      "label": "25 to 44",
-     "value": 83.8,
-     "n": 222
+     "value": 84.88,
+     "n": 214
     },
     {
      "label": "45 to 64",
-     "value": 85.17,
-     "n": 198
+     "value": 86.7,
+     "n": 192
     },
     {
      "label": "65 and over",
-     "value": 85.57,
-     "n": 63
+     "value": 85.37,
+     "n": 62
     }
    ]
   },
@@ -830,8 +830,8 @@
    "label": "Missouri",
    "abbr": "MO",
    "slug": "missouri",
-   "value": 76.81,
-   "n": 609,
+   "value": 76.78,
+   "n": 607,
    "by": [
     {
      "label": "18 to 24",
@@ -840,17 +840,17 @@
     },
     {
      "label": "25 to 44",
-     "value": 76.43,
-     "n": 239
+     "value": 76.48,
+     "n": 238
     },
     {
      "label": "45 to 64",
-     "value": 72.91,
-     "n": 195
+     "value": 72.78,
+     "n": 194
     },
     {
      "label": "65 and over",
-     "value": 79.82,
+     "value": 79.8,
      "n": 130
     }
    ]
@@ -860,27 +860,27 @@
    "label": "Montana",
    "abbr": "MT",
    "slug": "montana",
-   "value": 77.85,
-   "n": 279,
+   "value": 78.2,
+   "n": 284,
    "by": [
     {
      "label": "18 to 24",
-     "value": 67.09,
-     "n": 26
+     "value": 68.38,
+     "n": 25
     },
     {
      "label": "25 to 44",
-     "value": 85.59,
-     "n": 117
+     "value": 85.24,
+     "n": 121
     },
     {
      "label": "45 to 64",
-     "value": 67.95,
-     "n": 96
+     "value": 68.72,
+     "n": 98
     },
     {
      "label": "65 and over",
-     "value": 85.2,
+     "value": 85.3,
      "n": 40
     }
    ]
@@ -890,28 +890,28 @@
    "label": "Nebraska",
    "abbr": "NE",
    "slug": "nebraska",
-   "value": 71.46,
-   "n": 451,
+   "value": 72.7,
+   "n": 445,
    "by": [
     {
      "label": "18 to 24",
-     "value": 68.54,
+     "value": 75.57,
      "n": 23
     },
     {
      "label": "25 to 44",
-     "value": 65.78,
-     "n": 191
+     "value": 66.65,
+     "n": 185
     },
     {
      "label": "45 to 64",
-     "value": 73.64,
-     "n": 165
+     "value": 73.34,
+     "n": 164
     },
     {
      "label": "65 and over",
-     "value": 78.9,
-     "n": 72
+     "value": 79.19,
+     "n": 73
     }
    ]
   },
@@ -920,28 +920,28 @@
    "label": "Nevada",
    "abbr": "NV",
    "slug": "nevada",
-   "value": 78.16,
-   "n": 469,
+   "value": 78.1,
+   "n": 465,
    "by": [
     {
      "label": "18 to 24",
-     "value": 78.0,
-     "n": 35
+     "value": 77.07,
+     "n": 34
     },
     {
      "label": "25 to 44",
-     "value": 76.45,
-     "n": 172
+     "value": 76.63,
+     "n": 171
     },
     {
      "label": "45 to 64",
-     "value": 78.37,
-     "n": 167
+     "value": 78.3,
+     "n": 166
     },
     {
      "label": "65 and over",
-     "value": 80.6,
-     "n": 95
+     "value": 80.61,
+     "n": 94
     }
    ]
   },
@@ -950,28 +950,28 @@
    "label": "New Hampshire",
    "abbr": "NH",
    "slug": "new-hampshire",
-   "value": 79.45,
-   "n": 315,
+   "value": 80.28,
+   "n": 317,
    "by": [
     {
      "label": "18 to 24",
-     "value": 90.14,
-     "n": 25
+     "value": 93.45,
+     "n": 24
     },
     {
      "label": "25 to 44",
-     "value": 73.63,
-     "n": 101
+     "value": 74.83,
+     "n": 102
     },
     {
      "label": "45 to 64",
-     "value": 78.91,
-     "n": 122
+     "value": 79.06,
+     "n": 123
     },
     {
      "label": "65 and over",
-     "value": 82.38,
-     "n": 67
+     "value": 82.58,
+     "n": 68
     }
    ]
   },
@@ -980,28 +980,28 @@
    "label": "New Jersey",
    "abbr": "NJ",
    "slug": "new-jersey",
-   "value": 79.99,
-   "n": 447,
+   "value": 80.3,
+   "n": 438,
    "by": [
     {
      "label": "18 to 24",
-     "value": 84.68,
-     "n": 30
+     "value": 84.37,
+     "n": 28
     },
     {
      "label": "25 to 44",
-     "value": 78.95,
-     "n": 158
+     "value": 80.28,
+     "n": 154
     },
     {
      "label": "45 to 64",
-     "value": 78.46,
-     "n": 141
+     "value": 78.26,
+     "n": 140
     },
     {
      "label": "65 and over",
-     "value": 81.74,
-     "n": 118
+     "value": 81.67,
+     "n": 116
     }
    ]
   },
@@ -1010,28 +1010,28 @@
    "label": "New Mexico",
    "abbr": "NM",
    "slug": "new-mexico",
-   "value": 79.41,
-   "n": 389,
+   "value": 80.44,
+   "n": 385,
    "by": [
     {
      "label": "18 to 24",
-     "value": 85.66,
+     "value": 85.8,
      "n": 28
     },
     {
      "label": "25 to 44",
-     "value": 72.84,
-     "n": 148
+     "value": 73.55,
+     "n": 146
     },
     {
      "label": "45 to 64",
-     "value": 71.31,
-     "n": 141
+     "value": 72.6,
+     "n": 140
     },
     {
      "label": "65 and over",
-     "value": 93.52,
-     "n": 72
+     "value": 95.04,
+     "n": 71
     }
    ]
   },
@@ -1040,28 +1040,28 @@
    "label": "New York",
    "abbr": "NY",
    "slug": "new-york",
-   "value": 78.5,
-   "n": 1055,
+   "value": 78.99,
+   "n": 1030,
    "by": [
     {
      "label": "18 to 24",
-     "value": 81.94,
-     "n": 113
+     "value": 84.1,
+     "n": 110
     },
     {
      "label": "25 to 44",
-     "value": 76.99,
-     "n": 516
+     "value": 77.6,
+     "n": 502
     },
     {
      "label": "45 to 64",
-     "value": 73.41,
-     "n": 285
+     "value": 73.73,
+     "n": 278
     },
     {
      "label": "65 and over",
-     "value": 86.41,
-     "n": 141
+     "value": 86.19,
+     "n": 140
     }
    ]
   },
@@ -1070,28 +1070,28 @@
    "label": "North Carolina",
    "abbr": "NC",
    "slug": "north-carolina",
-   "value": 79.14,
-   "n": 789,
+   "value": 79.96,
+   "n": 773,
    "by": [
     {
      "label": "18 to 24",
-     "value": 84.82,
-     "n": 100
+     "value": 87.58,
+     "n": 98
     },
     {
      "label": "25 to 44",
-     "value": 77.39,
-     "n": 307
+     "value": 77.59,
+     "n": 296
     },
     {
      "label": "45 to 64",
-     "value": 78.01,
-     "n": 256
+     "value": 78.99,
+     "n": 255
     },
     {
      "label": "65 and over",
-     "value": 80.19,
-     "n": 126
+     "value": 80.62,
+     "n": 124
     }
    ]
   },
@@ -1100,27 +1100,27 @@
    "label": "North Dakota",
    "abbr": "ND",
    "slug": "north-dakota",
-   "value": 68.91,
-   "n": 263,
+   "value": 69.27,
+   "n": 269,
    "by": [
     {
      "label": "18 to 24",
-     "value": 64.51,
+     "value": 64.86,
      "n": 23
     },
     {
      "label": "25 to 44",
-     "value": 70.65,
-     "n": 118
+     "value": 70.37,
+     "n": 122
     },
     {
      "label": "45 to 64",
-     "value": 64.05,
-     "n": 96
+     "value": 65.36,
+     "n": 98
     },
     {
      "label": "65 and over",
-     "value": 75.49,
+     "value": 75.67,
      "n": 26
     }
    ]
@@ -1130,27 +1130,27 @@
    "label": "Ohio",
    "abbr": "OH",
    "slug": "ohio",
-   "value": 75.28,
-   "n": 888,
+   "value": 75.79,
+   "n": 876,
    "by": [
     {
      "label": "18 to 24",
-     "value": 82.21,
-     "n": 78
+     "value": 82.66,
+     "n": 75
     },
     {
      "label": "25 to 44",
-     "value": 75.42,
-     "n": 324
+     "value": 76.13,
+     "n": 320
     },
     {
      "label": "45 to 64",
-     "value": 72.71,
-     "n": 334
+     "value": 73.46,
+     "n": 329
     },
     {
      "label": "65 and over",
-     "value": 75.19,
+     "value": 75.13,
      "n": 152
     }
    ]
@@ -1160,28 +1160,28 @@
    "label": "Oklahoma",
    "abbr": "OK",
    "slug": "oklahoma",
-   "value": 75.85,
+   "value": 75.81,
    "n": 462,
    "by": [
     {
      "label": "18 to 24",
-     "value": 94.53,
+     "value": 94.49,
      "n": 35
     },
     {
      "label": "25 to 44",
-     "value": 69.76,
-     "n": 177
+     "value": 69.94,
+     "n": 176
     },
     {
      "label": "45 to 64",
-     "value": 68.98,
-     "n": 162
+     "value": 68.58,
+     "n": 164
     },
     {
      "label": "65 and over",
-     "value": 84.92,
-     "n": 88
+     "value": 84.93,
+     "n": 87
     }
    ]
   },
@@ -1190,28 +1190,28 @@
    "label": "Oregon",
    "abbr": "OR",
    "slug": "oregon",
-   "value": 78.17,
-   "n": 452,
+   "value": 78.29,
+   "n": 449,
    "by": [
     {
      "label": "18 to 24",
-     "value": 80.71,
+     "value": 80.66,
      "n": 35
     },
     {
      "label": "25 to 44",
-     "value": 70.21,
-     "n": 191
+     "value": 70.69,
+     "n": 189
     },
     {
      "label": "45 to 64",
-     "value": 80.56,
+     "value": 80.64,
      "n": 144
     },
     {
      "label": "65 and over",
-     "value": 84.84,
-     "n": 82
+     "value": 84.57,
+     "n": 81
     }
    ]
   },
@@ -1220,27 +1220,27 @@
    "label": "Pennsylvania",
    "abbr": "PA",
    "slug": "pennsylvania",
-   "value": 78.17,
-   "n": 771,
+   "value": 78.65,
+   "n": 765,
    "by": [
     {
      "label": "18 to 24",
-     "value": 80.29,
-     "n": 67
+     "value": 82.31,
+     "n": 64
     },
     {
      "label": "25 to 44",
-     "value": 75.45,
-     "n": 254
+     "value": 75.84,
+     "n": 252
     },
     {
      "label": "45 to 64",
-     "value": 77.58,
-     "n": 276
+     "value": 78.02,
+     "n": 275
     },
     {
      "label": "65 and over",
-     "value": 81.53,
+     "value": 81.47,
      "n": 174
     }
    ]
@@ -1250,28 +1250,28 @@
    "label": "Rhode Island",
    "abbr": "RI",
    "slug": "rhode-island",
-   "value": 78.19,
+   "value": 78.66,
    "n": 288,
    "by": [
     {
      "label": "18 to 24",
-     "value": 69.17,
-     "n": 17
+     "value": 72.82,
+     "n": 16
     },
     {
      "label": "25 to 44",
-     "value": 77.08,
+     "value": 76.61,
      "n": 108
     },
     {
      "label": "45 to 64",
-     "value": 77.12,
+     "value": 77.44,
      "n": 109
     },
     {
      "label": "65 and over",
-     "value": 85.34,
-     "n": 54
+     "value": 85.6,
+     "n": 55
     }
    ]
   },
@@ -1280,27 +1280,27 @@
    "label": "South Carolina",
    "abbr": "SC",
    "slug": "south-carolina",
-   "value": 82.01,
-   "n": 534,
+   "value": 82.34,
+   "n": 527,
    "by": [
     {
      "label": "18 to 24",
-     "value": 88.55,
-     "n": 48
+     "value": 88.32,
+     "n": 47
     },
     {
      "label": "25 to 44",
-     "value": 77.94,
-     "n": 194
+     "value": 79.56,
+     "n": 192
     },
     {
      "label": "45 to 64",
-     "value": 80.68,
-     "n": 180
+     "value": 80.08,
+     "n": 176
     },
     {
      "label": "65 and over",
-     "value": 86.17,
+     "value": 86.24,
      "n": 112
     }
    ]
@@ -1310,27 +1310,27 @@
    "label": "South Dakota",
    "abbr": "SD",
    "slug": "south-dakota",
-   "value": 72.73,
-   "n": 289,
+   "value": 73.16,
+   "n": 285,
    "by": [
     {
      "label": "18 to 24",
-     "value": 46.6,
-     "n": 30
+     "value": 48.07,
+     "n": 29
     },
     {
      "label": "25 to 44",
-     "value": 73.05,
-     "n": 131
+     "value": 73.99,
+     "n": 129
     },
     {
      "label": "45 to 64",
-     "value": 72.79,
-     "n": 84
+     "value": 72.63,
+     "n": 83
     },
     {
      "label": "65 and over",
-     "value": 84.7,
+     "value": 84.68,
      "n": 44
     }
    ]
@@ -1340,27 +1340,27 @@
    "label": "Tennessee",
    "abbr": "TN",
    "slug": "tennessee",
-   "value": 80.56,
-   "n": 569,
+   "value": 80.41,
+   "n": 560,
    "by": [
     {
      "label": "18 to 24",
-     "value": 88.8,
+     "value": 88.92,
      "n": 47
     },
     {
      "label": "25 to 44",
-     "value": 78.08,
-     "n": 212
+     "value": 77.59,
+     "n": 206
     },
     {
      "label": "45 to 64",
-     "value": 77.34,
-     "n": 208
+     "value": 77.4,
+     "n": 205
     },
     {
      "label": "65 and over",
-     "value": 85.03,
+     "value": 84.94,
      "n": 102
     }
    ]
@@ -1370,28 +1370,28 @@
    "label": "Texas",
    "abbr": "TX",
    "slug": "texas",
-   "value": 77.37,
-   "n": 1387,
+   "value": 77.58,
+   "n": 1355,
    "by": [
     {
      "label": "18 to 24",
-     "value": 81.28,
-     "n": 175
+     "value": 81.76,
+     "n": 174
     },
     {
      "label": "25 to 44",
-     "value": 73.92,
-     "n": 561
+     "value": 74.09,
+     "n": 545
     },
     {
      "label": "45 to 64",
-     "value": 76.58,
-     "n": 476
+     "value": 76.65,
+     "n": 463
     },
     {
      "label": "65 and over",
-     "value": 83.24,
-     "n": 175
+     "value": 83.57,
+     "n": 173
     }
    ]
   },
@@ -1400,27 +1400,27 @@
    "label": "Utah",
    "abbr": "UT",
    "slug": "utah",
-   "value": 78.18,
-   "n": 415,
+   "value": 78.37,
+   "n": 414,
    "by": [
     {
      "label": "18 to 24",
-     "value": 91.49,
-     "n": 38
+     "value": 91.89,
+     "n": 39
     },
     {
      "label": "25 to 44",
-     "value": 71.7,
-     "n": 204
+     "value": 71.98,
+     "n": 201
     },
     {
      "label": "45 to 64",
-     "value": 77.02,
-     "n": 120
+     "value": 77.3,
+     "n": 121
     },
     {
      "label": "65 and over",
-     "value": 81.81,
+     "value": 81.46,
      "n": 53
     }
    ]
@@ -1430,27 +1430,27 @@
    "label": "Vermont",
    "abbr": "VT",
    "slug": "vermont",
-   "value": 79.71,
-   "n": 242,
+   "value": 79.93,
+   "n": 246,
    "by": [
     {
      "label": "18 to 24",
-     "value": 65.1,
+     "value": 66.57,
      "n": 18
     },
     {
      "label": "25 to 44",
-     "value": 80.66,
+     "value": 80.16,
      "n": 113
     },
     {
      "label": "45 to 64",
-     "value": 76.81,
-     "n": 65
+     "value": 77.54,
+     "n": 69
     },
     {
      "label": "65 and over",
-     "value": 88.54,
+     "value": 88.48,
      "n": 46
     }
    ]
@@ -1460,27 +1460,27 @@
    "label": "Virginia",
    "abbr": "VA",
    "slug": "virginia",
-   "value": 83.77,
-   "n": 545,
+   "value": 83.89,
+   "n": 527,
    "by": [
     {
      "label": "18 to 24",
-     "value": 86.49,
-     "n": 54
+     "value": 86.12,
+     "n": 50
     },
     {
      "label": "25 to 44",
-     "value": 82.46,
-     "n": 206
+     "value": 82.91,
+     "n": 197
     },
     {
      "label": "45 to 64",
-     "value": 82.27,
-     "n": 182
+     "value": 82.24,
+     "n": 177
     },
     {
      "label": "65 and over",
-     "value": 86.46,
+     "value": 86.58,
      "n": 103
     }
    ]
@@ -1490,28 +1490,28 @@
    "label": "Washington",
    "abbr": "WA",
    "slug": "washington",
-   "value": 78.21,
-   "n": 528,
+   "value": 78.54,
+   "n": 522,
    "by": [
     {
      "label": "18 to 24",
-     "value": 89.76,
-     "n": 40
+     "value": 91.96,
+     "n": 39
     },
     {
      "label": "25 to 44",
-     "value": 70.02,
-     "n": 245
+     "value": 70.36,
+     "n": 241
     },
     {
      "label": "45 to 64",
-     "value": 76.94,
+     "value": 76.98,
      "n": 157
     },
     {
      "label": "65 and over",
-     "value": 88.31,
-     "n": 86
+     "value": 88.08,
+     "n": 85
     }
    ]
   },
@@ -1520,27 +1520,27 @@
    "label": "West Virginia",
    "abbr": "WV",
    "slug": "west-virginia",
-   "value": 77.82,
-   "n": 413,
+   "value": 78.2,
+   "n": 405,
    "by": [
     {
      "label": "18 to 24",
-     "value": 64.83,
-     "n": 25
+     "value": 62.66,
+     "n": 24
     },
     {
      "label": "25 to 44",
-     "value": 70.51,
-     "n": 157
+     "value": 72.5,
+     "n": 153
     },
     {
      "label": "45 to 64",
-     "value": 82.57,
-     "n": 175
+     "value": 82.56,
+     "n": 172
     },
     {
      "label": "65 and over",
-     "value": 85.57,
+     "value": 85.75,
      "n": 56
     }
    ]
@@ -1555,22 +1555,22 @@
    "by": [
     {
      "label": "18 to 24",
-     "value": 83.58,
-     "n": 43
+     "value": 82.87,
+     "n": 42
     },
     {
      "label": "25 to 44",
-     "value": 77.66,
-     "n": 135
+     "value": 78.8,
+     "n": 132
     },
     {
      "label": "45 to 64",
-     "value": 72.64,
-     "n": 151
+     "value": 71.82,
+     "n": 155
     },
     {
      "label": "65 and over",
-     "value": 77.35,
+     "value": 77.4,
      "n": 107
     }
    ]
@@ -1580,27 +1580,27 @@
    "label": "Wyoming",
    "abbr": "WY",
    "slug": "wyoming",
-   "value": 78.1,
-   "n": 241,
+   "value": 76.91,
+   "n": 240,
    "by": [
     {
      "label": "18 to 24",
-     "value": 89.0,
+     "value": 88.81,
      "n": 19
     },
     {
      "label": "25 to 44",
-     "value": 66.9,
-     "n": 109
+     "value": 65.84,
+     "n": 108
     },
     {
      "label": "45 to 64",
-     "value": 75.32,
+     "value": 72.52,
      "n": 84
     },
     {
      "label": "65 and over",
-     "value": 90.45,
+     "value": 90.24,
      "n": 29
     }
    ]

@@ -21,7 +21,7 @@ from pathlib import Path
 
 TOOLS = Path(__file__).resolve().parent
 OUT = TOOLS.parent / "docs" / "demo" / "chart-kit"
-WAVE = {"w39": {"wave": "Wave 39", "fielded": "Oct 1 to Nov 2, 2026", "pulled": "Nov 3, 2026"}}
+WAVE = {"w39": {"wave": "Wave 39", "fielded": "Oct 1 to Nov 3, 2026", "pulled": "Nov 10, 2026"}}
 
 
 def load(path):

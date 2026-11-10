@@ -13,9 +13,9 @@
   ]
  },
  "wave": "Wave 39",
- "fielded": "Oct 1 to Nov 2, 2026",
+ "fielded": "Oct 1 to Nov 3, 2026",
  "moe": "95% margins, worked out as in the Work report's Table 8: 1.96 × √(p(1 − p) / n) on the unweighted n. They leave out the effect of weighting, so true margins are somewhat wider; the MCP doesn't serve its own yet (#273). States rest on {nLo} to {nHi} respondents each, an age group within a state on as few as {cellMin}. Groups under 100 are starred: interpret with caution.",
- "pulled": "Nov 3, 2026",
+ "pulled": "Nov 10, 2026",
  "weight": {
   "us": "weight_vote: demographics plus presidential vote and turnout",
   "state": "weight_vote_state: demographics plus vote and turnout, calibrated within each state"
@@ -28,13 +28,13 @@
   "noun": "thermometers",
   "item": "Thermometer",
   "base": "adults",
-  "note": "Wave 39 from the survey team's cleaned release of Nov. 3, 2026, which may still change before the final file. Not for publication. Above 50 means 51 to 100: a rating of exactly 50, the scale's midpoint, is not counted. Every adult was shown each thermometer; those who skipped one (2.6% to 7.1% nationally, up to 17% in a state) are left out of its share.",
+  "note": "Wave 39 from the survey team's final release of Nov. 6, 2026. Not for publication. Above 50 means 51 to 100: a rating of exactly 50, the scale's midpoint, is not counted. Every adult was shown each thermometer; those who skipped one (2.5% to 7.1% nationally, up to 17% in a state) are left out of its share.",
   "across": {
    "us_title": "Whom U.S. adults rate above 50",
    "state_title": "{place} across {count} thermometers",
    "subtitle": "Share of {place} adults who rate each above 50 on the 0-to-100 thermometer, fall 2026"
   },
-  "note_label": "Preliminary",
+  "note_label": "Not for publication",
   "context": "context-w39"
  },
  "template": {
@@ -104,7 +104,7 @@
   },
   {
    "id": "therm-democratic-socialists-w39",
-   "column": "therm_democratic_socialists",
+   "column": "therm_dem_socialists",
    "label": "Democratic socialists",
    "phrase": "democratic socialists",
    "raw": {
@@ -114,10 +114,10 @@
    },
    "wording": "How would you rate each of the following groups on the feeling thermometer? — Democratic socialists (0 to 100; shown here: above 50)",
    "provenance": [
-    "create_recoded_variable(name=\"therm_warm_democratic_socialists\", source_column=\"therm_democratic_socialists\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_democratic_socialists__da66d7f3b73f",
-    "generate_crosstab(platform=\"therm_warm_democratic_socialists__da66d7f3b73f\", demographic=\"age_cat_4\", data_source=\"w39\")",
-    "generate_crosstab(platform=\"therm_warm_democratic_socialists__da66d7f3b73f\", demographic=\"state\", data_source=\"w39\")",
-    "generate_crosstab_multi(variable=\"therm_warm_democratic_socialists__da66d7f3b73f\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
+    "create_recoded_variable(name=\"therm_warm_democratic_socialists\", source_column=\"therm_dem_socialists\", mapping 0–50 → 0, 51–100 → 1, binary=true) → therm_warm_dem_socialists__b4d76376cae6",
+    "generate_crosstab(platform=\"therm_warm_dem_socialists__b4d76376cae6\", demographic=\"age_cat_4\", data_source=\"w39\")",
+    "generate_crosstab(platform=\"therm_warm_dem_socialists__b4d76376cae6\", demographic=\"state\", data_source=\"w39\")",
+    "generate_crosstab_multi(variable=\"therm_warm_dem_socialists__b4d76376cae6\", demographics=[\"state\", \"age_cat_4\"], data_source=\"w39\"); U.S. totals summed from these cells"
    ]
   },
   {
