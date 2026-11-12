@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<!--
+  CHIP50 MCP status update, November 2026: a slide deck in one file. It updates
+  the October deck in ../status-update-oct-2026/, which stays as presented.
+
+  Each <section class="slide"> is one slide on a 1920x1080 canvas that the
+  script at the bottom scales to the window. Arrow keys, space or a swipe
+  move between slides; #N in the URL opens slide N; printing to PDF gives one
+  page per slide. Images are in img/. Icons are inline SVG from Lucide
+  (lucide.dev, ISC license). The password gate is copied from ../../index.html,
+  so the same password works on both.
+-->
+<script>
+(function(){
+  const HASH='808488bd49a9971556eefb6aeafde6f5b3f5434205fa3670b72362dafc6aee43';
+  if(sessionStorage.getItem('ts_auth')===HASH)return;
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.style.overflow='hidden';
+    var g=document.createElement('div');
+    g.id='ts-gate';
+    g.innerHTML=`
+<div id="ts-gate-box">
+  <div id="ts-gate-brand">
+    <svg width="28" height="28" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="5" cy="5" r="2.2" fill="#2DC4B6"/>
+      <circle cx="25" cy="8" r="1.6" fill="#EDAA1B"/>
+      <circle cx="15" cy="25" r="2" fill="#2DC4B6"/>
+      <circle cx="23" cy="21" r="1.3" fill="#BF4E2C"/>
+      <line x1="5" y1="5" x2="25" y2="8" stroke="#2DC4B6" stroke-width="0.7" stroke-opacity="0.5"/>
+      <line x1="25" y1="8" x2="23" y2="21" stroke="#192E4A" stroke-width="0.7"/>
+      <line x1="23" y1="21" x2="15" y2="25" stroke="#2DC4B6" stroke-width="0.7" stroke-opacity="0.5"/>
+      <line x1="5" y1="5" x2="15" y2="25" stroke="#192E4A" stroke-width="0.5" stroke-dasharray="2,2"/>
+    </svg>
+    <div>
+      <div id="ts-gate-l1">Tech &amp;</div>
+      <div id="ts-gate-l2">Society</div>
+    </div>
+  </div>
+  <p id="ts-gate-sub">Enter password to continue</p>
+  <input id="ts-gate-input" type="password" placeholder="Password" autocomplete="current-password">
+  <button id="ts-gate-btn">Continue</button>
+  <div id="ts-gate-err"></div>
+</div>`;
+    document.body.prepend(g);
+    function attempt(){
+      var val=document.getElementById('ts-gate-input').value;
+      crypto.subtle.digest('SHA-256',new TextEncoder().encode(val)).then(function(buf){
+        var hex=Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+        if(hex===HASH){
+          sessionStorage.setItem('ts_auth',HASH);
+          document.getElementById('ts-gate').remove();
+          document.body.style.overflow='';
+        }else{
+          var e=document.getElementById('ts-gate-err');
+          e.textContent='Incorrect password.';
+          document.getElementById('ts-gate-input').value='';
+          document.getElementById('ts-gate-input').focus();
+        }
+      });
+    }
+    document.getElementById('ts-gate-btn').addEventListener('click',attempt);
+    document.getElementById('ts-gate-input').addEventListener('keydown',function(e){if(e.key==='Enter')attempt();});
+    setTimeout(function(){document.getElementById('ts-gate-input').focus();},60);
+  });
+})();
+</script>
+<style>
+#ts-gate{
+  position:fixed;inset:0;z-index:9999;
+  background:#091525;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Inter',system-ui,sans-serif;
+}
+#ts-gate-box{
+  width:100%;max-width:340px;
+  padding:44px 44px 40px;
+  background:#0C1D35;
+  border:1px solid #192E4A;
+  border-top:2px solid #2DC4B6;
+  text-align:center;
+}
+#ts-gate-brand{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  margin-bottom:28px;
+}
+#ts-gate-l1{
+  font-family:'Inter Tight',system-ui,sans-serif;
+  font-size:13px;font-weight:500;
+  letter-spacing:0.24em;text-transform:uppercase;
+  color:#8CA0B8;text-align:left;
+}
+#ts-gate-l2{
+  font-family:'Inter Tight',system-ui,sans-serif;
+  font-size:14px;font-weight:700;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:#2DC4B6;text-align:left;
+}
+#ts-gate-sub{
+  font-size:14.5px;color:#8CA0B8;
+  margin-bottom:22px;letter-spacing:0.01em;
+}
+#ts-gate-input{
+  width:100%;padding:10px 14px;
+  background:#091525;
+  border:1px solid #192E4A;
+  color:#EDE8D9;
+  font-family:inherit;font-size:16px;
+  outline:none;
+  margin-bottom:10px;
+  transition:border-color 0.15s;
+}
+#ts-gate-input:focus{border-color:#2DC4B6;}
+#ts-gate-input::placeholder{color:#4A607A;}
+#ts-gate-btn{
+  width:100%;padding:10px;
+  background:transparent;
+  border:1px solid #1A7A73;
+  color:#2DC4B6;
+  font-family:'Inter Tight',system-ui,sans-serif;
+  font-size:13.5px;font-weight:600;
+  letter-spacing:0.12em;text-transform:uppercase;
+  cursor:pointer;
+  transition:all 0.18s;
+}
+#ts-gate-btn:hover{background:rgba(45,196,182,0.1);border-color:#2DC4B6;}
+#ts-gate-err{
+  margin-top:10px;font-size:13.5px;
+  color:#BF4E2C;min-height:18px;
+  letter-spacing:0.02em;
+}
+</style>
+<title>The CHIP50 MCP, July to November 2026</title>
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=Lora:wght@500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0A1729; --navy-2: #13233D; --cream: #F0E9D8; --paper: #FBF7EE;
+  --teal: #2BBCC4; --teal-ink: #13666C; --amber: #FFB84D; --coral: #E07856; --blue: #85B7EB; --green: #97C459;
+  --ink: #33415A; --muted: #5A6678; --mist: #BFD0DC;
+  --serif: 'Lora', Georgia, serif;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #050C17; font-family: var(--sans); }
+h1, h2, h3, p, ul { margin: 0; }
+h1, h2, h3 { text-wrap: balance; }
+a { color: var(--teal-ink); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.dark a { color: var(--teal); }
+
+/* A fixed 1920x1080 canvas, scaled to fit the window by the script below. */
+.deck { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px;
+        transform: translate(-50%, -50%) scale(var(--scale, 0.5)); }
+.slide { position: absolute; inset: 0; padding: 128px; overflow: hidden; visibility: hidden;
+         background: var(--cream); color: var(--navy); }
+.slide.on { visibility: visible; }
+.slide.dark { background: var(--navy); color: var(--cream); }
+.slide.timeline { padding-top: 80px; padding-bottom: 80px; }
+
+h1 { font: 500 128px/1.05 var(--serif); }
+h2 { font: 500 80px/1.1 var(--serif); }
+.lede { font-size: 40px; line-height: 1.4; color: var(--mist); }
+.lede.small { font-size: 28px; line-height: 1.45; }
+.body { font-size: 36px; line-height: 1.45; color: var(--ink); }
+/* July, now and next on each unit slide: a solid rule for what's done, dashed for what's ahead. */
+.stage { font-size: 29px; line-height: 1.45; color: var(--muted); padding-left: 28px;
+         border-left: 6px solid rgba(10, 23, 41, 0.14); }
+.stage b { color: var(--navy); font-weight: 600; }
+.stage.now { color: var(--ink); border-left-color: var(--accent); }
+.stage.ahead { color: var(--ink); border-left-style: dashed; border-left-color: var(--accent); }
+.stage.pull { font: 500 34px/1.35 var(--serif); color: var(--navy); }
+.stage.pull b { font-family: var(--sans); font-size: 29px; }
+.refs { font-size: 26px; color: var(--muted); }
+.refs a { color: inherit; }
+
+.jul { --accent: var(--teal); } .aug { --accent: var(--amber); }
+.sep { --accent: var(--coral); } .oct { --accent: var(--blue); }
+.nov { --accent: var(--green); }
+
+.cover { display: flex; flex-direction: column; justify-content: flex-end; }
+.cover .constellation { position: absolute; left: 1192px; top: 128px; width: 600px; height: 600px; }
+.cover-text { width: 1100px; display: flex; flex-direction: column; gap: 32px; }
+.byline { font-size: 28px; color: var(--mist); }
+
+.split { display: grid; grid-template-columns: 640px 1fr; gap: 96px; align-items: center; }
+.panel { height: 824px; border-radius: 24px; background: var(--navy); overflow: hidden;
+         display: flex; align-items: center; justify-content: center; color: var(--accent); }
+.panel > svg { width: 320px; height: 320px; }
+.split.wide { grid-template-columns: 890px 1fr; gap: 72px; }
+.panel > img { width: 100%; height: 100%; object-fit: cover; object-position: left top; }
+.text { display: flex; flex-direction: column; gap: 32px; }
+
+.servers { width: 100%; padding: 56px; display: flex; flex-direction: column; gap: 32px; }
+.server { background: var(--navy-2); border-left: 8px solid var(--accent); border-radius: 12px;
+          padding: 28px 32px; display: flex; flex-direction: column; gap: 8px; }
+.server h3 { font: 600 44px/1.2 var(--sans); color: var(--cream); }
+.server p { font-size: 26px; color: var(--mist); }
+.server.future { background: none; border: 3px dashed var(--accent); border-left-width: 8px; }
+.server.future h3 { color: var(--mist); }
+
+.docs { display: flex; flex-direction: column; gap: 48px; }
+.docs .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+.docs .cols > div { display: flex; flex-direction: column; gap: 20px; }
+.docs h3 { font: 600 32px/1.2 var(--sans); }
+.docs ul { padding-left: 1.1em; font-size: 28px; line-height: 1.55; color: var(--ink); }
+
+.timeline, .next { display: flex; flex-direction: column; gap: 48px; }
+.timeline { gap: 32px; }
+.title-row { display: flex; justify-content: space-between; align-items: flex-end; }
+.title-row .refs { text-align: right; line-height: 1.4; }
+.months { display: flex; flex-direction: column; gap: 12px; }
+.month { display: grid; grid-template-columns: 420px 1fr; gap: 48px; background: var(--paper);
+         border-left: 10px solid var(--accent); border-radius: 12px; padding: 18px 40px; }
+.month .when { font: 600 24px/1.3 var(--sans); color: var(--muted); margin-bottom: 4px; }
+.month h3 { font: 500 40px/1.15 var(--serif); }
+.month > p { font-size: 28px; line-height: 1.45; color: var(--ink); align-self: center; }
+/* Seven rows on the story slide: tighter rows, and a wider first column so each title stays on one line. */
+#story .months { gap: 8px; }
+#story .month { grid-template-columns: 520px 1fr; padding: 12px 36px; }
+#story .month h3 { font-size: 36px; }
+#story .month > p { font-size: 26px; }
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.card { border-top: 10px solid var(--accent); border-radius: 16px; padding: 36px 40px;
+        display: flex; flex-direction: column; gap: 16px; background: var(--navy-2); }
+.card h3 { font: 500 48px/1.15 var(--serif); }
+.card p { font-size: 30px; line-height: 1.45; color: var(--mist); }
+.cards.three { grid-template-columns: repeat(3, 1fr); }
+.work { display: flex; flex-direction: column; gap: 64px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.stat { background: var(--paper); border-top: 10px solid var(--accent); border-radius: 16px; padding: 32px 40px 40px; }
+.stat .n { font: 500 96px/1.1 var(--serif); color: var(--navy); }
+.stat p:not(.n) { font-size: 30px; line-height: 1.35; color: var(--ink); margin-top: 12px; }
+.next h2 { font-size: 96px; }
+.spacer { flex: 1; }
+
+nav { position: fixed; right: 16px; bottom: 12px; display: flex; gap: 8px; align-items: center;
+      font: 500 14px var(--sans); color: #8CA0B8; }
+nav button { font: inherit; color: inherit; background: rgba(255,255,255,0.06);
+             border: 1px solid #192E4A; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+
+@page { size: 1920px 1080px; margin: 0; }
+@media print {
+  html, body { height: auto; overflow: visible; background: none; }
+  .deck { position: static; transform: none; height: auto; }
+  .slide { position: relative; visibility: visible; width: 1920px; height: 1080px; break-after: page; }
+  nav { display: none; }
+}
+</style>
+</head>
+<body>
+<main class="deck">
+
+<section class="slide dark cover" id="cover" aria-label="Cover">
+  <svg class="constellation" viewBox="0 0 720 720" aria-hidden="true"><g stroke="#2E4466" stroke-width="3"><line x1="360" y1="360" x2="170" y2="190"/><line x1="360" y1="360" x2="560" y2="150"/><line x1="360" y1="360" x2="610" y2="420"/><line x1="360" y1="360" x2="420" y2="610"/><line x1="360" y1="360" x2="130" y2="500"/><line x1="170" y1="190" x2="560" y2="150"/><line x1="610" y1="420" x2="420" y2="610"/><line x1="130" y1="500" x2="420" y2="610"/></g><circle cx="360" cy="360" r="30" fill="#FFB84D"/><circle cx="170" cy="190" r="16" fill="#3DD5CB"/><circle cx="560" cy="150" r="16" fill="#F0997B"/><circle cx="610" cy="420" r="16" fill="#85B7EB"/><circle cx="420" cy="610" r="16" fill="#97C459"/><circle cx="130" cy="500" r="16" fill="#AFA9EC"/></svg>
+  <div class="cover-text">
+    <h1>The CHIP50 MCP</h1>
+    <p class="lede">What we built, fixed, and documented since July</p>
+    <p class="byline">November 2026, prepared by David Eads</p>
+  </div>
+</section>
+<section class="slide timeline" id="story" aria-label="From prototype to early access">
+  <div class="title-row">
+    <h2>From prototype to early access</h2>
+    <p class="refs">Each step set up the next.</p>
+  </div>
+  <div class="months">
+    <div class="month jul">
+      <div><p class="when">Late July</p><h3>Know when it’s wrong</h3></div>
+      <p>Tests now run before every deploy, including checks against published CHIP50 reports. Those checks turned up problems in the data itself.</p>
+    </div>
+    <div class="month aug">
+      <div><p class="when">August</p><h3>Fix the data underneath</h3></div>
+      <p>So we went back to the raw survey files and, with Hong and Katya, planned a sturdier pipeline. With numbers we could check, we could open the MCP to more people.</p>
+    </div>
+    <div class="month sep">
+      <div><p class="when">September</p><h3>Open more doors</h3></div>
+      <p>One codebase now runs a server for each audience, plus a chat in the browser. Wider use showed how easily a model misreads a survey.</p>
+    </div>
+    <div class="month sep">
+      <div><p class="when">September</p><h3>Teach it to read a survey</h3></div>
+      <p>So the server now tells the model how to read the data. It’s a start on what could make the MCP great.</p>
+    </div>
+    <div class="month oct">
+      <div><p class="when">Early October</p><h3>Keep it running</h3></div>
+      <p>Rosters, logging, alerts and a maintenance guide make it ready for early-access users, and for someone new to run.</p>
+    </div>
+    <div class="month oct">
+      <div><p class="when">Late October</p><h3>Make it easy to change</h3></div>
+      <p>The code is now small modules, changes are tried on a staging server first, and the guidance the model reads is text a researcher can edit.</p>
+    </div>
+    <div class="month nov">
+      <div><p class="when">Oct. 26 to Nov. 6</p><h3>Serve the newest wave</h3></div>
+      <p>That let us serve Wave 39 while it was still in the field, and each of the survey team’s later releases the day it arrived.</p>
+    </div>
+  </div>
+</section>
+<section class="slide split jul" id="tests" aria-label="Every deploy is tested">
+  <div class="panel"><img src="img/test-status.jpg" alt="The test-status page on Nov. 12: 2,915 checks passing, 10 expected failures, none failing"></div>
+  <div class="text">
+    <h2>Every deploy is tested</h2>
+    <p class="stage was"><b>In July:</b> The test suite didn’t run, and deploys went out unchecked.</p>
+    <p class="stage now"><b>Now:</b> Every deploy runs 2,927 checks. Some run on live data, against published CHIP50 reports, an independent tabulation of Wave 38.6 and, since this week, the survey team’s Wave 39 release. The results of every run post to the <a href="../../test-status/">test-status page</a>.</p>
+    <p class="stage ahead"><b>Next:</b> Fix the 10 known problems the tests still flag, and check the live servers after each deploy, not just the code and the data.</p>
+  </div>
+</section>
+<section class="slide split aug" id="data" aria-label="Rebuilding the data">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 3 4 8 5-5 5 15H2L8 3z" /><path d="M4.14 15.08c2.62-1.57 5.24-1.43 7.86.42 2.74 1.94 5.49 2 8.23.19" /></svg></div>
+  <div class="text">
+    <h2>Rebuilding the data</h2>
+    <p class="stage was"><b>In July:</b> Import depended on a manual CSV export from someone on the team, labels and wording were typed into the code by hand, and 11 of the 47 waves weren’t in the database at all.</p>
+    <p class="stage now"><b>Now:</b> All 47 raw wave files sit in one bucket, and a new loader rebuilt every wave in a sandbox, labeled from the survey’s own codebook. Wave 39 is the first wave served from Katya’s cleaned data, and the data bugs Lazer and others found are fixed, from wrong labels and wording to the wrong weight on political and state questions.</p>
+    <p class="stage ahead"><b>Next:</b> Katya has posted cleaned data for every wave in a new repository. Once our sync can read it, load those waves the way we loaded Wave 39, and move production onto them.</p>
+  </div>
+</section>
+<section class="slide split nov" id="w39" aria-label="The newest wave, the day it arrives">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /><path d="m9 16 2 2 4-4" /></svg></div>
+  <div class="text">
+    <h2>The newest wave, the day it arrives</h2>
+    <p class="stage was"><b>In July:</b> A new wave reached the server through a manual export, with its labels and wording typed in by hand.</p>
+    <p class="stage now"><b>Now:</b> Wave 39 went live Oct. 26, while it was still in the field. The survey team’s cleaned release (Nov. 3) and final release (Nov. 6) were each served the day they arrived: 28,400 interviews with their own names, labels and wording, embargoed questions withheld, and a note on every question asked of only some respondents.</p>
+    <p class="stage ahead"><b>Next:</b> Each new release the same way, including the GSS replication wave once it has weights.</p>
+  </div>
+</section>
+<section class="slide split sep" id="servers" aria-label="One codebase, as many servers as we need">
+  <div class="panel">
+  <div class="servers">
+    <div class="server">
+      <h3>full</h3>
+      <p>mcp.techandsociety.ai</p>
+    </div>
+    <div class="server">
+      <h3>ai</h3>
+      <p>ai.techandsociety.ai</p>
+    </div>
+    <div class="server">
+      <h3>sentinel</h3>
+      <p>sentinel.techandsociety.ai</p>
+    </div>
+    <div class="server future">
+      <h3>next</h3>
+      <p>specialized servers, a paid tier</p>
+    </div>
+  </div>
+  </div>
+  <div class="text">
+    <h2>One codebase, as many servers as we need</h2>
+    <p class="stage was"><b>In July:</b> The AI survey ran on a separate fork of the code.</p>
+    <p class="stage now"><b>Now:</b> Each server is a profile with its own data, roster and address: today the full panel, the Wave 38.6 AI survey and sentinel. A new server is a profile, not a fork, and each has a staging copy where changes are tried before users see them.</p>
+    <p class="stage ahead"><b>Next:</b> Specialized servers for particular topics or partners, a paid tier, and more, each one a new profile.</p>
+  </div>
+</section>
+<section class="slide split wide sep" id="chat" aria-label="Ask from a browser">
+  <div class="panel"><img src="img/chat.jpg" alt="A chat.techandsociety.ai conversation comparing AI use by managers and other workers in the Wave 38.6 survey"></div>
+  <div class="text">
+    <h2>Ask from a browser</h2>
+    <p class="stage was"><b>In July:</b> The old chat ran in a cloud project we couldn’t administer, and everyone used one shared Google account.</p>
+    <p class="stage now"><b>Now:</b> <a href="https://chat.techandsociety.ai/">chat.techandsociety.ai</a> runs on the project’s own cloud account, and people on the roster sign in as themselves to ask the AI survey questions, no Claude setup needed.</p>
+    <p class="stage ahead"><b>Next:</b> Add the full panel alongside the AI survey, and give each person a spending allowance that fits real use.</p>
+  </div>
+</section>
+<section class="slide split sep" id="expertise" aria-label="Survey expertise">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" /><path d="M22 10v6" /><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" /></svg></div>
+  <div class="text">
+    <h2>Survey expertise</h2>
+    <p class="stage was"><b>In July:</b> The tools returned bare numbers, and the model had to guess what they meant.</p>
+    <p class="stage now"><b>Now:</b> The server tells the model how to read the data, which heads off mistakes we saw models make: averaging “Not sure” into a scale, borrowing a same-named question from another wave, reading a suppressed cell as zero. That guidance is now plain text a researcher can edit without touching code.</p>
+    <p class="stage ahead pull"><b>Next:</b> There’s a lot more to do, and it’s what could make the MCP great: a tool that teaches people how to read a survey, not one that just hands them numbers.</p>
+  </div>
+</section>
+<section class="slide split oct" id="ops" aria-label="Ready for early access">
+  <div class="panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg></div>
+  <div class="text">
+    <h2>Ready for early access</h2>
+    <p class="stage was"><b>In July:</b> Any Google account could get in, nothing recorded who ran what, and how it all ran lived in two people’s heads.</p>
+    <p class="stage now"><b>Now:</b> Each server has its own roster that admins edit without a redeploy, every tool call is logged with who made it, and someone without access is told where to ask. Claude and ChatGPT both connect. A <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md">maintenance guide</a> with runbooks lets someone new run it, and alerts email when a scheduled job fails.</p>
+    <p class="stage ahead"><b>Next:</b> A usage history that outlasts the 30 days the logs keep now.</p>
+  </div>
+</section>
+<section class="slide timeline roadmap" id="roadmap" aria-label="The roadmap, a month on">
+  <div class="title-row">
+    <h2>The roadmap, a month on</h2>
+    <p class="refs">What October’s roadmap said, and where it stands.</p>
+  </div>
+  <div class="months">
+    <div class="month jul">
+      <div><p class="when">Done Oct. 22</p><h3>Split server.py</h3></div>
+      <p>The 10,204-line file is now a package of small modules, and tests hold it to that shape. Someone new can work on one part without reading the whole.</p>
+    </div>
+    <div class="month jul">
+      <div><p class="when">Done Oct. 22</p><h3>A staging server</h3></div>
+      <p>Any branch can be deployed to a staging copy of each server first. Only the main branch reaches production.</p>
+    </div>
+    <div class="month aug">
+      <div><p class="when">Next</p><h3>One query path</h3></div>
+      <p>Send every table tool through one path for queries, suppression and labels, so a fix lands everywhere at once instead of tool by tool.</p>
+    </div>
+    <div class="month sep">
+      <div><p class="when">Under way, through year’s end</p><h3>Move production to the new pipeline</h3></div>
+      <p>Wave 39 came through it. Katya’s cleaned data for the other waves comes next, so every number traces back to the raw survey files.</p>
+    </div>
+    <div class="month oct">
+      <div><p class="when">Throughout</p><h3>More survey expertise</h3></div>
+      <p>Build in what users and reports get wrong. The guidance is now text a researcher can edit, so it no longer waits on an engineer.</p>
+    </div>
+  </div>
+</section>
+<section class="slide dark next" id="fit" aria-label="How does this fit?">
+  <h2>How does this fit?</h2>
+  <p class="lede">You’re also planning a road show, outside users and AI reports. How does this plan fit with those?</p>
+  <div class="cards three">
+    <div class="card jul">
+      <h3>Road show and outside users</h3>
+      <p>The servers and chat are ready for early access now. More users will turn up more ways to misread the data, and they’ll need someone to answer questions.</p>
+    </div>
+    <div class="card aug">
+      <h3>AI reports</h3>
+      <p>Published numbers lean hardest on the data: they should trace back to the raw files and use the new weights.</p>
+    </div>
+    <div class="card sep">
+      <h3>Bandwidth</h3>
+      <p>With one engineer, these go one at a time, and we’d pick the order. With more hands, the code and data work could run alongside the work with users.</p>
+    </div>
+  </div>
+</section>
+<section class="slide work" id="work" aria-label="The work behind it">
+  <h2>The work behind it</h2>
+  <div class="stats">
+    <div class="stat jul"><p class="n">161</p><p>pull requests merged</p></div>
+    <div class="stat aug"><p class="n">89</p><p>issues closed</p></div>
+    <div class="stat sep"><p class="n">41</p><p>bugs fixed</p></div>
+    <div class="stat oct"><p class="n">2,927</p><p>checks on every deploy</p></div>
+    <div class="stat aug"><p class="n">47</p><p>waves rebuilt from the raw files, in a sandbox</p></div>
+    <div class="stat sep"><p class="n">3</p><p>servers from one codebase, each with a staging copy</p></div>
+    <div class="stat nov"><p class="n">3</p><p>Wave 39 releases served in two weeks</p></div>
+    <div class="stat oct"><p class="n">8</p><p>runbooks in the maintenance guide</p></div>
+  </div>
+  <div class="spacer"></div>
+  <p class="refs">On mcp-server, July 17 to Nov. 11. Bugs fixed counts the closed issues that reported a bug.</p>
+</section>
+<section class="slide docs" id="docs" aria-label="Docs and runbooks">
+  <h2>Docs and runbooks</h2>
+  <div class="cols">
+    <div>
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md"><b>MAINTENANCE</b></a>: start here; how everything runs</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/CONNECTING.md">CONNECTING</a>: add a server to Claude or ChatGPT</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/USER_MANAGEMENT.md">USER_MANAGEMENT</a>: who gets access</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/PROFILES.md">PROFILES</a>: one image, three servers</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/NEW_DATA_PLAYBOOK.md">NEW_DATA_PLAYBOOK</a>: loading a wave</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/SENTINEL_USER_GUIDE.md">SENTINEL_USER_GUIDE</a>: the sentinel server</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/tree/main/chip50/content">chip50/content</a>: the text the model reads</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/SETUP.md">SETUP</a>: running the code locally</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/AGENTS.md">AGENTS</a>: rules for coding agents</li>
+        <li><a href="https://github.com/techandsociety-ai/chat#readme">chat README</a>: chat.techandsociety.ai</li>
+        <li><a href="../../test-status/">test-status</a>: live test results</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Runbook index</h3>
+      <ul>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#1-the-map">The map</a>: what runs where</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#4-deploys">Deploys</a> and checking what’s live · <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#staging">Staging</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#add-a-user">Add a user</a> · <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#remove-a-user">Remove a user</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#someone-says-they-cant-get-in">Someone says they can’t get in</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#roll-back-a-deploy">Roll back a deploy</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#alerts">Alerts</a>: who gets the emails</li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#add-a-wave">Add a wave</a> · <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#add-a-profile--deployment">Add a server</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#6-chattechandsocietyai-librechat">The hosted chat</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#11-backups-and-restore">Backups and restore</a></li>
+        <li><a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#12-credentials-inventory">Credentials</a> · <a href="https://github.com/techandsociety-ai/mcp-server/blob/main/docs/MAINTENANCE.md#13-loose-ends">Loose ends</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="refs">GitHub links need access to the private mcp-server and chat repos.</p>
+</section>
+</main>
+<nav aria-label="Slides">
+  <button id="prev" aria-label="Previous slide">‹</button>
+  <span id="count"></span>
+  <button id="next-btn" aria-label="Next slide">›</button>
+</nav>
+<script>
+(function () {
+  var deck = document.querySelector('.deck');
+  var slides = Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+  var count = document.getElementById('count');
+  var i = 0;
+  function fit() {
+    deck.style.setProperty('--scale', Math.min(innerWidth / 1920, innerHeight / 1080));
+  }
+  function go(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, k) { s.classList.toggle('on', k === i); });
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    history.replaceState(null, '', '#' + (i + 1));
+  }
+  function fromHash() { go((parseInt(location.hash.slice(1), 10) || 1) - 1); }
+  addEventListener('resize', fit);
+  addEventListener('hashchange', fromHash);
+  addEventListener('keydown', function (e) {
+    if (document.getElementById('ts-gate') || e.target.closest('input, button')) return;
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].indexOf(e.key) >= 0) go(i + 1);
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].indexOf(e.key) >= 0) go(i - 1);
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(slides.length - 1);
+    else return;
+    e.preventDefault();
+  });
+  document.getElementById('prev').onclick = function () { go(i - 1); };
+  document.getElementById('next-btn').onclick = function () { go(i + 1); };
+  var x0 = null;
+  addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) go(i + (dx < 0 ? 1 : -1));
+    x0 = null;
+  });
+  fit();
+  fromHash();
+})();
+</script>
+</body>
+</html>
